@@ -465,17 +465,17 @@
         .card-container {
             background-color: transparent;
             width: 100%;
-            min-height: 300px; /* Altura mínima para não achatar o conteúdo */
+            min-height: 322px; /* Altura mínima para não achatar o conteúdo */
             perspective: 1000px; /* Importante para o efeito 3D */
             cursor: pointer;
         }
 
-        /* O corpo que vai realmente girar */
         .card-body {
             position: relative;
             width: 100%;
-            height: 100%;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); /* Giro suave */
+            height: 100% !important; /* Adicionado */
+            min-height: 322px !important; /* Adicionado */
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             transform-style: preserve-3d;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             border-radius: 12px;
@@ -518,18 +518,21 @@
             transform: translateY(-5px);
         }
 
-        /* A Foto Quadrada */
+/* A Foto Quadrada */
         .foto-quadrada {
             width: 100%;
-            aspect-ratio: 1 / 1; /* Força ser um quadrado perfeito */
+            aspect-ratio: 1 / 1 !important; /* Força ser um quadrado perfeito */
             overflow: hidden;
             background-color: #f9f9f9;
+            /* ADICIONE A LINHA ABAIXO: */
+            flex-shrink: 0 !important; 
         }
 
         .foto-quadrada img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Faz a imagem preencher o quadrado sem esticar */
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important; /* Faz a imagem preencher o quadrado sem esticar */
+            display: block;
         }
 
         /* Texto dentro do card */
