@@ -7,11 +7,30 @@
     <style>
         @media (max-width: 768px) {
                 #formAdicionar {
-                    grid-template-columns: 1fr !important; /* Força uma única coluna no mobile */
+                    grid-template-columns: 1fr !important; /* Uma coluna no mobile */
                     gap: 20px !important;
+                    display: flex !important; /* Mudamos para flex para usar a propriedade order */
+                    flex-direction: column;
+                }
+
+                /* Forçamos o bloco de dados a ser o primeiro */
+                #bloco-dados-produto {
+                    order: 1;
+                }
+
+                /* O bloco de estoques/cores vem em segundo */
+                #bloco-estoques-cores {
+                    order: 2;
+                }
+
+                /* O botão de salvar SEMPRE será o último no mobile */
+                #btn-salvar-produto {
+                    order: 3;
+                    margin-top: 10px;
+                    width: 100%; /* Botão largura total no mobile fica melhor */
                 }
                 
-                /* Opcional: faz os itens de cores ocuparem mais espaço no mobile */
+                /* Garante que os itens de cores ocupem toda a largura no mobile */
                 [id^="container-cores-"] {
                     grid-template-columns: 1fr !important; 
                 }

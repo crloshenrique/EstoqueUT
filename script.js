@@ -290,18 +290,20 @@ function exibirFormularioAdicionar() {
         <div style="max-width: 1000px; margin: 0 auto; animation: fadeIn 0.3s ease;">
             <h1 style="margin-bottom: 30px; font-size: 1.8rem; border-bottom: 2px solid #f4f4f4; padding-bottom: 10px;">Cadastrar novo produto</h1>
 
-            <form id="formAdicionar" style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px;">
+            <form id="formAdicionar" style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; align-items: start;">
                 
-                <div style="display: flex; flex-direction: column; gap: 20px;">
+                <div id="bloco-dados-produto" style="display: flex; flex-direction: column; gap: 20px;">
                     <div style="background: white; padding: 25px; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
                         <div style="margin-bottom: 15px;">
                             <label style="font-weight: bold; display: block; margin-bottom: 8px; font-size: 0.9rem;">Nome do produto</label>
-                            <input type="text" id="addNome" placeholder="Ex: Smartwatch Ultra 9" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd;">
+                            <input type="text" id="addNome" placeholder="Ex: Smartwatch Ultra 9" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; outline: none;">
                         </div>
 
                         <div style="margin-bottom: 15px;">
                             <label style="font-weight: bold; display: block; margin-bottom: 8px; font-size: 0.9rem;">Imagem do Produto</label>
-                            <label for="addImagem" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; background: #f4f4f4; border: 2px dashed #ddd; border-radius: 8px; cursor: pointer; color: #666; font-size: 0.85rem;">
+                            <label for="addImagem" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; background: #f4f4f4; border: 2px dashed #ddd; border-radius: 8px; cursor: pointer; color: #666; font-size: 0.85rem; transition: all 0.2s;"
+                                onmouseover="this.style.borderColor='var(--accent-color)'; this.style.background='#edf2ff'" 
+                                onmouseout="this.style.borderColor='#ddd'; this.style.background='#f4f4f4'">
                                 <img src="imagens/menu/menu-adicionar.png" style="width: 20px; opacity: 0.5;">
                                 <span id="labelNomeArquivo">Clique para upload</span>
                                 <input type="file" id="addImagem" accept="image/*" style="display: none;" onchange="document.getElementById('labelNomeArquivo').innerText = this.files[0].name">
@@ -310,7 +312,7 @@ function exibirFormularioAdicionar() {
 
                         <div>
                             <label style="font-weight: bold; display: block; margin-bottom: 8px; font-size: 0.9rem;">Categoria</label>
-                            <select id="addTipo" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; background: white;">
+                            <select id="addTipo" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; background: white; cursor: pointer; outline: none;">
                                 <option value="" disabled selected>Selecione</option>
                                 <option value="Carregador">Carregador</option>
                                 <option value="Smartwatch">Smartwatch</option>
@@ -319,29 +321,32 @@ function exibirFormularioAdicionar() {
                             </select>
                         </div>
                     </div>
-
-                    <button type="button" onclick="salvarNovoProduto()" style="padding: 20px; background: var(--accent-color); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem;">
+                    
+                    <button type="button" id="btn-salvar-produto" onclick="salvarNovoProduto()" 
+                        style="padding: 20px; background: var(--accent-color); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem; box-shadow: 0 4px 15px rgba(0, 71, 171, 0.2); transition: all 0.2s;"
+                        onmouseover="this.style.transform='translateY(-2px)'; this.style.filter='brightness(1.1)'" 
+                        onmouseout="this.style.transform='translateY(0)'; this.style.filter='none'">
                         Salvar produto
                     </button>
                 </div>
 
-                <div style="display: flex; flex-direction: column; gap: 20px;">
+                <div id="bloco-estoques-cores" style="display: flex; flex-direction: column; gap: 20px;">
                     
-                    <div style="background: white; border: 1px solid #eee; padding: 20px; border-radius: 12px;">
+                    <div style="background: white; border: 1px solid #eee; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
                         <h3 style="font-size: 0.9rem; margin-bottom: 15px; color: var(--accent-color); font-weight: bold;">Estoque C</h3>
                         <div id="container-cores-C" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 15px;">
                             </div>
-                        <button type="button" onclick="abrirSeletorCores('C')" style="width: 100%; padding: 10px; border: 1px dashed var(--accent-color); background: #f0f7ff; color: var(--accent-color); border-radius: 8px; cursor: pointer; font-weight: bold;">
-                            + Adicionar cor
+                        <button type="button" onclick="abrirSeletorCores('C')" style="width: 100%; padding: 10px; border: 1px dashed var(--accent-color); background: #f0f7ff; color: var(--accent-color); border-radius: 8px; cursor: pointer; font-weight: bold; transition: background 0.2s;" onmouseover="this.style.background='#e0efff'" onmouseout="this.style.background='#f0f7ff'">
+                            + Adicionar cor a este estoque
                         </button>
                     </div>
 
-                    <div style="background: white; border: 1px solid #eee; padding: 20px; border-radius: 12px;">
+                    <div style="background: white; border: 1px solid #eee; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
                         <h3 style="font-size: 0.9rem; margin-bottom: 15px; color: var(--accent-color); font-weight: bold;">Estoque E</h3>
                         <div id="container-cores-E" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 15px;">
                             </div>
-                        <button type="button" onclick="abrirSeletorCores('E')" style="width: 100%; padding: 10px; border: 1px dashed var(--accent-color); background: #f0f7ff; color: var(--accent-color); border-radius: 8px; cursor: pointer; font-weight: bold;">
-                            + Adicionar cor
+                        <button type="button" onclick="abrirSeletorCores('E')" style="width: 100%; padding: 10px; border: 1px dashed var(--accent-color); background: #f0f7ff; color: var(--accent-color); border-radius: 8px; cursor: pointer; font-weight: bold; transition: background 0.2s;" onmouseover="this.style.background='#e0efff'" onmouseout="this.style.background='#f0f7ff'">
+                            + Adicionar cor a este estoque
                         </button>
                     </div>
 
@@ -350,11 +355,11 @@ function exibirFormularioAdicionar() {
         </div>
 
         <div id="modalSeletorCores" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
-            <div style="background: white; padding: 25px; border-radius: 15px; max-width: 450px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
-                <h3 style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Escolha a cor para o Estoque <span id="labelEstoqueAlvo"></span></h3>
+            <div style="background: white; padding: 25px; border-radius: 15px; max-width: 450px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: scaleIn 0.3s ease;">
+                <h3 style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Escolha a cor para o Estoque <span id="labelEstoqueAlvo" style="color: var(--accent-color);"></span></h3>
                 <div id="lista-opcoes-cores" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-height: 300px; overflow-y: auto; padding: 5px;">
                     </div>
-                <button onclick="document.getElementById('modalSeletorCores').style.display='none'" style="margin-top: 20px; width: 100%; padding: 12px; border: none; background: #f4f4f4; border-radius: 8px; cursor: pointer; font-weight: bold; color: #666;">Cancelar</button>
+                <button onclick="document.getElementById('modalSeletorCores').style.display='none'" style="margin-top: 20px; width: 100%; padding: 12px; border: none; background: #f4f4f4; border-radius: 8px; cursor: pointer; font-weight: bold; color: #666; transition: background 0.2s;" onmouseover="this.style.background='#eee'" onmouseout="this.style.background='#f4f4f4'">Cancelar</button>
             </div>
         </div>
     `;
