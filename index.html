@@ -297,27 +297,30 @@
         }
 
         .info-produto {
-            padding: 8px !important; 
+            padding: 10px !important; 
             display: flex !important;
             flex-direction: column !important;
+            /* Remove o space-between para os itens ficarem próximos */
+            justify-content: flex-start !important; 
             flex-grow: 1 !important;
-            justify-content: space-between; /* Empurra o estoque para o fim do card */
         }
 
         .info-produto h3 {
             font-size: 0.85rem;
-            /* Removemos a altura fixa para o título não apertar o estoque */
             height: auto !important; 
             min-height: 2.2rem;
             line-height: 1.1rem;
-            margin-bottom: 4px;
+            /* Define a margem inferior do título igual à da foto */
+            margin-bottom: 5px !important; 
         }
         
         .estoque-geral-container {
-            margin-top: auto; /* Garante que o estoque fique sempre na base da info */
-            padding-bottom: 4px;
-            display: flex !important; /* Garante visibilidade */
-        }
+                /* Remove o margin-top: auto que empurrava o item para baixo */
+                margin-top: 0 !important; 
+                display: flex !important;
+                align-items: center;
+                gap: 6px;
+            }
 
         /* Mantém seus ajustes de cores do verso */
         .card-back div[style*="grid-template-columns"] { gap: 4px !important; }
