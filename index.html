@@ -21,6 +21,7 @@
             box-sizing: border-box;
         }
 
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
@@ -99,16 +100,72 @@
             font-size: 2rem;
         }
 
-        /* Estilo para o Mobile */
-        @media (max-width: 768px) {
-            #sidebar {
-                position: absolute;
-                left: -70px; /* Esconde o menu lateral no mobile inicialmente */
-            }
-            main {
-                padding: 20px;
-            }
-        }
+/* Estilo para o Mobile */
+@media (max-width: 768px) {
+    #sidebar {
+        position: fixed; /* Fixado sobre o conteúdo */
+        left: -280px;    /* Escondido totalmente à esquerda */
+        width: 280px !important; /* Largura maior no celular */
+        height: 100vh;
+        z-index: 2000;
+        transition: left 0.3s ease;
+    }
+
+    /* Quando o menu tiver a classe 'ativo', ele aparece */
+    #sidebar.ativo {
+        left: 0;
+    }
+
+    /* Aumenta o tamanho dos itens e ícones no celular */
+    .sidebar-item {
+        height: 80px; /* Item mais alto para facilitar o toque */
+        padding: 0 20px;
+    }
+
+    .sidebar-item img {
+        width: 50px;  /* Ícones maiores */
+        height: 50px;
+    }
+
+    .sidebar-item span {
+        opacity: 1 !important; /* Texto sempre visível no celular */
+        font-size: 1.3rem;     /* Fonte maior */
+    }
+
+    main {
+        padding: 20px;
+    }
+
+    /* Botão Flutuante (Hambúrguer) */
+    .btn-menu-movel {
+        display: flex;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        background-color: var(--accent-color);
+        border-radius: 50%;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 3000;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .btn-menu-movel img {
+        width: 30px;
+        height: 30px;
+        filter: invert(1); /* Deixa o ícone branco se for preto */
+    }
+}
+
+/* Esconde o botão flutuante no Desktop */
+@media (min-width: 769px) {
+    .btn-menu-movel {
+        display: none;
+    }
+}
 
         /* Estilo do Campo de Busca */
         .busca-container {
@@ -318,6 +375,9 @@
         /* Removemos o estilo antigo das 'estoques' se não for mais usar */
     </style>
 </head>
+<div class="btn-menu-movel" onclick="toggleSidebar()">
+    <img src="imagens/menu/menu-hamburguer.png" alt="Abrir Menu">
+</div>
 <body>
 
     <nav id="sidebar">

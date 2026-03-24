@@ -49,7 +49,7 @@ async function mostrarEstoque() {
                 const hexCorBolinha = obterHexDaCor(cor);
 
                 listaCoresHtml += `
-                    <div title="${cor}" style="
+                    <div style="
                         display: flex; 
                         align-items: center; 
                         justify-content: center; 
@@ -238,3 +238,20 @@ function obterHexDaCor(nomeCor) {
 
     return mapaCores[corNormalizada] || "#cccccc"; // Cinza se não encontrar a cor
 }
+
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('ativo');
+}
+
+// Fecha o menu ao clicar em um item no celular
+document.addEventListener('DOMContentLoaded', () => {
+    const itensMenu = document.querySelectorAll('.sidebar-item');
+    itensMenu.forEach(item => {
+        item.addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                toggleSidebar();
+            }
+        });
+    });
+});
