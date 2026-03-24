@@ -195,54 +195,54 @@
         }
 
         /* Container relativo para o ícone ficar dentro do input */
-.busca-wrapper {
-    position: relative;
-    width: 100%;
-    max-width: 700px;
-}
+        .busca-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+        }
 
-/* Ícone de Filtro */
-.icone-filtro-busca {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 20px;
-    cursor: pointer;
-}
+        /* Ícone de Filtro */
+        .icone-filtro-busca {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            cursor: pointer;
+        }
 
-/* Menu de Categorias */
-.menu-filtro {
-    display: none;
-    position: absolute;
-    top: 110%;
-    right: 0;         /* Alinha a borda direita do menu com a borda direita do campo */
-    left: auto;       /* Remove o alinhamento à esquerda anterior */
-    width: 300px;     /* Define o tamanho fixo desejado */
-    background: white;
-    border: 1px solid #eee;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    z-index: 100;
-    max-height: 250px;
-    overflow-y: auto;
-}
+        /* Menu de Categorias */
+        .menu-filtro {
+            display: none;
+            position: absolute;
+            top: 110%;
+            right: 0;         /* Alinha a borda direita do menu com a borda direita do campo */
+            left: auto;       /* Remove o alinhamento à esquerda anterior */
+            width: 300px;     /* Define o tamanho fixo desejado */
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            z-index: 100;
+            max-height: 250px;
+            overflow-y: auto;
+        }
 
-.menu-filtro.ativo { display: block; }
+        .menu-filtro.ativo { display: block; }
 
-.item-categoria {
-    padding: 10px 20px;
-    cursor: pointer;
-}
+        .item-categoria {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
 
-/* Estilo para a categoria selecionada no menu */
-.item-categoria.ativo {
-    font-weight: bold;
-    color: var(--accent-color);
-    background-color: #f0f7ff; /* Um leve destaque de fundo */
-}
+        /* Estilo para a categoria selecionada no menu */
+        .item-categoria.ativo {
+            font-weight: bold;
+            color: var(--accent-color);
+            background-color: #f0f7ff; /* Um leve destaque de fundo */
+        }
 
-.item-categoria:hover { background-color: #f4f4f4; }
+        .item-categoria:hover { background-color: #f4f4f4; }
 
         /* Container que organiza os cards um ao lado do outro */
         .grid-produtos {
@@ -250,6 +250,23 @@
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 20px;
             padding: 20px;
+        }
+
+        @media (max-width: 480px) {
+            .grid-produtos {
+                /* Força exatamente 2 colunas com o mesmo tamanho */
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 10px;    /* Diminui o espaço entre cards para caber melhor */
+                padding: 10px; /* Diminui a margem lateral */
+            }
+
+            .card-container {
+                min-height: auto; /* Permite que o card se ajuste à nova largura */
+            }
+
+            .info-produto h3 {
+                font-size: 0.9rem; /* Diminui levemente a fonte do título para não quebrar o layout */
+            }
         }
 
         /* O container define a largura e a profundidade do 3D */
