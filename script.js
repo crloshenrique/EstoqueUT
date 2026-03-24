@@ -288,14 +288,14 @@ function mostrarOpcoesAlterar() {
                     <div style="width: 120px; height: 120px; background: #f4f4f4; border-radius: 20px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--accent-color); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
                         <img src="imagens/alterar.png" style="width: 60px; height: 60px; object-fit: contain;">
                     </div>
-                    <p style="margin-top: 15px; font-weight: bold; color: var(--text-color);">Alterar Produto</p>
+                    <p style="margin-top: 15px; font-weight: bold; color: var(--text-color);">Alterar</p>
                 </div>
 
                 <div class="opcao-alterar" style="text-align: center; cursor: pointer;" onclick="exibirFormularioAdicionar()">
                     <div style="width: 120px; height: 120px; background: #f4f4f4; border-radius: 20px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--accent-color); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
                         <img src="imagens/adicionar.png" style="width: 60px; height: 60px; object-fit: contain;">
                     </div>
-                    <p style="margin-top: 15px; font-weight: bold; color: var(--text-color);">Adicionar Novo</p>
+                    <p style="margin-top: 15px; font-weight: bold; color: var(--text-color);">Adicionar</p>
                 </div>
             </div>
         </div>
