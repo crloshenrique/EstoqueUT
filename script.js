@@ -295,15 +295,15 @@ function exibirFormularioAdicionar() {
                 <div id="bloco-dados-produto">
                     <div style="background: white; padding: 25px; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
                         <div style="margin-bottom: 15px;">
-                            <label style="font-weight: bold; display: block; margin-bottom: 8px; font-size: 0.9rem;">Nome do produto</label>
+                            <label style="font-weight: bold; display: block; margin-bottom: 8px; font-size: 0.9rem;">Nome</label>
                             <input type="text" id="addNome" placeholder="Ex: Smartwatch Ultra 9" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; outline: none;">
                         </div>
 
                         <div style="margin-bottom: 15px;">
-                            <label style="font-weight: bold; display: block; margin-bottom: 8px; font-size: 0.9rem;">Imagem do Produto</label>
+                            <label style="font-weight: bold; display: block; margin-bottom: 8px; font-size: 0.9rem;">Imagem</label>
                             <label for="addImagem" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; background: #f4f4f4; border: 2px dashed #ddd; border-radius: 8px; cursor: pointer; color: #666; font-size: 0.85rem;">
                                 <img src="imagens/menu/menu-adicionar.png" style="width: 20px; opacity: 0.5;">
-                                <span id="labelNomeArquivo">Clique para upload</span>
+                                <span id="labelNomeArquivo">Clique para fazer upload</span>
                                 <input type="file" id="addImagem" accept="image/*" style="display: none;" onchange="document.getElementById('labelNomeArquivo').innerText = this.files[0].name">
                             </label>
                         </div>
