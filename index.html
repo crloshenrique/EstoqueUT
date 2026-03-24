@@ -103,34 +103,66 @@
 /* Estilo para o Mobile */
 @media (max-width: 768px) {
     #sidebar {
-        position: fixed;
-        left: -280px; 
-        width: 280px !important;
+        position: fixed; /* Fixado sobre o conteúdo */
+        left: -280px;    /* Escondido totalmente à esquerda */
+        width: 280px !important; /* Largura maior no celular */
+        height: 100vh;
+        z-index: 2000;
         transition: left 0.3s ease;
     }
 
+    /* Quando o menu tiver a classe 'ativo', ele aparece */
     #sidebar.ativo {
         left: 0;
     }
 
-    /* O segredo: o botão fica "pendurado" na borda direita da sidebar */
-    .btn-menu-movel {
-        display: flex;
-        position: absolute; /* Absoluto em relação à sidebar */
-        top: 0;
-        right: -70px;      /* Joga o ícone para fora da barra (para a direita) */
-        width: 70px;
-        height: 70px;
-        background-color: var(--sidebar-color);
-        border-right: 2px solid var(--accent-color);
-        border-bottom: 2px solid var(--accent-color);
-        align-items: center;
-        justify-content: center;
+    /* Aumenta o tamanho dos itens e ícones no celular */
+    .sidebar-item {
+        height: 80px; /* Item mais alto para facilitar o toque */
+        padding: 0 20px;
     }
 
-    /* Quando a sidebar está ativa, o overlay aparece */
-    #sidebar.ativo + #overlayMenu {
-        display: block !important;
+    .sidebar-item img {
+        width: 50px;  /* Ícones maiores */
+        height: 50px;
+    }
+
+    .sidebar-item span {
+        opacity: 1 !important; /* Texto sempre visível no celular */
+        font-size: 1.3rem;     /* Fonte maior */
+    }
+
+    main {
+        padding: 20px;
+    }
+
+    /* Botão Flutuante (Hambúrguer) */
+    .btn-menu-movel {
+        display: flex;       /* Garante que é visível no telemóvel */
+        position: fixed;     /* Fixado no ecrã */
+        top: 0;             /* Alinhado ao topo exato */
+        left: 0;            /* Alinhado à esquerda exata */
+        width: 70px;        /* Mesma largura da sidebar encolhida */
+        height: 70px;       /* Mesma altura dos itens da sidebar */
+        background-color: transparent; /* Sem cor de fundo */
+        border: none;        /* Sem bordas */
+        border-radius: 0;    /* Sem cantos arredondados */
+        z-index: 3000;       /* Sempre acima de tudo */
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .btn-menu-movel img {
+        width: 40px;        /* Mesmo tamanho dos ícones do menu */
+        height: 40px;
+        /* Se o teu ícone for preto e o fundo do site for branco, não precisas de filtro.
+           Se o ícone não aparecer, podes tentar usar: filter: invert(1); */
+    }
+
+    /* Ajuste para o conteúdo principal não ficar por baixo do ícone */
+    main {
+        padding-top: 80px; /* Dá espaço para o ícone no topo */
     }
 }
 
@@ -350,12 +382,11 @@
     </style>
 </head>
 <body>
+    <div class="btn-menu-movel" onclick="toggleSidebar()">
+        <img src="imagens/menu/menu-hamburguer.png" alt="Abrir Menu">
+    </div>
 
     <nav id="sidebar">
-        <div class="btn-menu-movel" onclick="toggleSidebar()">
-            <img src="imagens/menu/menu-hamburguer.png" alt="Abrir Menu">
-        </div>
-
         <div class="sidebar-item">
             <img src="imagens/menu/menu-hamburguer.png" alt="Menu">
             <span>Menu</span>
@@ -377,17 +408,6 @@
         </div>
 
         </nav>
-
-        <div id="overlayMenu" onclick="toggleSidebar()" style="
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0,0,0,0.5);
-            z-index: 1500;
-        "></div>
 
     <main id="main-content">
         <h1>EstoqueUT</h1>

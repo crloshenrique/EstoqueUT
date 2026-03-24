@@ -239,36 +239,18 @@ function obterHexDaCor(nomeCor) {
     return mapaCores[corNormalizada] || "#cccccc"; // Cinza se não encontrar a cor
 }
 
-// 1. Função que abre e fecha o menu e controla o fundo escuro (overlay)
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('overlayMenu');
-    
-    if (sidebar) {
-        const estaAtivo = sidebar.classList.toggle('ativo');
-        if (overlay) {
-            overlay.style.display = estaAtivo ? 'block' : 'none';
-        }
-    }
+    sidebar.classList.toggle('ativo');
 }
 
-// 2. Configurações de cliques ao carregar a página
+// Fecha o menu ao clicar em um item no celular
 document.addEventListener('DOMContentLoaded', () => {
     const itensMenu = document.querySelectorAll('.sidebar-item');
-    
-    // Clique no item de Estoque para carregar os produtos
-    if(itensMenu[3]) { // Notei que no teu HTML novo, o Estoque passou a ser o índice 3 (devido ao botão flutuante ser o 0)
-        itensMenu[3].addEventListener('click', mostrarEstoque);
-    }
-
-    // No telemóvel: Fecha o menu automaticamente ao clicar em qualquer opção
     itensMenu.forEach(item => {
         item.addEventListener('click', () => {
             if (window.innerWidth <= 768) {
-                const sidebar = document.getElementById('sidebar');
-                const overlay = document.getElementById('overlayMenu');
-                if (sidebar) sidebar.classList.remove('ativo');
-                if (overlay) overlay.style.display = 'none';
+                toggleSidebar();
             }
         });
     });
