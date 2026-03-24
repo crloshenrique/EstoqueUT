@@ -352,8 +352,8 @@
     }
 
     .card-container {
-        /* Reduzido para 240px para tirar o excesso de espaço embaixo */
-        min-height: 240px !important; 
+        /* Removemos o min-height fixo. Agora o card "abraça" o conteúdo */
+        min-height: auto !important; 
         height: auto !important;
         margin-bottom: 10px;
         perspective: 1000px;
@@ -361,8 +361,9 @@
     }
 
     .card-body {
-        height: 100% !important;
-        min-height: 240px !important;
+        /* O corpo também precisa ser flexível */
+        height: auto !important;
+        min-height: auto !important;
         display: flex;
         flex-direction: column;
         transform-style: preserve-3d !important;
@@ -372,9 +373,11 @@
     .card-front {
         display: flex !important;
         flex-direction: column !important;
-        height: 100% !important;
-        padding-bottom: 5px;
+        /* IMPORTANTE: height auto permite que a borda suba até o texto */
+        height: auto !important; 
+        padding-bottom: 10px; /* Pequeno respiro final para não encostar na borda */
         backface-visibility: hidden !important;
+        position: relative !important; /* Muda de absolute para relative para o container pai entender a altura */
     }
 
     .foto-quadrada {
@@ -390,13 +393,11 @@
     }
 
     .info-produto {
-        padding: 6px 8px !important; 
+        padding: 8px 8px !important; 
         display: flex !important;
         flex-direction: column !important;
-        /* Garante que o conteúdo comece do topo, eliminando o buraco central */
         justify-content: flex-start !important; 
         flex-grow: 1 !important;
-        gap: 0px !important; 
     }
 
     .info-produto h3 {
@@ -404,7 +405,7 @@
         line-height: 1.1rem !important;
         height: auto !important; 
         max-height: 2.2rem !important; 
-        margin-bottom: 4px !important;
+        margin-bottom: 8px !important; /* Espaço entre título e estoque */
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
@@ -418,10 +419,8 @@
         justify-content: center !important; 
         gap: 12px !important; 
         width: 100% !important;
-        /* Empurra para o fim do card, mas respeita a nova altura menor */
-        margin-top: auto !important;
-        padding-top: 2px;
-        padding-bottom: 2px;
+        margin-top: 0 !important; /* Removemos o auto para não empurrar pro fundo vazio */
+        padding-top: 0px;
     }
 
     .mini-detalhe {
@@ -441,8 +440,9 @@
         white-space: nowrap !important;
     }
 
+    /* Ajuste vital para o verso não quebrar com o height auto */
     .card-back {
-        position: absolute;
+        position: absolute !important; /* O verso continua absoluto */
         top: 0;
         left: 0;
         width: 100%;
@@ -451,14 +451,6 @@
         backface-visibility: hidden !important;
         transform: rotateY(180deg);
         overflow-y: auto !important;
-    }
-
-    .card-back div[style*="grid-template-columns"] { 
-        gap: 4px !important; 
-    }
-    
-    .card-back strong { 
-        font-size: 0.75rem !important; 
     }
 }
 
