@@ -390,8 +390,8 @@
     }
 
     .info-produto {
-        /* Padding lateral reduzido para ganhar espaço para os números */
-        padding: 8px 6px !important; 
+        /* Padding lateral equilibrado para dar espaço aos números */
+        padding: 8px 8px !important; 
         display: flex !important;
         flex-direction: column !important;
         flex-grow: 1 !important;
@@ -418,25 +418,25 @@
         width: 100% !important;
         margin-top: auto !important;
         padding-top: 4px;
-        gap: 2px !important; /* Espaço mínimo entre estoque e preço */
+        gap: 3px !important;
     }
 
     .mini-detalhe {
         display: flex !important;
         align-items: center !important;
-        gap: 3px !important; /* Aproxima o ícone do texto */
+        gap: 4px !important;
     }
 
     .icone-estoque-p {
-        width: 14px !important; /* Ícones menores para não ocupar largura */
-        height: 14px !important;
+        width: 15px !important; /* Aumentado ligeiramente de 14px */
+        height: 15px !important;
     }
 
     .numero-estoque, .mini-detalhe span {
-        /* Fonte reduzida para garantir que R$ 100,00 caiba sem cortar */
-        font-size: 0.80rem !important; 
+        /* Aumentado para 0.85rem (o anterior era 0.80rem) */
+        font-size: 0.85rem !important; 
         font-weight: bold;
-        white-space: nowrap !important; /* Proíbe quebra de linha */
+        white-space: nowrap !important;
     }
 
     .card-back {
@@ -451,7 +451,6 @@
         overflow-y: auto !important;
     }
 
-    /* Ajustes específicos para o grid de cores no verso não vazar */
     .card-back div[style*="grid-template-columns"] { 
         gap: 4px !important; 
     }
