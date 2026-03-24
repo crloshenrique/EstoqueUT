@@ -366,43 +366,43 @@
         .card-back strong { font-size: 0.8rem !important; min-width: 12px !important; }
     }
 
-        /* O container define a largura e a profundidade do 3D */
-        .card-container {
-            background-color: transparent;
-            width: 100%;
-            min-height: 300px; /* Altura mínima para não achatar o conteúdo */
-            perspective: 1000px; /* Importante para o efeito 3D */
-            cursor: pointer;
-        }
+.card-container {
+    background-color: transparent;
+    width: 100%;
+    /* Remova min-height fixo e deixe o conteúdo ditar o tamanho */
+    height: auto; 
+    perspective: 1000px;
+    cursor: pointer;
+}
 
-        /* O corpo que vai realmente girar */
-        .card-body {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); /* Giro suave */
-            transform-style: preserve-3d;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            border-radius: 12px;
-        }
+.card-body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    /* Técnica para sobrepor frente e verso sem absolute puro que corta */
+    display: grid; 
+}
 
         /* Quando o JS colocar a classe 'girado', ele executa o giro */
         .card-container.girado .card-body {
             transform: rotateY(180deg);
         }
 
-        /* Estilo comum para as duas faces (Frente e Verso) */
-        .card-front, .card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden; /* Esconde a face oposta */
-            backface-visibility: hidden;
-            border-radius: 12px;
-            border: 1px solid #eee;
-            background-color: white;
-            overflow: hidden;
-        }
+.card-front, .card-back {
+    /* Em vez de absolute fixo, usamos grid-area para um ficar sobre o outro */
+    grid-area: 1 / 1 / 2 / 2; 
+    width: 100%;
+    backface-visibility: hidden;
+    border-radius: 12px;
+    border: 1px solid #eee;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+}
 
         /* Face da Frente */
         .card-front {
@@ -423,19 +423,34 @@
             transform: translateY(-5px);
         }
 
-        /* A Foto Quadrada */
-        .foto-quadrada {
-            width: 100%;
-            aspect-ratio: 1 / 1; /* Força ser um quadrado perfeito */
-            overflow: hidden;
-            background-color: #f9f9f9;
-        }
+/* Localize e substitua/atualize estas regras */
 
-        .foto-quadrada img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Faz a imagem preencher o quadrado sem esticar */
-        }
+.card-front {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    /* Impede que os itens internos tentem "esticar" para ocupar o card todo */
+    justify-content: flex-start; 
+}
+
+.foto-quadrada {
+    width: 100%;
+    /* Força o navegador a manter a proporção 1:1 baseada na largura */
+    aspect-ratio: 1 / 1; 
+    overflow: hidden;
+    background-color: #f9f9f9;
+    /* IMPORTANTE: Impede que o flexbox estique a imagem verticalmente */
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.foto-quadrada img {
+    width: 100%;
+    height: 100%;
+    /* Garante que a imagem preencha o quadrado sem distorcer */
+    object-fit: cover; 
+    display: block;
+}
 
         /* Texto dentro do card */
         .info-produto {
