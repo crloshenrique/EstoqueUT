@@ -5,6 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PDV Unter Tech</title>
     <style>
+
+        /* Estilos para os Alertas (Toasts) */
+.toast-sucesso, .toast-erro {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px 30px;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    z-index: 10000;
+    transition: all 0.5s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.toast-sucesso {
+    background-color: #28a745; /* Verde */
+}
+
+.toast-erro {
+    background-color: #dc3545; /* Vermelho */
+}
+
+.toast-hidden {
+    top: -100px; /* Esconde para cima */
+    opacity: 0;
+}
+
 @media (max-width: 768px) {
     #formAdicionar {
         display: flex !important; /* Essencial para o 'order' funcionar */
