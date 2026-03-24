@@ -252,7 +252,7 @@
             padding: 20px;
         }
 
-    @media (max-width: 480px) {
+@media (max-width: 480px) {
         .grid-produtos {
             grid-template-columns: repeat(2, 1fr); 
             gap: 10px;
@@ -260,78 +260,79 @@
         }
 
         .card-container {
-                min-height: 220px !important; 
-                height: 220px !important;
-                /* Removemos o drop-shadow para não somar com a outra sombra */
-                filter: none !important; 
-            }
+            min-height: 220px !important; 
+            height: 220px !important;
+            filter: none !important; 
+        }
 
         .card-body {
-                /* Aplicamos EXATAMENTE a mesma sombra do PC */
-                box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important; 
-                height: 100% !important;
-                border-radius: 12px;
-            }
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important; 
+            height: 100% !important;
+            border-radius: 12px;
+        }
+
+        /* --- CORREÇÃO DA IMAGEM --- */
+        .card-front {
+            display: flex !important;
+            flex-direction: column !important; /* Alinha foto em cima e texto em baixo */
+            height: 100% !important;
+            justify-content: flex-start !important;
+        }
+
+        .foto-quadrada {
+            width: 100% !important;
+            aspect-ratio: 1 / 1 !important; /* Garante o formato quadrado */
+            flex-shrink: 0 !important;      /* IMPEDE A IMAGEM DE ESTICAR VERTICALMENTE */
+            height: auto !important;
+            position: relative !important;
+        }
+
+        .foto-quadrada img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important; /* Corta as bordas se a foto não for quadrada original */
+        }
+        /* -------------------------- */
 
         .info-produto {
-            padding: 10px; /* Reduz o preenchimento interno para ganhar espaço */
+            padding: 8px !important; 
+            flex-grow: 1 !important; /* Ocupa o restante do espaço do card */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .info-produto h3 {
             font-size: 0.85rem;
-            height: 2rem; /* Ajusta a altura do título para 2 linhas menores */
-            line-height: 1rem;
-            margin-bottom: 5px;
+            height: 2.2rem; 
+            line-height: 1.1rem;
+            margin-bottom: 2px;
         }
         
         .estoque-geral-container {
-            margin-top: 4px; /* Cola mais o ícone de estoque ao título */
+            margin-top: 2px; 
         }
+
+        /* Ajustes dos retângulos de cores (já funcionais) */
         .card-back div[style*="grid-template-columns"] {
-        gap: 4px !important; 
-    }
+            gap: 4px !important; 
+        }
 
-    /* 2. Remove o limite de 60px e ajusta o preenchimento interno */
-    .card-back div[style*="background-color: #ebebeb"] {
-        max-width: none !important; /* Permite que o retângulo cresça */
-        padding: 4px 2px !important; /* Reduz o respiro lateral interno */
-    }
+        .card-back div[style*="background-color: #ebebeb"] {
+            max-width: none !important; 
+            padding: 4px 2px !important; 
+        }
 
-    /* 3. Ajusta a bolinha colorida para não empurrar o número */
-    .card-back span[style*="border-radius: 50%"] {
-        margin-right: 3px !important; 
-        width: 12px !important; /* Diminui levemente a bolinha no mobile */
-        height: 12px !important;
-    }
+        .card-back span[style*="border-radius: 50%"] {
+            margin-right: 3px !important; 
+            width: 12px !important; 
+            height: 12px !important;
+        }
 
-    /* 4. Garante que o número (strong) tenha espaço */
-    .card-back strong {
-        font-size: 0.8rem !important;
-        min-width: 12px !important;
-    }
-    .foto-quadrada {
-        width: 100% !important;
-        height: auto !important;
-        aspect-ratio: 1 / 1 !important; /* Isso obriga a altura a ser igual à largura */
-        display: block !important;
-        position: relative !important;
-    }
-
-    .foto-quadrada img {
-        position: absolute !important;
-        top: 0;
-        left: 0;
-        width: 100% !important;
-        height: 100% !important;
-        object-fit: cover !important; /* Garante que a imagem preencha o quadrado sem distorcer */
-    }
-
-    /* Ajuste para que as informações do produto não "subam" para cima da foto */
-    .card-front {
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: flex-start !important;
-    }
+        .card-back strong {
+            font-size: 0.8rem !important;
+            min-width: 12px !important;
+        }
     }
 
         /* O container define a largura e a profundidade do 3D */
