@@ -252,48 +252,39 @@
             padding: 20px;
         }
 
-@media (max-width: 480px) {
-    .grid-produtos {
-        grid-template-columns: repeat(2, 1fr); 
-        gap: 10px;
-        padding: 10px;
+    @media (max-width: 480px) {
+        .grid-produtos {
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 10px;
+            padding: 10px;
+        }
+
+.card-container {
+        min-height: 220px; 
+        /* Adicionamos a sombra diretamente no container para garantir que apareça */
+        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
     }
 
-    /* Ajuste na Altura do Container */
-    .card-container {
-        /* Reduzimos para 200px para o card ficar curto, mas com espaço para o conteúdo */
-        min-height: 200px !important; 
-        height: 200px !important; /* Altura fixa no mobile para o 3D funcionar */
-    }
-
-    /* Garantimos que o corpo (que tem a sombra) ocupe 100% da nova altura */
     .card-body {
-        height: 100% !important;
-        /* A sombra já está definida no CSS geral (.card-body), então ela reaparecerá aqui */
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Mantém a sombra interna */
+        height: 220px !important; /* Força a altura para a sombra não achatar */
     }
 
-    /* Mantemos 'absolute' para o giro 3D e a sombra funcionarem */
-    .card-front {
-        position: absolute; 
-        height: 100% !important;
-    }
+        .info-produto {
+            padding: 10px; /* Reduz o preenchimento interno para ganhar espaço */
+        }
 
-    .info-produto {
-        padding: 8px; /* Compacta o espaço interno */
+        .info-produto h3 {
+            font-size: 0.85rem;
+            height: 2rem; /* Ajusta a altura do título para 2 linhas menores */
+            line-height: 1rem;
+            margin-bottom: 5px;
+        }
+        
+        .estoque-geral-container {
+            margin-top: 4px; /* Cola mais o ícone de estoque ao título */
+        }
     }
-
-    .info-produto h3 {
-        font-size: 0.85rem;
-        /* Ajuste do título para caber no card menor */
-        line-height: 1.1rem;
-        height: 2.2rem; /* Mantém 2 linhas compactas */
-        margin-bottom: 2px;
-    }
-    
-    .estoque-geral-container {
-        margin-top: 2px; /* Gruda o estoque ao título */
-    }
-}
 
         /* O container define a largura e a profundidade do 3D */
         .card-container {
