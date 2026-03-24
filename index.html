@@ -382,11 +382,12 @@
     </style>
 </head>
 <body>
-    <div class="btn-menu-movel" onclick="toggleSidebar()">
-        <img src="imagens/menu/menu-hamburguer.png" alt="Abrir Menu">
-    </div>
 
     <nav id="sidebar">
+        <div class="btn-menu-movel" onclick="toggleSidebar()">
+            <img src="imagens/menu/menu-hamburguer.png" alt="Abrir Menu">
+        </div>
+
         <div class="sidebar-item">
             <img src="imagens/menu/menu-hamburguer.png" alt="Menu">
             <span>Menu</span>
@@ -408,6 +409,17 @@
         </div>
 
         </nav>
+
+        <div id="overlayMenu" onclick="toggleSidebar()" style="
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.5);
+            z-index: 1500;
+        "></div>
 
     <main id="main-content">
         <h1>EstoqueUT</h1>
