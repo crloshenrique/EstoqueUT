@@ -252,33 +252,47 @@
             padding: 20px;
         }
 
-        @media (max-width: 480px) {
-            .grid-produtos {
-                grid-template-columns: repeat(2, 1fr); 
-                gap: 10px;
-                padding: 10px;
-            }
+@media (max-width: 480px) {
+    .grid-produtos {
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 10px;
+        padding: 10px;
+    }
 
-            .card-container {
-                /* Reduzimos a altura mínima para o card não esticar no celular */
-                min-height: 220px; 
-            }
+    /* FORÇA O CARD A NÃO TER ALTURA SOBRANDO */
+    .card-container {
+        min-height: 180px !important; /* Valor menor para garantir */
+        height: auto !important;      /* Permite que o card encolha se houver pouco texto */
+    }
 
-            .info-produto {
-                padding: 10px; /* Reduz o preenchimento interno para ganhar espaço */
-            }
+    /* Ajusta o corpo do card para seguir a altura automática */
+    .card-body {
+        height: auto !important;
+        min-height: 180px !important;
+    }
 
-            .info-produto h3 {
-                font-size: 0.85rem;
-                height: 2rem; /* Ajusta a altura do título para 2 linhas menores */
-                line-height: 1rem;
-                margin-bottom: 5px;
-            }
-            
-            .estoque-geral-container {
-                margin-top: 4px; /* Cola mais o ícone de estoque ao título */
-            }
-        }
+    /* Garante que a face da frente não estique artificialmente */
+    .card-front {
+        position: relative; /* Muda de absolute para relative no mobile para respeitar o conteúdo */
+        height: auto !important;
+    }
+
+    .info-produto {
+        padding: 8px; /* Compacta ainda mais o espaço interno */
+    }
+
+    .info-produto h3 {
+        font-size: 0.85rem;
+        height: auto;      /* Remove a altura fixa do título */
+        max-height: 2.4rem; /* Limita a 2 linhas mas não força 2 linhas se for só uma */
+        line-height: 1.1rem;
+        margin-bottom: 2px;
+    }
+    
+    .estoque-geral-container {
+        margin-top: 2px;
+    }
+}
 
         /* O container define a largura e a profundidade do 3D */
         .card-container {
