@@ -259,38 +259,39 @@
         padding: 10px;
     }
 
-    /* FORÇA O CARD A NÃO TER ALTURA SOBRANDO */
+    /* Ajuste na Altura do Container */
     .card-container {
-        min-height: 180px !important; /* Valor menor para garantir */
-        height: auto !important;      /* Permite que o card encolha se houver pouco texto */
+        /* Reduzimos para 200px para o card ficar curto, mas com espaço para o conteúdo */
+        min-height: 200px !important; 
+        height: 200px !important; /* Altura fixa no mobile para o 3D funcionar */
     }
 
-    /* Ajusta o corpo do card para seguir a altura automática */
+    /* Garantimos que o corpo (que tem a sombra) ocupe 100% da nova altura */
     .card-body {
-        height: auto !important;
-        min-height: 180px !important;
+        height: 100% !important;
+        /* A sombra já está definida no CSS geral (.card-body), então ela reaparecerá aqui */
     }
 
-    /* Garante que a face da frente não estique artificialmente */
+    /* Mantemos 'absolute' para o giro 3D e a sombra funcionarem */
     .card-front {
-        position: relative; /* Muda de absolute para relative no mobile para respeitar o conteúdo */
-        height: auto !important;
+        position: absolute; 
+        height: 100% !important;
     }
 
     .info-produto {
-        padding: 8px; /* Compacta ainda mais o espaço interno */
+        padding: 8px; /* Compacta o espaço interno */
     }
 
     .info-produto h3 {
         font-size: 0.85rem;
-        height: auto;      /* Remove a altura fixa do título */
-        max-height: 2.4rem; /* Limita a 2 linhas mas não força 2 linhas se for só uma */
+        /* Ajuste do título para caber no card menor */
         line-height: 1.1rem;
+        height: 2.2rem; /* Mantém 2 linhas compactas */
         margin-bottom: 2px;
     }
     
     .estoque-geral-container {
-        margin-top: 2px;
+        margin-top: 2px; /* Gruda o estoque ao título */
     }
 }
 
