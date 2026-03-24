@@ -301,9 +301,7 @@ function exibirFormularioAdicionar() {
 
                         <div style="margin-bottom: 15px;">
                             <label style="font-weight: bold; display: block; margin-bottom: 8px; font-size: 0.9rem;">Imagem do Produto</label>
-                            <label for="addImagem" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; background: #f4f4f4; border: 2px dashed #ddd; border-radius: 8px; cursor: pointer; color: #666; font-size: 0.85rem; transition: all 0.2s;"
-                                onmouseover="this.style.borderColor='var(--accent-color)'; this.style.background='#edf2ff'" 
-                                onmouseout="this.style.borderColor='#ddd'; this.style.background='#f4f4f4'">
+                            <label for="addImagem" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; background: #f4f4f4; border: 2px dashed #ddd; border-radius: 8px; cursor: pointer; color: #666; font-size: 0.85rem; transition: all 0.2s;">
                                 <img src="imagens/menu/menu-adicionar.png" style="width: 20px; opacity: 0.5;">
                                 <span id="labelNomeArquivo">Clique para upload</span>
                                 <input type="file" id="addImagem" accept="image/*" style="display: none;" onchange="document.getElementById('labelNomeArquivo').innerText = this.files[0].name">
@@ -321,48 +319,30 @@ function exibirFormularioAdicionar() {
                             </select>
                         </div>
                     </div>
-                    
-                    <button type="button" id="btn-salvar-produto" onclick="salvarNovoProduto()" 
-                        style="padding: 20px; background: var(--accent-color); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem; box-shadow: 0 4px 15px rgba(0, 71, 171, 0.2); transition: all 0.2s;"
-                        onmouseover="this.style.transform='translateY(-2px)'; this.style.filter='brightness(1.1)'" 
-                        onmouseout="this.style.transform='translateY(0)'; this.style.filter='none'">
-                        Salvar produto
-                    </button>
                 </div>
 
                 <div id="bloco-estoques-cores" style="display: flex; flex-direction: column; gap: 20px;">
-                    
                     <div style="background: white; border: 1px solid #eee; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
                         <h3 style="font-size: 0.9rem; margin-bottom: 15px; color: var(--accent-color); font-weight: bold;">Estoque C</h3>
-                        <div id="container-cores-C" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 15px;">
-                            </div>
-                        <button type="button" onclick="abrirSeletorCores('C')" style="width: 100%; padding: 10px; border: 1px dashed var(--accent-color); background: #f0f7ff; color: var(--accent-color); border-radius: 8px; cursor: pointer; font-weight: bold; transition: background 0.2s;" onmouseover="this.style.background='#e0efff'" onmouseout="this.style.background='#f0f7ff'">
-                            + Adicionar cor a este estoque
-                        </button>
+                        <div id="container-cores-C" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 15px;"></div>
+                        <button type="button" onclick="abrirSeletorCores('C')" style="width: 100%; padding: 10px; border: 1px dashed var(--accent-color); background: #f0f7ff; color: var(--accent-color); border-radius: 8px; cursor: pointer; font-weight: bold;">+ Adicionar cor</button>
                     </div>
 
                     <div style="background: white; border: 1px solid #eee; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
                         <h3 style="font-size: 0.9rem; margin-bottom: 15px; color: var(--accent-color); font-weight: bold;">Estoque E</h3>
-                        <div id="container-cores-E" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 15px;">
-                            </div>
-                        <button type="button" onclick="abrirSeletorCores('E')" style="width: 100%; padding: 10px; border: 1px dashed var(--accent-color); background: #f0f7ff; color: var(--accent-color); border-radius: 8px; cursor: pointer; font-weight: bold; transition: background 0.2s;" onmouseover="this.style.background='#e0efff'" onmouseout="this.style.background='#f0f7ff'">
-                            + Adicionar cor a este estoque
-                        </button>
+                        <div id="container-cores-E" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 15px;"></div>
+                        <button type="button" onclick="abrirSeletorCores('E')" style="width: 100%; padding: 10px; border: 1px dashed var(--accent-color); background: #f0f7ff; color: var(--accent-color); border-radius: 8px; cursor: pointer; font-weight: bold;">+ Adicionar cor</button>
                     </div>
-
                 </div>
+
+                <button type="button" id="btn-salvar-produto" onclick="salvarNovoProduto()" 
+                    style="padding: 20px; background: var(--accent-color); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem; box-shadow: 0 4px 15px rgba(0, 71, 171, 0.2); transition: all 0.2s;">
+                    Salvar produto
+                </button>
+
             </form>
         </div>
-
-        <div id="modalSeletorCores" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
-            <div style="background: white; padding: 25px; border-radius: 15px; max-width: 450px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: scaleIn 0.3s ease;">
-                <h3 style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Escolha a cor para o Estoque <span id="labelEstoqueAlvo" style="color: var(--accent-color);"></span></h3>
-                <div id="lista-opcoes-cores" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-height: 300px; overflow-y: auto; padding: 5px;">
-                    </div>
-                <button onclick="document.getElementById('modalSeletorCores').style.display='none'" style="margin-top: 20px; width: 100%; padding: 12px; border: none; background: #f4f4f4; border-radius: 8px; cursor: pointer; font-weight: bold; color: #666; transition: background 0.2s;" onmouseover="this.style.background='#eee'" onmouseout="this.style.background='#f4f4f4'">Cancelar</button>
-            </div>
-        </div>
-    `;
+        `;
 }
 
 let estoqueAlvoAtual = ''; 

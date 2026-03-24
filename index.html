@@ -5,36 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PDV Unter Tech</title>
     <style>
-        @media (max-width: 768px) {
-                #formAdicionar {
-                    grid-template-columns: 1fr !important; /* Uma coluna no mobile */
-                    gap: 20px !important;
-                    display: flex !important; /* Mudamos para flex para usar a propriedade order */
-                    flex-direction: column;
-                }
+/* --- CONFIGURAÇÃO PARA CELULAR (MOBILE) --- */
+@media (max-width: 768px) {
+    #formAdicionar {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 20px !important;
+    }
 
-                /* Forçamos o bloco de dados a ser o primeiro */
-                #bloco-dados-produto {
-                    order: 1;
-                }
+    #bloco-dados-produto { order: 1; }
+    #bloco-estoques-cores { order: 2; }
+    
+    #btn-salvar-produto { 
+        order: 3; 
+        width: 100%; /* No mobile, botões largos são melhores para o polegar */
+        max-width: 300px; /* Mas limitamos para não ficar exagerado */
+        align-self: center; /* Centraliza o botão */
+        margin-top: 10px;
+        padding: 15px !important; /* Diminui um pouco a altura */
+    }
 
-                /* O bloco de estoques/cores vem em segundo */
-                #bloco-estoques-cores {
-                    order: 2;
-                }
+    [id^="container-cores-"] {
+        grid-template-columns: 1fr !important; 
+    }
+}
 
-                /* O botão de salvar SEMPRE será o último no mobile */
-                #btn-salvar-produto {
-                    order: 3;
-                    margin-top: 10px;
-                    width: 100%; /* Botão largura total no mobile fica melhor */
-                }
-                
-                /* Garante que os itens de cores ocupem toda a largura no mobile */
-                [id^="container-cores-"] {
-                    grid-template-columns: 1fr !important; 
-                }
-            }
+/* --- CONFIGURAÇÃO PARA COMPUTADOR (DESKTOP) --- */
+@media (min-width: 769px) {
+    #btn-salvar-produto {
+        grid-column: 1; 
+        width: 100%;
+        margin-top: -15px; /* Puxa ele para cima para colar no bloco de dados */
+    }
+}
 
         /* Variáveis de Cores (Inspiradas no seu anexo) */
         :root {
