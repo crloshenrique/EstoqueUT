@@ -219,24 +219,24 @@ document.addEventListener('click', (event) => {
     }
 });
 
+// Configuração centralizada de cores
+const MAPA_CORES = {
+    "preto": "#000000",
+    "branco": "#ffffff",
+    "azul": "#0047ab",
+    "vermelho": "#ff0000",
+    "verde": "#008000",
+    "amarelo": "#ffdf00",
+    "cinza": "#808080",
+    "laranja": "#ffa500",
+    "rosa": "#ffc0cb",
+    "roxo": "#800080",
+    "transparente": "repeating-conic-gradient(#ffffff 0% 25%, #bbbbbb 0% 50%) 50% / 6px 6px"
+};
+
 function obterHexDaCor(nomeCor) {
     const corNormalizada = nomeCor.trim().toLowerCase();
-
-    const mapaCores = {
-        "preto": "#000000",
-        "branco": "#ffffff",
-        "azul": "#0047ab",
-        "vermelho": "#ff0000",
-        "verde": "#008000",
-        "amarelo": "#ffdf00",
-        "cinza": "#808080",
-        "laranja": "#ffa500",
-        "rosa": "#ffc0cb",
-        "roxo": "#800080",
-        "transparente": "repeating-conic-gradient(#ffffff 0% 25%, #bbbbbb 0% 50%) 50% / 6px 6px"
-    };
-
-    return mapaCores[corNormalizada] || "#cccccc"; // Cinza se não encontrar a cor
+    return MAPA_CORES[corNormalizada] || "#cccccc";
 }
 
 function toggleSidebar() {
@@ -254,4 +254,206 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+});
+
+// Função para a tela de Alterar/Adicionar
+// Função para a tela inicial de escolha (Alterar ou Adicionar)
+function mostrarOpcoesAlterar() {
+    const mainContent = document.getElementById('main-content');
+    mainContent.innerHTML = `
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 70vh; gap: 40px; padding: 20px;">
+            <h1 style="margin-bottom: 20px;">O que deseja fazer?</h1>
+            <div style="display: flex; gap: 50px; flex-wrap: wrap; justify-content: center;">
+                <div class="opcao-alterar" style="text-align: center; cursor: pointer;" onclick="console.log('Em breve: Alterar')">
+                    <div style="width: 120px; height: 120px; background: #f4f4f4; border-radius: 20px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--accent-color); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                        <img src="imagens/alterar.png" style="width: 60px; height: 60px; object-fit: contain;">
+                    </div>
+                    <p style="margin-top: 15px; font-weight: bold; color: var(--text-color);">Alterar Produto</p>
+                </div>
+
+                <div class="opcao-alterar" style="text-align: center; cursor: pointer;" onclick="exibirFormularioAdicionar()">
+                    <div style="width: 120px; height: 120px; background: #f4f4f4; border-radius: 20px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--accent-color); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                        <img src="imagens/adicionar.png" style="width: 60px; height: 60px; object-fit: contain;">
+                    </div>
+                    <p style="margin-top: 15px; font-weight: bold; color: var(--text-color);">Adicionar Novo</p>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Função que renderiza o formulário de cadastro
+function exibirFormularioAdicionar() {
+    const mainContent = document.getElementById('main-content');
+    
+    mainContent.innerHTML = `
+        <div style="max-width: 1000px; margin: 0 auto; animation: fadeIn 0.3s ease;">
+            <h1 style="margin-bottom: 30px; font-size: 1.8rem; border-bottom: 2px solid #f4f4f4; padding-bottom: 10px;">Cadastrar novo produto</h1>
+
+            <form id="formAdicionar" style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px;">
+                
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <div style="background: white; padding: 25px; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                        <div style="margin-bottom: 15px;">
+                            <label style="font-weight: bold; display: block; margin-bottom: 8px; font-size: 0.9rem;">Nome do produto</label>
+                            <input type="text" id="addNome" placeholder="Ex: Smartwatch Ultra 9" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd;">
+                        </div>
+
+                        <div style="margin-bottom: 15px;">
+                            <label style="font-weight: bold; display: block; margin-bottom: 8px; font-size: 0.9rem;">Imagem do Produto</label>
+                            <label for="addImagem" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; background: #f4f4f4; border: 2px dashed #ddd; border-radius: 8px; cursor: pointer; color: #666; font-size: 0.85rem;">
+                                <img src="imagens/menu/menu-adicionar.png" style="width: 20px; opacity: 0.5;">
+                                <span id="labelNomeArquivo">Clique para upload</span>
+                                <input type="file" id="addImagem" accept="image/*" style="display: none;" onchange="document.getElementById('labelNomeArquivo').innerText = this.files[0].name">
+                            </label>
+                        </div>
+
+                        <div>
+                            <label style="font-weight: bold; display: block; margin-bottom: 8px; font-size: 0.9rem;">Categoria</label>
+                            <select id="addTipo" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; background: white;">
+                                <option value="" disabled selected>Selecione</option>
+                                <option value="Carregador">Carregador</option>
+                                <option value="Smartwatch">Smartwatch</option>
+                                <option value="Fone de Ouvido">Fone de Ouvido</option>
+                                <option value="Cabo">Cabo</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="button" onclick="salvarNovoProduto()" style="padding: 20px; background: var(--accent-color); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem;">
+                        Salvar produto
+                    </button>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    
+                    <div style="background: white; border: 1px solid #eee; padding: 20px; border-radius: 12px;">
+                        <h3 style="font-size: 0.9rem; margin-bottom: 15px; color: var(--accent-color); font-weight: bold;">Estoque C</h3>
+                        <div id="container-cores-C" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 15px;">
+                            </div>
+                        <button type="button" onclick="abrirSeletorCores('C')" style="width: 100%; padding: 10px; border: 1px dashed var(--accent-color); background: #f0f7ff; color: var(--accent-color); border-radius: 8px; cursor: pointer; font-weight: bold;">
+                            + Adicionar cor
+                        </button>
+                    </div>
+
+                    <div style="background: white; border: 1px solid #eee; padding: 20px; border-radius: 12px;">
+                        <h3 style="font-size: 0.9rem; margin-bottom: 15px; color: var(--accent-color); font-weight: bold;">Estoque E</h3>
+                        <div id="container-cores-E" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 15px;">
+                            </div>
+                        <button type="button" onclick="abrirSeletorCores('E')" style="width: 100%; padding: 10px; border: 1px dashed var(--accent-color); background: #f0f7ff; color: var(--accent-color); border-radius: 8px; cursor: pointer; font-weight: bold;">
+                            + Adicionar cor
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+        <div id="modalSeletorCores" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+            <div style="background: white; padding: 25px; border-radius: 15px; max-width: 450px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+                <h3 style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Escolha a cor para o Estoque <span id="labelEstoqueAlvo"></span></h3>
+                <div id="lista-opcoes-cores" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-height: 300px; overflow-y: auto; padding: 5px;">
+                    </div>
+                <button onclick="document.getElementById('modalSeletorCores').style.display='none'" style="margin-top: 20px; width: 100%; padding: 12px; border: none; background: #f4f4f4; border-radius: 8px; cursor: pointer; font-weight: bold; color: #666;">Cancelar</button>
+            </div>
+        </div>
+    `;
+}
+
+let estoqueAlvoAtual = ''; 
+
+function abrirSeletorCores(estoque) {
+    estoqueAlvoAtual = estoque;
+    document.getElementById('labelEstoqueAlvo').innerText = estoque;
+    const modal = document.getElementById('modalSeletorCores');
+    const lista = document.getElementById('lista-opcoes-cores');
+    
+    modal.style.display = 'flex';
+    lista.innerHTML = Object.keys(MAPA_CORES).map(cor => `
+        <div onclick="adicionarCorAoEstoque('${cor}')" style="cursor: pointer; text-align: center; padding: 10px; border: 1px solid #eee; border-radius: 8px; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--accent-color)'; this.style.background='#f0f7ff'" onmouseout="this.style.borderColor='#eee'; this.style.background='white'">
+            <div style="width: 25px; height: 25px; border-radius: 50%; background: ${obterHexDaCor(cor)}; margin: 0 auto 5px; border: 1px solid #ccc;"></div>
+            <span style="font-size: 0.75rem; text-transform: capitalize; font-weight: 500;">${cor}</span>
+        </div>
+    `).join('');
+}
+
+function adicionarCorAoEstoque(cor) {
+    const container = document.getElementById(`container-cores-${estoqueAlvoAtual}`);
+    
+    if (container.querySelector(`[data-cor="${cor}"]`)) {
+        document.getElementById('modalSeletorCores').style.display = 'none';
+        return;
+    }
+
+    const novoInput = document.createElement('div');
+    novoInput.innerHTML = `
+        <div style="
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; /* Força o alinhamento nas extremidades */
+            gap: 5px; 
+            background: #f9f9f9; 
+            padding: 6px 10px; 
+            border-radius: 8px; 
+            border: 1px solid #eee; 
+            animation: scaleIn 0.2s ease;
+            width: 100%; /* Garante que ocupe o espaço do grid */
+            box-sizing: border-box;
+        ">
+            <div style="display: flex; align-items: center; gap: 6px; overflow: hidden;">
+                <span style="width: 12px; height: 12px; border-radius: 50%; background: ${obterHexDaCor(cor)}; border: 1px solid #ccc; flex-shrink: 0;"></span>
+                <span style="font-size: 0.7rem; text-transform: capitalize; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${cor}</span>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 4px; flex-shrink: 0;">
+                <input type="number" value="0" min="0" data-estoque="Estoque ${estoqueAlvoAtual}" data-cor="${cor}" 
+                    style="
+                        width: 38px; 
+                        border: 1px solid #ddd; 
+                        border-radius: 4px; 
+                        padding: 2px; 
+                        text-align: center; 
+                        font-size: 0.8rem; 
+                        font-weight: normal; 
+                        color: #000; 
+                        accent-color: var(--accent-color);
+                        outline: none;
+                    ">
+
+                <button type="button" 
+                    onclick="this.parentElement.parentElement.remove()" 
+                    onmouseover="this.style.color='#ff4d4d'" 
+                    onmouseout="this.style.color='var(--accent-color)'"
+                    style="
+                        background: none; 
+                        border: none; 
+                        color: var(--accent-color); 
+                        cursor: pointer; 
+                        font-size: 1.1rem; 
+                        padding: 0; 
+                        margin-left: 2px;
+                        line-height: 1; 
+                        transition: color 0.2s;
+                        font-family: Arial, sans-serif;
+                    ">×</button>
+            </div>
+        </div>
+    `;
+    
+    container.appendChild(novoInput.firstElementChild);
+    document.getElementById('modalSeletorCores').style.display = 'none';
+}
+// Atualize o listener de carregamento do DOM para incluir o clique
+document.addEventListener('DOMContentLoaded', () => {
+    const itensMenu = document.querySelectorAll('.sidebar-item');
+    
+    // Ícone de estoque (índice 2)
+    if(itensMenu[2]) {
+        itensMenu[2].addEventListener('click', mostrarEstoque);
+    }
+
+    // Ícone de alterar (índice 3)
+    if(itensMenu[3]) {
+        itensMenu[3].addEventListener('click', mostrarOpcoesAlterar);
+    }
 });
