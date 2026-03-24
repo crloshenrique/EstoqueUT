@@ -344,18 +344,20 @@
 
 @media (max-width: 480px) {
     .grid-produtos {
+        /* minmax(0, 1fr) impede que um card empurre a largura do outro */
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important; 
         gap: 10px;
         padding: 10px;
         width: 100%;
+        box-sizing: border-box;
     }
 
     .card-container {
-        /* Aumentamos um pouco a altura mínima para caber tudo com folga */
         min-height: 260px !important; 
         height: auto !important;
         margin-bottom: 10px;
         perspective: 1000px;
+        width: 100%;
     }
 
     .card-body {
@@ -371,7 +373,8 @@
         display: flex !important;
         flex-direction: column !important;
         height: 100% !important;
-        padding-bottom: 5px; /* Espaço extra no fundo */
+        padding-bottom: 5px;
+        backface-visibility: hidden !important;
     }
 
     .foto-quadrada {
@@ -380,18 +383,24 @@
         flex-shrink: 0 !important;
     }
 
+    .foto-quadrada img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+
     .info-produto {
-        padding: 8px 10px !important; /* Reduzi o padding superior/inferior */
+        /* Padding lateral reduzido para ganhar espaço para os números */
+        padding: 8px 6px !important; 
         display: flex !important;
         flex-direction: column !important;
         flex-grow: 1 !important;
-        justify-content: space-between !important; /* Força o estoque para o final */
+        justify-content: space-between !important;
     }
 
     .info-produto h3 {
         font-size: 0.95rem !important;
         line-height: 1.1rem !important;
-        /* Removemos o height fixo para não empurrar o resto pra baixo */
         height: auto !important; 
         max-height: 2.2rem !important; 
         margin-bottom: 5px !important;
@@ -399,6 +408,7 @@
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
+        text-overflow: ellipsis;
     }
     
     .estoque-geral-container {
@@ -406,18 +416,47 @@
         align-items: center !important; 
         justify-content: space-between !important; 
         width: 100% !important;
-        margin-top: auto !important; /* Garante que fique no pé do card */
-        padding-top: 5px;
+        margin-top: auto !important;
+        padding-top: 4px;
+        gap: 2px !important; /* Espaço mínimo entre estoque e preço */
     }
 
-    .mini-detalhe span {
-        font-size: 0.85rem !important; /* Fonte do preço/estoque levemente menor para caber */
+    .mini-detalhe {
+        display: flex !important;
+        align-items: center !important;
+        gap: 3px !important; /* Aproxima o ícone do texto */
     }
 
-    /* Ajuste para o verso não cortar também */
+    .icone-estoque-p {
+        width: 14px !important; /* Ícones menores para não ocupar largura */
+        height: 14px !important;
+    }
+
+    .numero-estoque, .mini-detalhe span {
+        /* Fonte reduzida para garantir que R$ 100,00 caiba sem cortar */
+        font-size: 0.80rem !important; 
+        font-weight: bold;
+        white-space: nowrap !important; /* Proíbe quebra de linha */
+    }
+
     .card-back {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
         padding: 10px !important;
+        backface-visibility: hidden !important;
+        transform: rotateY(180deg);
         overflow-y: auto !important;
+    }
+
+    /* Ajustes específicos para o grid de cores no verso não vazar */
+    .card-back div[style*="grid-template-columns"] { 
+        gap: 4px !important; 
+    }
+    .card-back strong { 
+        font-size: 0.75rem !important; 
     }
 }
 
