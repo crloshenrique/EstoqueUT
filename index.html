@@ -5,37 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PDV Unter Tech</title>
     <style>
-/* --- CONFIGURAÇÃO PARA CELULAR (MOBILE) --- */
 @media (max-width: 768px) {
     #formAdicionar {
-        display: flex !important;
+        display: flex !important; /* Essencial para o 'order' funcionar */
         flex-direction: column !important;
         gap: 20px !important;
+        width: 100% !important;
     }
 
-    #bloco-dados-produto { order: 1; }
-    #bloco-estoques-cores { order: 2; }
-    
+    #bloco-dados-produto { 
+        order: 1; 
+        width: 100% !important;
+    }
+
+    #bloco-estoques-cores { 
+        order: 2; 
+        width: 100% !important;
+    }
+
     #btn-salvar-produto { 
         order: 3; 
-        width: 100%; /* No mobile, botões largos são melhores para o polegar */
-        max-width: 300px; /* Mas limitamos para não ficar exagerado */
-        align-self: center; /* Centraliza o botão */
+        width: 100% !important;
         margin-top: 10px;
-        padding: 15px !important; /* Diminui um pouco a altura */
+        padding: 15px !important;
     }
-
+    
+    /* Garante que os retângulos das cores ocupem a largura toda no mobile */
     [id^="container-cores-"] {
         grid-template-columns: 1fr !important; 
     }
 }
 
-/* --- CONFIGURAÇÃO PARA COMPUTADOR (DESKTOP) --- */
 @media (min-width: 769px) {
     #btn-salvar-produto {
-        grid-column: 1; 
-        width: 100%;
-        margin-top: -15px; /* Puxa ele para cima para colar no bloco de dados */
+        grid-column: 1;
+        margin-top: -10px;
     }
 }
 

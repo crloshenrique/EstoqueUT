@@ -292,7 +292,7 @@ function exibirFormularioAdicionar() {
 
             <form id="formAdicionar" style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; align-items: start;">
                 
-                <div id="bloco-dados-produto" style="display: flex; flex-direction: column; gap: 20px;">
+                <div id="bloco-dados-produto">
                     <div style="background: white; padding: 25px; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
                         <div style="margin-bottom: 15px;">
                             <label style="font-weight: bold; display: block; margin-bottom: 8px; font-size: 0.9rem;">Nome do produto</label>
@@ -301,7 +301,7 @@ function exibirFormularioAdicionar() {
 
                         <div style="margin-bottom: 15px;">
                             <label style="font-weight: bold; display: block; margin-bottom: 8px; font-size: 0.9rem;">Imagem do Produto</label>
-                            <label for="addImagem" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; background: #f4f4f4; border: 2px dashed #ddd; border-radius: 8px; cursor: pointer; color: #666; font-size: 0.85rem; transition: all 0.2s;">
+                            <label for="addImagem" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; background: #f4f4f4; border: 2px dashed #ddd; border-radius: 8px; cursor: pointer; color: #666; font-size: 0.85rem;">
                                 <img src="imagens/menu/menu-adicionar.png" style="width: 20px; opacity: 0.5;">
                                 <span id="labelNomeArquivo">Clique para upload</span>
                                 <input type="file" id="addImagem" accept="image/*" style="display: none;" onchange="document.getElementById('labelNomeArquivo').innerText = this.files[0].name">
@@ -310,7 +310,7 @@ function exibirFormularioAdicionar() {
 
                         <div>
                             <label style="font-weight: bold; display: block; margin-bottom: 8px; font-size: 0.9rem;">Categoria</label>
-                            <select id="addTipo" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; background: white; cursor: pointer; outline: none;">
+                            <select id="addTipo" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; background: white; outline: none;">
                                 <option value="" disabled selected>Selecione</option>
                                 <option value="Carregador">Carregador</option>
                                 <option value="Smartwatch">Smartwatch</option>
@@ -336,14 +336,14 @@ function exibirFormularioAdicionar() {
                 </div>
 
                 <button type="button" id="btn-salvar-produto" onclick="salvarNovoProduto()" 
-                    style="padding: 20px; background: var(--accent-color); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem; box-shadow: 0 4px 15px rgba(0, 71, 171, 0.2); transition: all 0.2s;">
+                    style="padding: 20px; background: var(--accent-color); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem; box-shadow: 0 4px 15px rgba(0, 71, 171, 0.2);">
                     Salvar produto
                 </button>
             </form>
         </div>
 
         <div id="modalSeletorCores" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center;">
-            <div style="background: white; padding: 25px; border-radius: 15px; max-width: 400px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+            <div style="background: white; padding: 25px; border-radius: 15px; max-width: 400px; width: 90%;">
                 <h3 style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Cor para Estoque <span id="labelEstoqueAlvo"></span></h3>
                 <div id="lista-opcoes-cores" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-height: 300px; overflow-y: auto;"></div>
                 <button type="button" onclick="document.getElementById('modalSeletorCores').style.display='none'" style="margin-top: 20px; width: 100%; padding: 10px; border: none; border-radius: 8px; background: #eee; cursor: pointer;">Cancelar</button>
@@ -351,7 +351,6 @@ function exibirFormularioAdicionar() {
         </div>
     `;
 }
-
 let estoqueAlvoAtual = ''; 
 
 function abrirSeletorCores(estoque) {
