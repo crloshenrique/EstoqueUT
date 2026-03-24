@@ -239,18 +239,29 @@ function obterHexDaCor(nomeCor) {
     return mapaCores[corNormalizada] || "#cccccc"; // Cinza se não encontrar a cor
 }
 
+// 1. Função que abre e fecha o menu
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
-    sidebar.classList.toggle('ativo');
+    if (sidebar) {
+        sidebar.classList.toggle('ativo');
+    }
 }
 
-// Fecha o menu ao clicar em um item no celular
+// 2. Configurações de cliques
 document.addEventListener('DOMContentLoaded', () => {
     const itensMenu = document.querySelectorAll('.sidebar-item');
+    
+    // Clique no item de Estoque (índice 2)
+    if(itensMenu[2]) {
+        itensMenu[2].addEventListener('click', mostrarEstoque);
+    }
+
+    // No telemóvel: Fecha o menu automaticamente ao clicar em qualquer opção
     itensMenu.forEach(item => {
         item.addEventListener('click', () => {
             if (window.innerWidth <= 768) {
-                toggleSidebar();
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar) sidebar.classList.remove('ativo');
             }
         });
     });
