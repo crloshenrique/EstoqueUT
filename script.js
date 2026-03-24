@@ -100,13 +100,13 @@ html += `
                     <div style="display: flex; align-items: center; gap: 22px;">
                         
                         <div style="display: flex; align-items: center; gap: 4px;">
-                            <img src="imagens/estoque.png" class="icone-estoque-p" style="width: 18px; height: 18px; object-fit: contain;">
+                            <img src="imagens/estoque.png" class="icone-estoque-p" style="width: 15px; height: 15px; object-fit: contain;">
                             <span class="numero-estoque" style="font-size: 1rem; font-weight: bold; color: #333;">${estoqueGeral}</span>
                         </div>
                         
                         <div style="display: flex; align-items: center; gap: 4px;">
-                            <img src="imagens/dinheiro.png" class="icone-estoque-p" style="width: 18px; height: 18px; object-fit: contain;">
-                            <span class="numero-estoque" style="font-size: 1rem; font-weight: bold; color: #333;">${preco}</span>
+                            <img src="imagens/dinheiro.png" class="icone-estoque-p" style="width: 15px; height: 15px; object-fit: contain;">
+                            <span class="numero-estoque" style="font-size: 0.9rem; font-weight: bold; color: #333;">${preco}</span>
                         </div>
                         
                     </div>
