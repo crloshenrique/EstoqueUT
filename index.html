@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PDV Unter Tech</title>
     <style>
+        @media (max-width: 768px) {
+                #formAdicionar {
+                    grid-template-columns: 1fr !important; /* Força uma única coluna no mobile */
+                    gap: 20px !important;
+                }
+                
+                /* Opcional: faz os itens de cores ocuparem mais espaço no mobile */
+                [id^="container-cores-"] {
+                    grid-template-columns: 1fr !important; 
+                }
+            }
+
         /* Variáveis de Cores (Inspiradas no seu anexo) */
         :root {
             --bg-color: #ffffff;      /* Mude de #121212 para branco */
