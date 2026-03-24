@@ -414,11 +414,13 @@
     .estoque-geral-container {
         display: flex !important;
         align-items: center !important; 
-        justify-content: space-between !important; 
+        /* Alterado de space-between para center para aproximar os dois blocos */
+        justify-content: center !important; 
+        /* Ajuste este gap para controlar a distância entre estoque e dinheiro */
+        gap: 12px !important; 
         width: 100% !important;
         margin-top: auto !important;
         padding-top: 4px;
-        gap: 3px !important;
     }
 
     .mini-detalhe {
@@ -428,12 +430,11 @@
     }
 
     .icone-estoque-p {
-        width: 15px !important; /* Aumentado ligeiramente de 14px */
+        width: 15px !important;
         height: 15px !important;
     }
 
     .numero-estoque, .mini-detalhe span {
-        /* Aumentado para 0.85rem (o anterior era 0.80rem) */
         font-size: 0.85rem !important; 
         font-weight: bold;
         white-space: nowrap !important;
@@ -454,6 +455,7 @@
     .card-back div[style*="grid-template-columns"] { 
         gap: 4px !important; 
     }
+    
     .card-back strong { 
         font-size: 0.75rem !important; 
     }
