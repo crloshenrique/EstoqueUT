@@ -534,19 +534,34 @@
             margin-top: 8px;
         }
 
-        /* O ícone pequeno */
-        .icone-estoque-p {
-            width: 18px;         /* Um pouco maior que a letra (que tem uns 14px/16px) */
-            height: 18px;
-            object-fit: contain;
-        }
+/* --- PADRÃO: MOBILE (Ícone 15x15, Fonte 0.9rem) --- */
+.icone-estoque-p {
+    width: 15px;
+    height: 15px;
+    object-fit: contain;
+    display: block; /* Remove espaços vazios abaixo da imagem */
+}
 
-        /* O número do estoque */
-        .numero-estoque {
-            font-size: 1rem;
-            font-weight: bold;
-            color: #333;
-        }
+.numero-estoque {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #333;
+    display: flex;
+    align-items: center; /* Alinhamento vertical central */
+    line-height: 1;      /* Evita que a caixa do texto seja maior que o ícone */
+}
+
+/* --- AJUSTE: DESKTOP/PC (Telas maiores que 768px) --- */
+@media (min-width: 769px) {
+    .icone-estoque-p {
+        width: 18px;  /* Tamanho que você solicitou */
+        height: 18px;
+    }
+
+    .numero-estoque {
+        font-size: 1rem; /* Aumentei um pouco a fonte para acompanhar o ícone maior */
+    }
+}
 
         /* Removemos o estilo antigo das 'estoques' se não for mais usar */
     </style>

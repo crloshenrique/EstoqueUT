@@ -96,20 +96,21 @@ html += `
                     </h3>
 
                     <div style="width: 100%; height: 1px; background-color: #eee; margin: 8px 0;"></div>
-                    
-                    <div style="display: flex; align-items: center; gap: 22px;">
-                        
-                        <div style="display: flex; align-items: center; gap: 4px;">
-                            <img src="imagens/estoque.png" class="icone-estoque-p" style="width: 15px; height: 15px; object-fit: contain;">
-                            <span class="numero-estoque" style="font-size: 1rem; font-weight: bold; color: #333;">${estoqueGeral}</span>
-                        </div>
-                        
-                        <div style="display: flex; align-items: center; gap: 4px;">
-                            <img src="imagens/dinheiro.png" class="icone-estoque-p" style="width: 15px; height: 15px; object-fit: contain;">
-                            <span class="numero-estoque" style="font-size: 0.9rem; font-weight: bold; color: #333;">${preco}</span>
-                        </div>
-                        
-                    </div>
+                
+
+<div style="display: flex; align-items: center; gap: 22px;">
+    
+    <div style="display: flex; align-items: center; gap: 4px;">
+        <img src="imagens/estoque.png" class="icone-estoque-p">
+        <span class="numero-estoque">${estoqueGeral}</span>
+    </div>
+    
+    <div style="display: flex; align-items: center; gap: 4px;">
+        <img src="imagens/dinheiro.png" class="icone-estoque-p">
+        <span class="numero-estoque">${preco}</span>
+    </div>
+    
+</div>
                 </div>
             </div>
             <div class="card-back" style="flex-direction: column; justify-content: flex-start; padding: 15px; overflow-y: auto;">
