@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDV Unter Tech</title>
+    <style>
+        /* Variáveis de Cores (Inspiradas no seu anexo) */
+        :root {
+            --bg-color: #ffffff;      /* Mude de #121212 para branco */
+            --sidebar-color: #f4f4f4; /* Um cinza bem clarinho para o menu se destacar do fundo */
+            --accent-color: #0047ab;  /* Azul (ex: Azul Cobalto) no lugar do Rosa */
+            --text-color: #333333;    /* Um cinza escuro/preto para as letras aparecerem no fundo branco */
+            --sidebar-width: 70px;
+            --sidebar-expanded: 240px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Estrutura do Menu Lateral */
+        #sidebar {
+            background-color: var(--sidebar-color);
+            width: var(--sidebar-width);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border-right: 2px solid var(--accent-color);
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            position: relative;
+        }
+
+        /* Expande ao passar o rato */
+        #sidebar:hover {
+            width: var(--sidebar-expanded);
+        }
+
+        /* Item do Menu (O Ícone Hambúrguer) */
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            height: 70px;
+            padding: 0 15px;
+            cursor: pointer;
+            overflow: hidden;
+            transition: background 0.2s;
+        }
+
+        .sidebar-item:hover {
+            /* Isso pega a sua variável --accent-color e aplica 10% de opacidade */
+            background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
+        }
+
+        .sidebar-item img {
+            width: 40px;
+            height: 40px;
+            min-width: 40px; /* Impede o ícone de encolher */
+            object-fit: contain;
+        }
+
+        .sidebar-item span {
+            margin-left: 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.2s;
+            color: var(--text-color);
+        }
+
+        /* Mostra o texto quando a barra expande */
+        #sidebar:hover .sidebar-item span {
+            opacity: 1;
+        }
+
+        /* Conteúdo Principal */
+        main {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        h1 {
+            color: var(--accent-color);
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        /* Estilo para o Mobile */
+        @media (max-width: 768px) {
+            #sidebar {
+                position: absolute;
+                left: -70px; /* Esconde o menu lateral no mobile inicialmente */
+            }
+            main {
+                padding: 20px;
+            }
+        }
+
+        /* Estilo do Campo de Busca */
+        .busca-container {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        #inputBusca {
+            width: 100%;
+            max-width: 700px;
+            padding: 12px 20px;
+            border: 2px solid #eee;
+            border-radius: 25px;
+            outline: none;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        #inputBusca:focus {
+            border-color: var(--accent-color);
+        }
+
+        /* Container relativo para o ícone ficar dentro do input */
+.busca-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+}
+
+/* Ícone de Filtro */
+.icone-filtro-busca {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    cursor: pointer;
+}
+
+/* Menu de Categorias */
+.menu-filtro {
+    display: none;
+    position: absolute;
+    top: 110%;
+    right: 0;         /* Alinha a borda direita do menu com a borda direita do campo */
+    left: auto;       /* Remove o alinhamento à esquerda anterior */
+    width: 300px;     /* Define o tamanho fixo desejado */
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    z-index: 100;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.menu-filtro.ativo { display: block; }
+
+.item-categoria {
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+/* Estilo para a categoria selecionada no menu */
+.item-categoria.ativo {
+    font-weight: bold;
+    color: var(--accent-color);
+    background-color: #f0f7ff; /* Um leve destaque de fundo */
+}
+
+.item-categoria:hover { background-color: #f4f4f4; }
+
+        /* Container que organiza os cards um ao lado do outro */
+        .grid-produtos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        /* O container define a largura e a profundidade do 3D */
+        .card-container {
+            background-color: transparent;
+            width: 100%;
+            min-height: 300px; /* Altura mínima para não achatar o conteúdo */
+            perspective: 1000px; /* Importante para o efeito 3D */
+            cursor: pointer;
+        }
+
+        /* O corpo que vai realmente girar */
+        .card-body {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); /* Giro suave */
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 12px;
+        }
+
+        /* Quando o JS colocar a classe 'girado', ele executa o giro */
+        .card-container.girado .card-body {
+            transform: rotateY(180deg);
+        }
+
+        /* Estilo comum para as duas faces (Frente e Verso) */
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden; /* Esconde a face oposta */
+            backface-visibility: hidden;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            background-color: white;
+            overflow: hidden;
+        }
+
+        /* Face da Frente */
+        .card-front {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Face de Trás (Verso) */
+        .card-back {
+            transform: rotateY(180deg); /* Já começa invertida */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fcfcfc;
+        }
+
+        .card-produto:hover {
+            transform: translateY(-5px);
+        }
+
+        /* A Foto Quadrada */
+        .foto-quadrada {
+            width: 100%;
+            aspect-ratio: 1 / 1; /* Força ser um quadrado perfeito */
+            overflow: hidden;
+            background-color: #f9f9f9;
+        }
+
+        .foto-quadrada img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Faz a imagem preencher o quadrado sem esticar */
+        }
+
+        /* Texto dentro do card */
+        .info-produto {
+            padding: 15px;
+        }
+
+        .info-produto h3 {
+            margin: 0 0 10px 0;
+            font-size: 1rem;
+            color: #0047ab;
+            
+            /* Configuração para as 2 linhas com reticências (...) */
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2; /* Versão para navegadores Chrome/Safari/Edge */
+            line-clamp: 2;         /* Versão padrão oficial (resolve o aviso do editor) */
+            
+            overflow: hidden;
+            text-overflow: ellipsis;
+            
+            /* Altura fixa para manter o alinhamento dos cards */
+            line-height: 1.2rem; 
+            height: 2.4rem; 
+        }
+
+        .estoques {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        /* Container que agrupa ícone + número */
+        .estoque-geral-container {
+            display: flex;
+            align-items: center; /* Alinha verticalmente no centro */
+            gap: 6px;            /* Espaço entre ícone e número */
+            margin-top: 8px;
+        }
+
+        /* O ícone pequeno */
+        .icone-estoque-p {
+            width: 18px;         /* Um pouco maior que a letra (que tem uns 14px/16px) */
+            height: 18px;
+            object-fit: contain;
+        }
+
+        /* O número do estoque */
+        .numero-estoque {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Removemos o estilo antigo das 'estoques' se não for mais usar */
+    </style>
+</head>
+<body>
+
+    <nav id="sidebar">
+        <div class="sidebar-item">
+            <img src="imagens/menu/menu-hamburguer.png" alt="Menu">
+            <span>Menu</span>
+        </div>
+
+        <div class="sidebar-item">
+            <img src="imagens/menu/menu-telainicial.png" alt="Inicio">
+            <span>Início</span>
+        </div>
+
+        <div class="sidebar-item">
+            <img src="imagens/menu/menu-estoque.png" alt="Estoque">
+            <span>Estoque</span>
+        </div>
+
+        <div class="sidebar-item">
+            <img src="imagens/menu/menu-relatorio.png" alt="Relatorio">
+            <span>Relatório</span>
+        </div>
+
+        </nav>
+
+    <main id="main-content">
+        <h1>EstoqueUT</h1>
+        <p>Bem-vindo ao sistema de gestão. O menu lateral está configurado para expandir ao passar o rato.</p>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
