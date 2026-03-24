@@ -322,81 +322,91 @@
         }
 
 @media (max-width: 480px) {
-        .grid-produtos {
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 10px;
-            padding: 10px;
-        }
-
-        .card-container {
-            /* Mudamos de height fixo para min-height para o card poder esticar se precisar */
-            min-height: 240px !important; 
-            height: auto !important;
-            filter: none !important; 
-            margin-bottom: 10px;
-        }
-
-        .card-body {
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important; 
-            height: 100% !important;
-            min-height: 240px !important;
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card-front {
-            display: flex !important;
-            flex-direction: column !important;
-            height: 100% !important;
-            position: relative !important; /* Importante para não flutuar */
-        }
-
-        .foto-quadrada {
-            width: 100% !important;
-            aspect-ratio: 1 / 1 !important;
-            flex-shrink: 0 !important;
-            height: auto !important;
-        }
-
-        .foto-quadrada img {
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: cover !important;
-        }
-
-        .info-produto {
-            padding: 10px !important; 
-            display: flex !important;
-            flex-direction: column !important;
-            /* Remove o space-between para os itens ficarem próximos */
-            justify-content: flex-start !important; 
-            flex-grow: 1 !important;
-        }
-
-        .info-produto h3 {
-            font-size: 0.85rem;
-            height: auto !important; 
-            min-height: 2.2rem;
-            line-height: 1.1rem;
-            /* Define a margem inferior do título igual à da foto */
-            margin-bottom: 8px !important; 
-        }
-        
-/* Localize esta classe no seu index.html e deixe-a assim: */
-.estoque-geral-container {
-    display: flex;
-    align-items: center; 
-    gap: 15px; /* Isso garante que o estoque e o dinheiro não fiquem grudados */
-    margin-top: 8px;
-}
-
-        /* Mantém seus ajustes de cores do verso */
-        .card-back div[style*="grid-template-columns"] { gap: 4px !important; }
-        .card-back div[style*="background-color: #ebebeb"] { max-width: none !important; padding: 4px 2px !important; }
-        .card-back span[style*="border-radius: 50%"] { width: 12px !important; height: 12px !important; margin-right: 3px !important; }
-        .card-back strong { font-size: 0.8rem !important; min-width: 12px !important; }
+    .grid-produtos {
+        /* Força 2 colunas rigorosamente iguais */
+        grid-template-columns: repeat(2, 1fr) !important; 
+        gap: 10px !important;
+        padding: 10px !important;
+        display: grid !important;
     }
+
+    .card-container {
+        width: 100% !important;
+        min-height: 240px !important; 
+        height: auto !important;
+        filter: none !important; 
+        margin-bottom: 10px;
+    }
+
+    .card-body {
+        /* Importante: Voltar para grid para o efeito de giro funcionar sem achatar */
+        display: grid !important;
+        grid-template-columns: 100% !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important; 
+        height: 100% !important;
+        border-radius: 12px;
+    }
+
+    .card-front, .card-back {
+        /* Garante que as faces ocupem a mesma célula do grid */
+        grid-area: 1 / 1 / 2 / 2 !important;
+        width: 100% !important;
+        min-width: 0; /* Impede que o texto empurre a largura do card */
+    }
+
+    .card-front {
+        display: flex !important;
+        flex-direction: column !important;
+        height: 100% !important;
+    }
+
+    .foto-quadrada {
+        width: 100% !important;
+        aspect-ratio: 1 / 1 !important;
+        flex-shrink: 0 !important;
+        height: auto !important;
+    }
+
+    .foto-quadrada img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+
+    .info-produto {
+        padding: 10px !important; 
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important; 
+        flex-grow: 1 !important;
+    }
+
+    .info-produto h3 {
+        font-size: 0.85rem;
+        height: auto !important; 
+        min-height: 2.2rem;
+        line-height: 1.1rem;
+        margin-bottom: 8px !important; 
+        /* Garante que o texto longo não quebre o layout */
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .estoque-geral-container {
+        display: flex;
+        align-items: center; 
+        gap: 10px; /* Reduzi um pouco para caber melhor em telas pequenas */
+        margin-top: 5px;
+    }
+
+    /* Ajustes do Verso */
+    .card-back div[style*="grid-template-columns"] { gap: 4px !important; }
+    .card-back div[style*="background-color: #ebebeb"] { max-width: none !important; padding: 4px 2px !important; }
+    .card-back span[style*="border-radius: 50%"] { width: 12px !important; height: 12px !important; margin-right: 3px !important; }
+    .card-back strong { font-size: 0.8rem !important; min-width: 12px !important; }
+}
 
 .card-container {
     background-color: transparent;
