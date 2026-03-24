@@ -342,61 +342,91 @@
             padding: 20px;
         }
 
-@media (max-width: 480px) {
-    /* 1. Força o Grid a ter duas colunas identicas de 50% menos o gap */
-    .grid-produtos {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important; 
-        gap: 10px !important;
-        padding: 10px !important;
-        width: 100% !important;
-    }
+        @media (max-width: 480px) {
+                .grid-produtos {
+                    grid-template-columns: repeat(2, 1fr); 
+                    gap: 10px;
+                    padding: 10px;
+                }
 
-    /* 2. Garante que o container do card não ultrapasse o limite da coluna */
-    .card-container {
-        width: 100% !important;
-        max-width: 100% !important;
-        min-height: 240px !important; 
-        height: auto !important;
-        margin-bottom: 5px;
-    }
+                .card-container {
+                    /* Mudamos de height fixo para min-height para o card poder esticar se precisar */
+                    min-height: 240px !important; 
+                    height: auto !important;
+                    filter: none !important; 
+                    margin-bottom: 10px;
+                }
 
-    /* 3. Evita que o conteúdo interno (texto longo) estique o card */
-    .card-body, .card-front {
-        width: 100% !important;
-        overflow: hidden; /* Impede qualquer "vazamento" de largura */
-    }
+                .card-body {
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important; 
+                    height: 100% !important;
+                    min-height: 240px !important;
+                    border-radius: 12px;
+                    display: flex;
+                    flex-direction: column;
+                }
 
-    /* 4. Trava a imagem para que ela nunca force o card a ser largo */
-    .foto-quadrada {
-        width: 100% !important;
-        max-width: 100% !important;
-        aspect-ratio: 1 / 1 !important;
-    }
+                .card-front {
+                    display: flex !important;
+                    flex-direction: column !important;
+                    height: 100% !important;
+                    position: relative !important; /* Importante para não flutuar */
+                }
 
-    /* 5. Ajuste no conteúdo para não empurrar muito para baixo */
-    .info-produto {
-        padding: 8px !important; /* Diminuído para ganhar espaço */
-    }
+                .foto-quadrada {
+                    width: 100% !important;
+                    aspect-ratio: 1 / 1 !important;
+                    flex-shrink: 0 !important;
+                    height: auto !important;
+                }
 
-    .info-produto h3 {
-        font-size: 0.8rem !important;
-        min-height: 2rem !important;
-        margin-bottom: 5px !important;
-    }
+                .foto-quadrada img {
+                    width: 100% !important;
+                    height: 100% !important;
+                    object-fit: cover !important;
+                }
 
-    /* 6. Garante que o estoque e preço fiquem na mesma linha sem quebrar */
-    .estoque-geral-container {
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        flex-wrap: nowrap !important; /* Impede que o preço caia para a linha de baixo */
-        gap: 4px !important;
-    }
+                .info-produto {
+                    padding: 10px !important; 
+                    display: flex !important;
+                    flex-direction: column !important;
+                    /* Remove o space-between para os itens ficarem próximos */
+                    justify-content: flex-start !important; 
+                    flex-grow: 1 !important;
+                }
 
-    .mini-detalhe span {
-        font-size: 0.8rem !important; /* Fonte levemente menor para caber tudo */
-    }
-}
+                .info-produto h3 {
+                    font-size: 0.85rem;
+                    height: auto !important; 
+                    min-height: 2.2rem;
+                    line-height: 1.1rem;
+                    /* Define a margem inferior do título igual à da foto */
+                    margin-bottom: 8px !important; 
+                }
+                
+                /* Localize esta classe no seu index.html e deixe-a assim: */
+                .estoque-geral-container {
+                    display: flex;
+                    align-items: center; 
+                    justify-content: space-between; /* Adicione isso para separar os dois */
+                    gap: 8px; 
+                    margin-top: 8px;
+                    width: 100%; /* Garante que use a largura toda */
+                }
+
+                /* Adicione este estilo para os mini-blocos internos */
+                .mini-detalhe {
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                }
+
+                /* Mantém seus ajustes de cores do verso */
+                .card-back div[style*="grid-template-columns"] { gap: 4px !important; }
+                .card-back div[style*="background-color: #ebebeb"] { max-width: none !important; padding: 4px 2px !important; }
+                .card-back span[style*="border-radius: 50%"] { width: 12px !important; height: 12px !important; margin-right: 3px !important; }
+                .card-back strong { font-size: 0.8rem !important; min-width: 12px !important; }
+            }
 
         /* O container define a largura e a profundidade do 3D */
         .card-container {
