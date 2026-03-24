@@ -260,79 +260,70 @@
         }
 
         .card-container {
-            min-height: 220px !important; 
-            height: 220px !important;
+            /* Mudamos de height fixo para min-height para o card poder esticar se precisar */
+            min-height: 240px !important; 
+            height: auto !important;
             filter: none !important; 
+            margin-bottom: 10px;
         }
 
         .card-body {
             box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important; 
             height: 100% !important;
+            min-height: 240px !important;
             border-radius: 12px;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* --- CORREÇÃO DA IMAGEM --- */
         .card-front {
             display: flex !important;
-            flex-direction: column !important; /* Alinha foto em cima e texto em baixo */
+            flex-direction: column !important;
             height: 100% !important;
-            justify-content: flex-start !important;
+            position: relative !important; /* Importante para não flutuar */
         }
 
         .foto-quadrada {
             width: 100% !important;
-            aspect-ratio: 1 / 1 !important; /* Garante o formato quadrado */
-            flex-shrink: 0 !important;      /* IMPEDE A IMAGEM DE ESTICAR VERTICALMENTE */
+            aspect-ratio: 1 / 1 !important;
+            flex-shrink: 0 !important;
             height: auto !important;
-            position: relative !important;
         }
 
         .foto-quadrada img {
             width: 100% !important;
             height: 100% !important;
-            object-fit: cover !important; /* Corta as bordas se a foto não for quadrada original */
+            object-fit: cover !important;
         }
-        /* -------------------------- */
 
         .info-produto {
             padding: 8px !important; 
-            flex-grow: 1 !important; /* Ocupa o restante do espaço do card */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            display: flex !important;
+            flex-direction: column !important;
+            flex-grow: 1 !important;
+            justify-content: space-between; /* Empurra o estoque para o fim do card */
         }
 
         .info-produto h3 {
             font-size: 0.85rem;
-            height: 2.2rem; 
+            /* Removemos a altura fixa para o título não apertar o estoque */
+            height: auto !important; 
+            min-height: 2.2rem;
             line-height: 1.1rem;
-            margin-bottom: 2px;
+            margin-bottom: 4px;
         }
         
         .estoque-geral-container {
-            margin-top: 2px; 
+            margin-top: auto; /* Garante que o estoque fique sempre na base da info */
+            padding-bottom: 4px;
+            display: flex !important; /* Garante visibilidade */
         }
 
-        /* Ajustes dos retângulos de cores (já funcionais) */
-        .card-back div[style*="grid-template-columns"] {
-            gap: 4px !important; 
-        }
-
-        .card-back div[style*="background-color: #ebebeb"] {
-            max-width: none !important; 
-            padding: 4px 2px !important; 
-        }
-
-        .card-back span[style*="border-radius: 50%"] {
-            margin-right: 3px !important; 
-            width: 12px !important; 
-            height: 12px !important;
-        }
-
-        .card-back strong {
-            font-size: 0.8rem !important;
-            min-width: 12px !important;
-        }
+        /* Mantém seus ajustes de cores do verso */
+        .card-back div[style*="grid-template-columns"] { gap: 4px !important; }
+        .card-back div[style*="background-color: #ebebeb"] { max-width: none !important; padding: 4px 2px !important; }
+        .card-back span[style*="border-radius: 50%"] { width: 12px !important; height: 12px !important; margin-right: 3px !important; }
+        .card-back strong { font-size: 0.8rem !important; min-width: 12px !important; }
     }
 
         /* O container define a largura e a profundidade do 3D */
