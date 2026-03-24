@@ -137,17 +137,16 @@
     }
 
     /* Botão Flutuante (Hambúrguer) */
-    .btn-menu-movel {
-        display: flex;       /* Garante que é visível no telemóvel */
-        position: fixed;     /* Fixado no ecrã */
-        top: 0;             /* Alinhado ao topo exato */
-        left: 0;            /* Alinhado à esquerda exata */
-        width: 70px;        /* Mesma largura da sidebar encolhida */
-        height: 70px;       /* Mesma altura dos itens da sidebar */
-        background-color: transparent; /* Sem cor de fundo */
-        border: none;        /* Sem bordas */
-        border-radius: 0;    /* Sem cantos arredondados */
-        z-index: 3000;       /* Sempre acima de tudo */
+.btn-menu-movel {
+        display: flex;
+        position: absolute;  /* Muda de fixed para absolute */
+        top: 0;
+        right: -70px;       /* Joga o ícone para fora da lateral direita da barra */
+        width: 70px;
+        height: 70px;
+        background-color: transparent; 
+        border: none;
+        z-index: 3000;
         align-items: center;
         justify-content: center;
         cursor: pointer;
@@ -382,11 +381,12 @@
     </style>
 </head>
 <body>
-    <div class="btn-menu-movel" onclick="toggleSidebar()">
-        <img src="imagens/menu/menu-hamburguer.png" alt="Abrir Menu">
-    </div>
 
     <nav id="sidebar">
+        <div class="btn-menu-movel" onclick="toggleSidebar()">
+            <img src="imagens/menu/menu-hamburguer.png" alt="Abrir Menu">
+        </div>
+
         <div class="sidebar-item">
             <img src="imagens/menu/menu-hamburguer.png" alt="Menu">
             <span>Menu</span>
