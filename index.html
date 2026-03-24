@@ -260,14 +260,17 @@
         }
 
 .card-container {
-        min-height: 220px; 
-        /* Adicionamos a sombra diretamente no container para garantir que apareça */
-        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        min-height: 220px !important; 
+        height: 220px !important;
+        /* Removemos o drop-shadow para não somar com a outra sombra */
+        filter: none !important; 
     }
 
-    .card-body {
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Mantém a sombra interna */
-        height: 220px !important; /* Força a altura para a sombra não achatar */
+.card-body {
+        /* Aplicamos EXATAMENTE a mesma sombra do PC */
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important; 
+        height: 100% !important;
+        border-radius: 12px;
     }
 
         .info-produto {
