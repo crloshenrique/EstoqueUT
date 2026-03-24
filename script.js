@@ -367,27 +367,27 @@ function exibirFormularioAdicionar() {
 
                         <div>
                             <label style="font-weight: bold; display: block; margin-bottom: 8px; font-size: 0.9rem;">Categoria</label>
-                    <select id="addTipo" style="
-                            width: 100%; 
-                            padding: 12px; 
-                            padding-right: 35px; /* Adicionamos este espaço para a seta não encostar na borda */
-                            border-radius: 8px; 
-                            border: 1px solid #ddd; 
-                            background: white; 
-                            outline: none;
-                            appearance: none; /* Opcional: remove a seta padrão se quiser usar uma customizada no futuro */
-                            -webkit-appearance: none;
-                            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
-                            background-repeat: no-repeat;
-                            background-position: right 12px top 50%; /* Posiciona a seta com 12px de distância da borda direita */
-                            background-size: 12px auto;
-                        ">
-                            <option value="" disabled selected>Selecione</option>
-                            <option value="Carregador">Carregador</option>
-                            <option value="Smartwatch">Smartwatch</option>
-                            <option value="Fone de Ouvido">Fone de Ouvido</option>
-                            <option value="Cabo">Cabo</option>
-                        </select>
+<select id="addTipo" style="
+        width: 100%; 
+        padding: 12px; 
+        padding-right: 35px; /* Adicionamos este espaço para a seta não encostar na borda */
+        border-radius: 8px; 
+        border: 1px solid #ddd; 
+        background: white; 
+        outline: none;
+        appearance: none; /* Opcional: remove a seta padrão se quiser usar uma customizada no futuro */
+        -webkit-appearance: none;
+        background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+        background-repeat: no-repeat;
+        background-position: right 12px top 50%; /* Posiciona a seta com 12px de distância da borda direita */
+        background-size: 12px auto;
+    ">
+        <option value="" disabled selected>Selecione</option>
+        <option value="Carregador">Carregador</option>
+        <option value="Smartwatch">Smartwatch</option>
+        <option value="Fone de Ouvido">Fone de Ouvido</option>
+        <option value="Cabo">Cabo</option>
+    </select>
                         </div>
                     </div>
                 </div>
@@ -529,26 +529,13 @@ async function salvarNovoProduto() {
     const valorInput = document.getElementById('addValor').value;
     const inputImagem = document.getElementById('addImagem');
 
-        if (!nome) {
-            mostrarAlerta("O campo 'Nome' é obrigatório!", "erro");
-            return;
-        }
-        if (!inputImagem.files || inputImagem.files.length === 0) {
-            mostrarAlerta("Selecione uma imagem para o produto!", "erro");
-            return;
-        }
-        if (!valorInput) {
-            mostrarAlerta("O campo 'Valor' é obrigatório!", "erro");
-            return;
-        }
-        if (!tipo) {
-            mostrarAlerta("Selecione uma categoria!", "erro");
-            return;
-        }
+    if (!nome || !tipo || !valorInput) {
+        alert("Preencha Nome, Categoria e Valor!");
+        return;
+    }
 
-        // Se chegar aqui, todos os campos estão preenchidos
-        btn.disabled = true;
-        btn.innerText = "Salvando...";
+    btn.disabled = true;
+    btn.innerText = "Salvando...";
 
     try {
         // 2. Captura de Cores e Quantidades (Dinâmico)
@@ -606,11 +593,8 @@ async function salvarNovoProduto() {
 
         if (insertError) throw insertError;
 
-        mostrarAlerta("Produto cadastrado com sucesso!", "sucesso");
-
-        setTimeout(() => {
-            exibirFormularioAdicionar();
-        }, 500); 
+        alert("Produto salvo com sucesso!");
+        mostrarEstoque(); // Volta para a lista de produtos
 
     } catch (error) {
         console.error("Erro ao salvar:", error);
@@ -619,19 +603,4 @@ async function salvarNovoProduto() {
         btn.disabled = false;
         btn.innerText = "Salvar Produto";
     }
-}
-
-function mostrarAlerta(mensagem, tipo = 'sucesso') {
-    const toast = document.createElement('div');
-    // Usa toast-sucesso ou toast-erro conforme o que passarmos
-    toast.className = `toast-${tipo} toast-hidden`;
-    toast.innerHTML = `<span>${mensagem}</span>`;
-    document.body.appendChild(toast);
-
-    setTimeout(() => toast.classList.remove('toast-hidden'), 10);
-
-    setTimeout(() => {
-        toast.classList.add('toast-hidden');
-        setTimeout(() => toast.remove(), 500);
-    }, 3000);
 }

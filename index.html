@@ -5,96 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PDV Unter Tech</title>
     <style>
+@media (max-width: 768px) {
+    #formAdicionar {
+        display: flex !important; /* Essencial para o 'order' funcionar */
+        flex-direction: column !important;
+        gap: 20px !important;
+        width: 100% !important;
+    }
 
-        /* Toast de Erro */
-        .toast-erro {
-            position: fixed;
-            top: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #dc3545; /* Vermelho erro */
-            color: white;
-            padding: 15px 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            z-index: 10000;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.5s ease;
-        }
+    #bloco-dados-produto { 
+        order: 1; 
+        width: 100% !important;
+    }
 
-        /* Estilo do Alerta Flutuante */
-        .toast-sucesso {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #28a745; /* Verde sucesso */
-            color: white;
-            padding: 16px 32px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            z-index: 9999;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            animation: surgindo 0.5s ease-out;
-        }
+    #bloco-estoques-cores { 
+        order: 2; 
+        width: 100% !important;
+    }
 
-        @keyframes surgindo {
-            from { top: -100px; opacity: 0; }
-            to { top: 20px; opacity: 1; }
-        }
+    #btn-salvar-produto { 
+        order: 3; 
+        width: 100% !important;
+        margin-top: 10px;
+        padding: 15px !important;
+    }
+    
+    /* Garante que os retângulos das cores ocupem a largura toda no mobile */
+    [id^="container-cores-"] {
+        grid-template-columns: 1fr !important; 
+    }
+}
 
-        .toast-sucesso.saindo {
-            animation: sumindo 0.5s ease-in forwards;
-        }
-
-        @keyframes sumindo {
-            from { top: 20px; opacity: 1; }
-            to { top: -100px; opacity: 0; }
-        }
-
-        @media (max-width: 768px) {
-            #formAdicionar {
-                display: flex !important; /* Essencial para o 'order' funcionar */
-                flex-direction: column !important;
-                gap: 20px !important;
-                width: 100% !important;
-            }
-
-            #bloco-dados-produto { 
-                order: 1; 
-                width: 100% !important;
-            }
-
-            #bloco-estoques-cores { 
-                order: 2; 
-                width: 100% !important;
-            }
-
-            #btn-salvar-produto { 
-                order: 3; 
-                width: 100% !important;
-                margin-top: 10px;
-                padding: 15px !important;
-            }
-            
-            /* Garante que os retângulos das cores ocupem a largura toda no mobile */
-            [id^="container-cores-"] {
-                grid-template-columns: 1fr !important; 
-            }
-        }
-
-        @media (min-width: 769px) {
-            #btn-salvar-produto {
-                grid-column: 1;
-                margin-top: -10px;
-            }
-        }
+@media (min-width: 769px) {
+    #btn-salvar-produto {
+        grid-column: 1;
+        margin-top: -10px;
+    }
+}
 
         /* Variáveis de Cores (Inspiradas no seu anexo) */
         :root {
@@ -190,77 +137,77 @@
             font-size: 2rem;
         }
 
-        /* Estilo para o Mobile */
-        @media (max-width: 768px) {
-            #sidebar {
-                position: fixed; /* Fixado sobre o conteúdo */
-                left: -280px;    /* Escondido totalmente à esquerda */
-                width: 280px !important; /* Largura maior no celular */
-                height: 100vh;
-                z-index: 2000;
-                transition: left 0.3s ease;
-            }
+/* Estilo para o Mobile */
+@media (max-width: 768px) {
+    #sidebar {
+        position: fixed; /* Fixado sobre o conteúdo */
+        left: -280px;    /* Escondido totalmente à esquerda */
+        width: 280px !important; /* Largura maior no celular */
+        height: 100vh;
+        z-index: 2000;
+        transition: left 0.3s ease;
+    }
 
-            /* Quando o menu tiver a classe 'ativo', ele aparece */
-            #sidebar.ativo {
-                left: 0;
-            }
+    /* Quando o menu tiver a classe 'ativo', ele aparece */
+    #sidebar.ativo {
+        left: 0;
+    }
 
-            /* Aumenta o tamanho dos itens e ícones no celular */
-            .sidebar-item {
-                height: 80px; /* Item mais alto para facilitar o toque */
-                padding: 0 20px;
-            }
+    /* Aumenta o tamanho dos itens e ícones no celular */
+    .sidebar-item {
+        height: 80px; /* Item mais alto para facilitar o toque */
+        padding: 0 20px;
+    }
 
-            .sidebar-item img {
-                width: 50px;  /* Ícones maiores */
-                height: 50px;
-            }
+    .sidebar-item img {
+        width: 50px;  /* Ícones maiores */
+        height: 50px;
+    }
 
-            .sidebar-item span {
-                opacity: 1 !important; /* Texto sempre visível no celular */
-                font-size: 1.3rem;     /* Fonte maior */
-            }
+    .sidebar-item span {
+        opacity: 1 !important; /* Texto sempre visível no celular */
+        font-size: 1.3rem;     /* Fonte maior */
+    }
 
-            main {
-                padding: 20px;
-            }
+    main {
+        padding: 20px;
+    }
 
-            /* Botão Flutuante (Hambúrguer) */
-        .btn-menu-movel {
-                display: flex;
-                position: absolute;  /* Muda de fixed para absolute */
-                top: 0;
-                right: -70px;       /* Joga o ícone para fora da lateral direita da barra */
-                width: 70px;
-                height: 70px;
-                background-color: transparent; 
-                border: none;
-                z-index: 3000;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-            }
+    /* Botão Flutuante (Hambúrguer) */
+.btn-menu-movel {
+        display: flex;
+        position: absolute;  /* Muda de fixed para absolute */
+        top: 0;
+        right: -70px;       /* Joga o ícone para fora da lateral direita da barra */
+        width: 70px;
+        height: 70px;
+        background-color: transparent; 
+        border: none;
+        z-index: 3000;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
 
-            .btn-menu-movel img {
-                width: 40px;        /* Mesmo tamanho dos ícones do menu */
-                height: 40px;
-                /* Se o teu ícone for preto e o fundo do site for branco, não precisas de filtro.
-                Se o ícone não aparecer, podes tentar usar: filter: invert(1); */
-            }
+    .btn-menu-movel img {
+        width: 40px;        /* Mesmo tamanho dos ícones do menu */
+        height: 40px;
+        /* Se o teu ícone for preto e o fundo do site for branco, não precisas de filtro.
+           Se o ícone não aparecer, podes tentar usar: filter: invert(1); */
+    }
 
-            /* Ajuste para o conteúdo principal não ficar por baixo do ícone */
-            main {
-                padding-top: 80px; /* Dá espaço para o ícone no topo */
-            }
-        }
+    /* Ajuste para o conteúdo principal não ficar por baixo do ícone */
+    main {
+        padding-top: 80px; /* Dá espaço para o ícone no topo */
+    }
+}
 
-        /* Esconde o botão flutuante no Desktop */
-        @media (min-width: 769px) {
-            .btn-menu-movel {
-                display: none;
-            }
-        }
+/* Esconde o botão flutuante no Desktop */
+@media (min-width: 769px) {
+    .btn-menu-movel {
+        display: none;
+    }
+}
 
         /* Estilo do Campo de Busca */
         .busca-container {
@@ -343,132 +290,97 @@
         }
 
 @media (max-width: 480px) {
-    .grid-produtos {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important; 
-        gap: 10px;
-        padding: 10px;
-        width: 100%;
-        box-sizing: border-box;
-    }
+        .grid-produtos {
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 10px;
+            padding: 10px;
+        }
 
-    .card-container {
-        /* Removemos o min-height fixo. Agora o card "abraça" o conteúdo */
-        min-height: auto !important; 
-        height: auto !important;
-        margin-bottom: 10px;
-        perspective: 1000px;
-        width: 100%;
-    }
+        .card-container {
+            /* Mudamos de height fixo para min-height para o card poder esticar se precisar */
+            min-height: 240px !important; 
+            height: auto !important;
+            filter: none !important; 
+            margin-bottom: 10px;
+        }
 
-    .card-body {
-        /* O corpo também precisa ser flexível */
-        height: auto !important;
-        min-height: auto !important;
-        display: flex;
-        flex-direction: column;
-        transform-style: preserve-3d !important;
-        position: relative;
-    }
+        .card-body {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important; 
+            height: 100% !important;
+            min-height: 240px !important;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+        }
 
-    .card-front {
-        display: flex !important;
-        flex-direction: column !important;
-        /* IMPORTANTE: height auto permite que a borda suba até o texto */
-        height: auto !important; 
-        padding-bottom: 10px; /* Pequeno respiro final para não encostar na borda */
-        backface-visibility: hidden !important;
-        position: relative !important; /* Muda de absolute para relative para o container pai entender a altura */
-    }
+        .card-front {
+            display: flex !important;
+            flex-direction: column !important;
+            height: 100% !important;
+            position: relative !important; /* Importante para não flutuar */
+        }
 
-    .foto-quadrada {
-        width: 100% !important;
-        aspect-ratio: 1 / 1 !important;
-        flex-shrink: 0 !important;
-    }
+        .foto-quadrada {
+            width: 100% !important;
+            aspect-ratio: 1 / 1 !important;
+            flex-shrink: 0 !important;
+            height: auto !important;
+        }
 
-    .foto-quadrada img {
-        width: 100% !important;
-        height: 100% !important;
-        object-fit: cover !important;
-    }
+        .foto-quadrada img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+        }
 
-    .info-produto {
-        padding: 8px 8px !important; 
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: flex-start !important; 
-        flex-grow: 1 !important;
-    }
+        .info-produto {
+            padding: 10px !important; 
+            display: flex !important;
+            flex-direction: column !important;
+            /* Remove o space-between para os itens ficarem próximos */
+            justify-content: flex-start !important; 
+            flex-grow: 1 !important;
+        }
 
-    .info-produto h3 {
-        font-size: 0.95rem !important;
-        line-height: 1.1rem !important;
-        height: auto !important; 
-        max-height: 2.2rem !important; 
-        margin-bottom: 8px !important; /* Espaço entre título e estoque */
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    
-    .estoque-geral-container {
-        display: flex !important;
-        align-items: center !important; 
-        justify-content: center !important; 
-        gap: 12px !important; 
-        width: 100% !important;
-        margin-top: 0 !important; /* Removemos o auto para não empurrar pro fundo vazio */
-        padding-top: 0px;
-    }
-
-    .mini-detalhe {
-        display: flex !important;
-        align-items: center !important;
-        gap: 4px !important;
-    }
-
-    .icone-estoque-p {
-        width: 15px !important;
-        height: 15px !important;
-    }
-
-    .numero-estoque, .mini-detalhe span {
-        font-size: 0.85rem !important; 
-        font-weight: bold;
-        white-space: nowrap !important;
-    }
-
-    /* Ajuste vital para o verso não quebrar com o height auto */
-    .card-back {
-        position: absolute !important; /* O verso continua absoluto */
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        padding: 10px !important;
-        backface-visibility: hidden !important;
-        transform: rotateY(180deg);
-        overflow-y: auto !important;
-    }
+        .info-produto h3 {
+            font-size: 0.85rem;
+            height: auto !important; 
+            min-height: 2.2rem;
+            line-height: 1.1rem;
+            /* Define a margem inferior do título igual à da foto */
+            margin-bottom: 8px !important; 
+        }
+        
+/* Localize esta classe no seu index.html e deixe-a assim: */
+.estoque-geral-container {
+    display: flex;
+    align-items: center; 
+    gap: 15px; /* Isso garante que o estoque e o dinheiro não fiquem grudados */
+    margin-top: 8px;
 }
+
+        /* Mantém seus ajustes de cores do verso */
+        .card-back div[style*="grid-template-columns"] { gap: 4px !important; }
+        .card-back div[style*="background-color: #ebebeb"] { max-width: none !important; padding: 4px 2px !important; }
+        .card-back span[style*="border-radius: 50%"] { width: 12px !important; height: 12px !important; margin-right: 3px !important; }
+        .card-back strong { font-size: 0.8rem !important; min-width: 12px !important; }
+    }
 
         /* O container define a largura e a profundidade do 3D */
         .card-container {
             background-color: transparent;
             width: 100%;
-            min-height: 322px; /* Altura mínima para não achatar o conteúdo */
+            min-height: 300px; /* Altura mínima para não achatar o conteúdo */
             perspective: 1000px; /* Importante para o efeito 3D */
             cursor: pointer;
         }
 
+        /* O corpo que vai realmente girar */
         .card-body {
             position: relative;
             width: 100%;
-            height: 100% !important; /* Adicionado */
-            min-height: 322px !important; /* Adicionado */
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); /* Giro suave */
             transform-style: preserve-3d;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             border-radius: 12px;
@@ -511,21 +423,18 @@
             transform: translateY(-5px);
         }
 
-/* A Foto Quadrada */
+        /* A Foto Quadrada */
         .foto-quadrada {
             width: 100%;
-            aspect-ratio: 1 / 1 !important; /* Força ser um quadrado perfeito */
+            aspect-ratio: 1 / 1; /* Força ser um quadrado perfeito */
             overflow: hidden;
             background-color: #f9f9f9;
-            /* ADICIONE A LINHA ABAIXO: */
-            flex-shrink: 0 !important; 
         }
 
         .foto-quadrada img {
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: cover !important; /* Faz a imagem preencher o quadrado sem esticar */
-            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Faz a imagem preencher o quadrado sem esticar */
         }
 
         /* Texto dentro do card */
