@@ -254,18 +254,29 @@
 
         @media (max-width: 480px) {
             .grid-produtos {
-                /* Força exatamente 2 colunas com o mesmo tamanho */
                 grid-template-columns: repeat(2, 1fr); 
-                gap: 10px;    /* Diminui o espaço entre cards para caber melhor */
-                padding: 10px; /* Diminui a margem lateral */
+                gap: 10px;
+                padding: 10px;
             }
 
             .card-container {
-                min-height: auto; /* Permite que o card se ajuste à nova largura */
+                /* Reduzimos a altura mínima para o card não esticar no celular */
+                min-height: 220px; 
+            }
+
+            .info-produto {
+                padding: 10px; /* Reduz o preenchimento interno para ganhar espaço */
             }
 
             .info-produto h3 {
-                font-size: 0.9rem; /* Diminui levemente a fonte do título para não quebrar o layout */
+                font-size: 0.85rem;
+                height: 2rem; /* Ajusta a altura do título para 2 linhas menores */
+                line-height: 1rem;
+                margin-bottom: 5px;
+            }
+            
+            .estoque-geral-container {
+                margin-top: 4px; /* Cola mais o ícone de estoque ao título */
             }
         }
 
