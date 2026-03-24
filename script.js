@@ -78,28 +78,47 @@ async function mostrarEstoque() {
             listaCoresHtml += `</div>`; // Fecha a mini-grid de cores
         });
 
-        html += `
-            <div class="card-container" data-tipo="${item.tipo || ''}" onclick="girarCarta(this)">
-                <div class="card-body">
-                    <div class="card-front">
-                        <div class="foto-quadrada">
-                            <img src="${item.imagem_url || 'imagens/placeholder.png'}" alt="${item.nome}">
+const preco = item.valor 
+    ? Number(item.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }).replace(/\s/g, '') 
+    : 'R$0,00';
+
+html += `
+    <div class="card-container" data-tipo="${item.tipo || ''}" onclick="girarCarta(this)">
+        <div class="card-body">
+            <div class="card-front">
+                <div class="foto-quadrada">
+                    <img src="${item.imagem_url || 'imagens/placeholder.png'}" alt="${item.nome}">
+                </div>
+                <div class="info-produto" style="padding: 15px; display: flex; flex-direction: column;">
+                    
+                    <h3 class="nome-produto" style="margin: 0; font-size: 1rem; color: #0047ab; line-height: 1.2rem; height: 2.4rem; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                        ${item.nome}
+                    </h3>
+
+                    <div style="width: 100%; height: 1px; background-color: #eee; margin: 8px 0;"></div>
+                    
+                    <div style="display: flex; align-items: center; gap: 22px;">
+                        
+                        <div style="display: flex; align-items: center; gap: 4px;">
+                            <img src="imagens/estoque.png" class="icone-estoque-p" style="width: 18px; height: 18px; object-fit: contain;">
+                            <span class="numero-estoque" style="font-size: 1rem; font-weight: bold; color: #333;">${estoqueGeral}</span>
                         </div>
-                        <div class="info-produto">
-                            <h3 class="nome-produto">${item.nome}</h3>
-                            <div class="estoque-geral-container">
-                                <img src="imagens/estoque.png" class="icone-estoque-p">
-                                <span class="numero-estoque">${estoqueGeral}</span>
-                            </div>
+                        
+                        <div style="display: flex; align-items: center; gap: 4px;">
+                            <img src="imagens/dinheiro.png" class="icone-estoque-p" style="width: 18px; height: 18px; object-fit: contain;">
+                            <span class="numero-estoque" style="font-size: 1rem; font-weight: bold; color: #333;">${preco}</span>
                         </div>
-                    </div>
-                    <div class="card-back" style="flex-direction: column; justify-content: flex-start; padding: 15px; overflow-y: auto;">
-                        <h4 style="font-size: 0.9rem; margin-bottom: 5px; text-align: center; width: 100%;">Distribuição</h4>
-                        ${listaCoresHtml || '<p style="color: #999;">Sem dados</p>'}
+                        
                     </div>
                 </div>
             </div>
-        `;
+            <div class="card-back" style="flex-direction: column; justify-content: flex-start; padding: 15px; overflow-y: auto;">
+                <h4 style="font-size: 0.9rem; margin-bottom: 5px; text-align: center; width: 100%;">Distribuição</h4>
+                ${listaCoresHtml || '<p style="color: #999;">Sem dados</p>'}
+            </div>
+        </div>
+    </div>
+`;
     });
 
     html += '</div>';
@@ -308,15 +327,67 @@ function exibirFormularioAdicionar() {
                             </label>
                         </div>
 
+                        <div style="margin-bottom: 15px;">
+                            <label style="font-weight: bold; display: block; margin-bottom: 8px; font-size: 0.9rem;">Valor</label>
+                            <div style="
+                                display: flex; 
+                                align-items: center; 
+                                border: 1px solid #ddd; 
+                                border-radius: 8px; 
+                                background: white; 
+                                height: 45px; 
+                                padding: 0 12px;
+                                overflow: hidden;
+                            ">
+                                <span style="
+                                    font-weight: bold; 
+                                    color: #333; 
+                                    font-size: 0.9rem;
+                                    margin-right: 4px;
+                                    display: inline-block;
+                                    line-height: 1; /* Força o alinhamento central */
+                                ">R$</span>
+                                <input type="number" id="addValor" step="0.01" placeholder="0,00" 
+                                    style="
+                                        flex: 1;
+                                        border: none;
+                                        outline: none;
+                                        background: transparent;
+                                        font-size: 0.9rem;
+                                        height: 100%;
+                                        margin: 0;
+                                        padding: 0;
+                                        appearance: textfield; /* Remove setas no Firefox */
+                                        -webkit-appearance: none; /* Remove setas no Chrome/Safari */
+                                        line-height: 1;
+                                    ">
+                            </div>
+                        </div>
+
+
                         <div>
                             <label style="font-weight: bold; display: block; margin-bottom: 8px; font-size: 0.9rem;">Categoria</label>
-                            <select id="addTipo" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; background: white; outline: none;">
-                                <option value="" disabled selected>Selecione</option>
-                                <option value="Carregador">Carregador</option>
-                                <option value="Smartwatch">Smartwatch</option>
-                                <option value="Fone de Ouvido">Fone de Ouvido</option>
-                                <option value="Cabo">Cabo</option>
-                            </select>
+                    <select id="addTipo" style="
+                            width: 100%; 
+                            padding: 12px; 
+                            padding-right: 35px; /* Adicionamos este espaço para a seta não encostar na borda */
+                            border-radius: 8px; 
+                            border: 1px solid #ddd; 
+                            background: white; 
+                            outline: none;
+                            appearance: none; /* Opcional: remove a seta padrão se quiser usar uma customizada no futuro */
+                            -webkit-appearance: none;
+                            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+                            background-repeat: no-repeat;
+                            background-position: right 12px top 50%; /* Posiciona a seta com 12px de distância da borda direita */
+                            background-size: 12px auto;
+                        ">
+                            <option value="" disabled selected>Selecione</option>
+                            <option value="Carregador">Carregador</option>
+                            <option value="Smartwatch">Smartwatch</option>
+                            <option value="Fone de Ouvido">Fone de Ouvido</option>
+                            <option value="Cabo">Cabo</option>
+                        </select>
                         </div>
                     </div>
                 </div>
@@ -448,3 +519,119 @@ document.addEventListener('DOMContentLoaded', () => {
         itensMenu[3].addEventListener('click', mostrarOpcoesAlterar);
     }
 });
+
+async function salvarNovoProduto() {
+    const btn = document.getElementById('btn-salvar-produto');
+    
+    // 1. Captura de Campos Básicos
+    const nome = document.getElementById('addNome').value;
+    const tipo = document.getElementById('addTipo').value;
+    const valorInput = document.getElementById('addValor').value;
+    const inputImagem = document.getElementById('addImagem');
+
+        if (!nome) {
+            mostrarAlerta("O campo 'Nome' é obrigatório!", "erro");
+            return;
+        }
+        if (!inputImagem.files || inputImagem.files.length === 0) {
+            mostrarAlerta("Selecione uma imagem para o produto!", "erro");
+            return;
+        }
+        if (!valorInput) {
+            mostrarAlerta("O campo 'Valor' é obrigatório!", "erro");
+            return;
+        }
+        if (!tipo) {
+            mostrarAlerta("Selecione uma categoria!", "erro");
+            return;
+        }
+
+        // Se chegar aqui, todos os campos estão preenchidos
+        btn.disabled = true;
+        btn.innerText = "Salvando...";
+
+    try {
+        // 2. Captura de Cores e Quantidades (Dinâmico)
+        // Criamos o objeto no formato que o seu banco espera
+        let coresFinal = { "Estoque C": {}, "Estoque E": {} };
+
+        // Buscamos todos os inputs de número dentro dos containers de cores
+        const inputsCores = document.querySelectorAll('input[data-cor]');
+        
+        inputsCores.forEach(input => {
+            // Pegamos o valor, se estiver vazio vira 0
+            const qtd = parseInt(input.value) || 0; 
+            
+            const cor = input.getAttribute('data-cor');
+            const estoque = input.getAttribute('data-estoque');
+            
+            // Removemos o "if (qtd > 0)", assim ele salva mesmo sendo zero
+            coresFinal[estoque][cor] = qtd;
+        });
+
+        // 3. Upload da Imagem para o bucket 'fotos-produtos'
+        let imagem_url = "";
+        if (inputImagem.files && inputImagem.files[0]) {
+            const arquivo = inputImagem.files[0];
+            const extensao = arquivo.name.split('.').pop();
+            const nomeArquivo = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${extensao}`;
+            const caminhoArquivo = `public/${nomeArquivo}`;
+
+            const { data: uploadData, error: uploadError } = await _supabase.storage
+                .from('fotos-produtos') // Nome do seu bucket
+                .upload(caminhoArquivo, arquivo);
+
+            if (uploadError) throw uploadError;
+
+            // Gerar URL pública
+            const { data: urlData } = _supabase.storage
+                .from('fotos-produtos')
+                .getPublicUrl(caminhoArquivo);
+            
+            imagem_url = urlData.publicUrl;
+        }
+
+        // 4. Inserção no Supabase (Tabela 'produtos')
+        const { error: insertError } = await _supabase
+            .from('produtos')
+            .insert([
+                { 
+                    nome: nome, 
+                    tipo: tipo, 
+                    valor: parseFloat(valorInput), 
+                    cor: coresFinal, 
+                    imagem_url: imagem_url 
+                }
+            ]);
+
+        if (insertError) throw insertError;
+
+        mostrarAlerta("Produto cadastrado com sucesso!", "sucesso");
+
+        setTimeout(() => {
+            exibirFormularioAdicionar();
+        }, 500); 
+
+    } catch (error) {
+        console.error("Erro ao salvar:", error);
+        alert("Erro: " + error.message);
+    } finally {
+        btn.disabled = false;
+        btn.innerText = "Salvar Produto";
+    }
+}
+
+function mostrarAlerta(mensagem, tipo = 'sucesso') {
+    const toast = document.createElement('div');
+    // Usa toast-sucesso ou toast-erro conforme o que passarmos
+    toast.className = `toast-${tipo} toast-hidden`;
+    toast.innerHTML = `<span>${mensagem}</span>`;
+    document.body.appendChild(toast);
+
+    setTimeout(() => toast.classList.remove('toast-hidden'), 10);
+
+    setTimeout(() => {
+        toast.classList.add('toast-hidden');
+        setTimeout(() => toast.remove(), 500);
+    }, 3000);
+}
