@@ -138,25 +138,31 @@
 
     /* Botão Flutuante (Hambúrguer) */
     .btn-menu-movel {
-        display: flex;
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        width: 60px;
-        height: 60px;
-        background-color: var(--accent-color);
-        border-radius: 50%;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        z-index: 3000;
+        display: flex;       /* Garante que é visível no telemóvel */
+        position: fixed;     /* Fixado no ecrã */
+        top: 0;             /* Alinhado ao topo exato */
+        left: 0;            /* Alinhado à esquerda exata */
+        width: 70px;        /* Mesma largura da sidebar encolhida */
+        height: 70px;       /* Mesma altura dos itens da sidebar */
+        background-color: transparent; /* Sem cor de fundo */
+        border: none;        /* Sem bordas */
+        border-radius: 0;    /* Sem cantos arredondados */
+        z-index: 3000;       /* Sempre acima de tudo */
         align-items: center;
         justify-content: center;
         cursor: pointer;
     }
 
     .btn-menu-movel img {
-        width: 30px;
-        height: 30px;
-        filter: invert(1); /* Deixa o ícone branco se for preto */
+        width: 40px;        /* Mesmo tamanho dos ícones do menu */
+        height: 40px;
+        /* Se o teu ícone for preto e o fundo do site for branco, não precisas de filtro.
+           Se o ícone não aparecer, podes tentar usar: filter: invert(1); */
+    }
+
+    /* Ajuste para o conteúdo principal não ficar por baixo do ícone */
+    main {
+        padding-top: 80px; /* Dá espaço para o ícone no topo */
     }
 }
 
@@ -379,7 +385,7 @@
     <div class="btn-menu-movel" onclick="toggleSidebar()">
         <img src="imagens/menu/menu-hamburguer.png" alt="Abrir Menu">
     </div>
-    
+
     <nav id="sidebar">
         <div class="sidebar-item">
             <img src="imagens/menu/menu-hamburguer.png" alt="Menu">
