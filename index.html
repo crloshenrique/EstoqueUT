@@ -24,7 +24,7 @@
             gap: 10px;
             transition: all 0.5s ease;
         }
-        
+
         /* Estilo do Alerta Flutuante */
         .toast-sucesso {
             position: fixed;
@@ -408,8 +408,17 @@
                 .estoque-geral-container {
                     display: flex;
                     align-items: center; 
-                    gap: 15px; /* Isso garante que o estoque e o dinheiro não fiquem grudados */
+                    justify-content: space-between; /* Adicione isso para separar os dois */
+                    gap: 8px; 
                     margin-top: 8px;
+                    width: 100%; /* Garante que use a largura toda */
+                }
+
+                /* Adicione este estilo para os mini-blocos internos */
+                .mini-detalhe {
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
                 }
 
                 /* Mantém seus ajustes de cores do verso */
