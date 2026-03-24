@@ -389,13 +389,14 @@
         object-fit: cover !important;
     }
 
-    .info-produto {
-        /* Padding lateral equilibrado para dar espaço aos números */
+.info-produto {
         padding: 8px 8px !important; 
         display: flex !important;
         flex-direction: column !important;
+        /* Mudamos de space-between para flex-start para tirar o buraco */
+        justify-content: flex-start !important; 
         flex-grow: 1 !important;
-        justify-content: space-between !important;
+        gap: 2px !important; /* Controla a distância mínima entre título e estoque */
     }
 
     .info-produto h3 {
