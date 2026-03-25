@@ -5,75 +5,174 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PDV Unter Tech</title>
     <style>
+        
+/* Estilos para a busca de alteração - Centralizada */
+.container-busca-alterar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+}
 
-        /* Estilos para os Alertas (Toasts) */
-.toast-sucesso, .toast-erro {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 15px 30px;
-    border-radius: 8px;
+.wrapper-input-select {
+    position: relative;
+    flex: 1;
+    max-width: 500px;
+}
+
+#inputBuscaAlterar {
+    width: 100%;
+    padding: 12px 45px 12px 20px; /* Padding extra na direita para a seta */
+    border-radius: 25px;
+    border: 2px solid #eee;
+    outline: none;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    text-align: left; /* Garante texto alinhado à esquerda */
+}
+
+#inputBuscaAlterar:focus {
+    border-color: var(--accent-color);
+}
+
+.seta-busca-alterar {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 15px;
+    cursor: pointer;
+    /* Filtro para deixar o ícone azul (aproximado do seu --accent-color) */
+    filter: invert(18%) sepia(88%) saturate(3452%) hue-rotate(209deg) brightness(91%) contrast(101%);
+}
+
+/* Padronização do Placeholder */
+#inputBuscaAlterar::placeholder {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1rem;
+    color: #999;
+}
+
+#listaSugestoes {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 10px;
+    right: 10px;
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    max-height: 250px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    text-align: left; /* Resultados alinhados à esquerda */
+}
+
+.sugestao-item {
+    padding: 12px 20px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    border-bottom: 1px solid #f9f9f9;
+}
+
+.sugestao-item:hover {
+    background-color: #f0f7ff;
+    color: var(--accent-color);
+}
+
+.btn-prosseguir {
+    padding: 12px 30px;
+    background-color: var(--accent-color);
     color: white;
+    border: none;
+    border-radius: 25px; /* Arredondado para combinar com o input */
     font-weight: bold;
-    z-index: 10000;
-    transition: all 0.5s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    cursor: pointer;
+    transition: all 0.2s;
+    height: 48px; /* Alinha a altura com o input */
     display: flex;
     align-items: center;
-    gap: 10px;
 }
 
-.toast-sucesso {
-    background-color: #28a745; /* Verde */
+.btn-prosseguir:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.7;
 }
 
-.toast-erro {
-    background-color: #dc3545; /* Vermelho */
-}
+        /* Estilos para os Alertas (Toasts) */
+        .toast-sucesso, .toast-erro {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 30px;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            z-index: 10000;
+            transition: all 0.5s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-.toast-hidden {
-    top: -100px; /* Esconde para cima */
-    opacity: 0;
-}
+        .toast-sucesso {
+            background-color: #28a745; /* Verde */
+        }
 
-@media (max-width: 768px) {
-    #formAdicionar {
-        display: flex !important; /* Essencial para o 'order' funcionar */
-        flex-direction: column !important;
-        gap: 20px !important;
-        width: 100% !important;
-    }
+        .toast-erro {
+            background-color: #dc3545; /* Vermelho */
+        }
 
-    #bloco-dados-produto { 
-        order: 1; 
-        width: 100% !important;
-    }
+        .toast-hidden {
+            top: -100px; /* Esconde para cima */
+            opacity: 0;
+        }
 
-    #bloco-estoques-cores { 
-        order: 2; 
-        width: 100% !important;
-    }
+        @media (max-width: 768px) {
+            #formAdicionar {
+                display: flex !important; /* Essencial para o 'order' funcionar */
+                flex-direction: column !important;
+                gap: 20px !important;
+                width: 100% !important;
+            }
 
-    #btn-salvar-produto { 
-        order: 3; 
-        width: 100% !important;
-        margin-top: 10px;
-        padding: 15px !important;
-    }
-    
-    /* Garante que os retângulos das cores ocupem a largura toda no mobile */
-    [id^="container-cores-"] {
-        grid-template-columns: 1fr !important; 
-    }
-}
+            #bloco-dados-produto { 
+                order: 1; 
+                width: 100% !important;
+            }
 
-@media (min-width: 769px) {
-    #btn-salvar-produto {
-        grid-column: 1;
-        margin-top: -10px;
-    }
-}
+            #bloco-estoques-cores { 
+                order: 2; 
+                width: 100% !important;
+            }
+
+            #btn-salvar-produto { 
+                order: 3; 
+                width: 100% !important;
+                margin-top: 10px;
+                padding: 15px !important;
+            }
+            
+            /* Garante que os retângulos das cores ocupem a largura toda no mobile */
+            [id^="container-cores-"] {
+                grid-template-columns: 1fr !important; 
+            }
+        }
+
+        @media (min-width: 769px) {
+            #btn-salvar-produto {
+                grid-column: 1;
+                margin-top: -10px;
+            }
+        }
 
         /* Variáveis de Cores (Inspiradas no seu anexo) */
         :root {

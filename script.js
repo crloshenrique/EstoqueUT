@@ -10,7 +10,8 @@ async function mostrarEstoque() {
 
     const { data: produtos, error } = await _supabase
         .from('produtos')
-        .select('*');
+        .select('*')
+        .order('updated_at', { ascending: false });
 
     if (error) {
         mainContent.innerHTML = '<p>Erro ao carregar: ' + error.message + '</p>';
@@ -18,8 +19,8 @@ async function mostrarEstoque() {
     }
 
     let html = `
-        <h1>Estoque</h1>
-        <div class="busca-container">
+            <h1 style="text-align: center; width: 100%; margin-bottom: 30px;">Estoque</h1>
+            <div class="busca-container">
             <div class="busca-wrapper">
                 <input type="text" id="inputBusca" placeholder="Pesquisar produto..." onkeyup="filtrarProdutos()">
                 <img src="imagens/filtro.png" class="icone-filtro-busca" onclick="toggleMenuFiltro()">
@@ -35,14 +36,21 @@ async function mostrarEstoque() {
         let listaCoresHtml = "";
 
         // Percorre Estoque C e Estoque E
-        Object.entries(dadosEstoque).forEach(([nomeEstoque, cores]) => {
+        ["Estoque C", "Estoque E"].forEach((nomeEstoque) => {
+            const cores = dadosEstoque[nomeEstoque] || {};
+            
             // Título do Estoque
             listaCoresHtml += `<div style="font-weight: bold; margin-top: 10px; margin-bottom: 5px; color: var(--accent-color); border-bottom: 1px solid #eee; width: 100%; font-size: 0.85rem;">${nomeEstoque}</div>`;
 
             // Criamos uma mini-grid para as cores deste estoque específico
             listaCoresHtml += `<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; justify-items: center; width: 100%; margin-bottom: 10px;">`;
 
-            Object.entries(cores).forEach(([cor, qtd]) => {
+            // --- LÓGICA PARA MANTER A ORDEM ---
+            const chaveOrdem = nomeEstoque === "Estoque C" ? "ordemC" : "ordemE";
+            const ordemParaUsar = dadosEstoque[chaveOrdem] || Object.keys(cores);
+
+            ordemParaUsar.forEach((cor) => {
+                const qtd = cores[cor];
                 const quantidade = Number(qtd) || 0;
                 estoqueGeral += quantidade;
 
@@ -284,46 +292,48 @@ function mostrarOpcoesAlterar() {
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 70vh; gap: 40px; padding: 20px;">
             <h1 style="margin-bottom: 20px;">O que deseja fazer?</h1>
             <div style="display: flex; gap: 50px; flex-wrap: wrap; justify-content: center;">
-                <div class="opcao-alterar" style="text-align: center; cursor: pointer;" onclick="console.log('Em breve: Alterar')">
-                    <div style="width: 120px; height: 120px; background: #f4f4f4; border-radius: 20px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--accent-color); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
-                        <img src="imagens/alterar.png" style="width: 60px; height: 60px; object-fit: contain;">
-                    </div>
-                    <p style="margin-top: 15px; font-weight: bold; color: var(--text-color);">Alterar</p>
-                </div>
-
                 <div class="opcao-alterar" style="text-align: center; cursor: pointer;" onclick="exibirFormularioAdicionar()">
                     <div style="width: 120px; height: 120px; background: #f4f4f4; border-radius: 20px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--accent-color); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
                         <img src="imagens/adicionar.png" style="width: 60px; height: 60px; object-fit: contain;">
                     </div>
                     <p style="margin-top: 15px; font-weight: bold; color: var(--text-color);">Adicionar</p>
                 </div>
+
+                <div class="opcao-alterar" style="text-align: center; cursor: pointer;" onclick="exibirBuscaAlterar()">
+                    <div style="width: 120px; height: 120px; background: #f4f4f4; border-radius: 20px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--accent-color); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                        <img src="imagens/alterar.png" style="width: 60px; height: 60px; object-fit: contain;">
+                    </div>
+                    <p style="margin-top: 15px; font-weight: bold; color: var(--text-color);">Alterar</p>
+                </div>
             </div>
         </div>
     `;
 }
 
-// Função que renderiza o formulário de cadastro
-function exibirFormularioAdicionar() {
+function exibirFormularioAdicionar(produto = null) {
     const mainContent = document.getElementById('main-content');
-    
+    const modoEdicao = produto !== null; // Se recebeu um produto, é modo edição
+
     mainContent.innerHTML = `
         <div style="max-width: 1000px; margin: 0 auto; animation: fadeIn 0.3s ease;">
-            <h1 style="margin-bottom: 30px; font-size: 1.8rem; border-bottom: 2px solid #f4f4f4; padding-bottom: 10px;">Cadastrar novo produto</h1>
+            <h1 style="text-align: center; margin-bottom: 30px; font-size: 1.8rem; border-bottom: 2px solid #f4f4f4; padding-bottom: 10px; width: 100%;">
+                ${modoEdicao ? 'Alterar produto' : 'Cadastrar novo produto'}
+            </h1>
 
-            <form id="formAdicionar" style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; align-items: start;">
+            <form id="formAdicionar" data-id-edicao="${modoEdicao ? produto.id : ''}" style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; align-items: start;">
                 
                 <div id="bloco-dados-produto">
                     <div style="background: white; padding: 25px; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
                         <div style="margin-bottom: 15px;">
                             <label style="font-weight: bold; display: block; margin-bottom: 8px; font-size: 0.9rem;">Nome</label>
-                            <input type="text" id="addNome" placeholder="Ex: Smartwatch Ultra 9" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; outline: none;">
+                            <input type="text" id="addNome" value="${modoEdicao ? produto.nome : ''}" placeholder="Ex: Smartwatch Ultra 9" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; outline: none;">
                         </div>
 
                         <div style="margin-bottom: 15px;">
-                            <label style="font-weight: bold; display: block; margin-bottom: 8px; font-size: 0.9rem;">Imagem</label>
+                            <label style="font-weight: bold; display: block; margin-bottom: 8px; font-size: 0.9rem;">Imagem ${modoEdicao ? '(Opcional)' : ''}</label>
                             <label for="addImagem" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; background: #f4f4f4; border: 2px dashed #ddd; border-radius: 8px; cursor: pointer; color: #666; font-size: 0.85rem;">
                                 <img src="imagens/menu/menu-adicionar.png" style="width: 20px; opacity: 0.5;">
-                                <span id="labelNomeArquivo">Clique para fazer upload</span>
+                                <span id="labelNomeArquivo">${modoEdicao ? 'Trocar imagem...' : 'Clique para fazer upload'}</span>
                                 <input type="file" id="addImagem" accept="image/*" style="display: none;" onchange="document.getElementById('labelNomeArquivo').innerText = this.files[0].name">
                             </label>
                         </div>
@@ -346,9 +356,9 @@ function exibirFormularioAdicionar() {
                                     font-size: 0.9rem;
                                     margin-right: 4px;
                                     display: inline-block;
-                                    line-height: 1; /* Força o alinhamento central */
+                                    line-height: 1; 
                                 ">R$</span>
-                                <input type="number" id="addValor" step="0.01" placeholder="0,00" 
+                                <input type="number" id="addValor" step="0.01" value="${modoEdicao ? produto.valor : ''}" placeholder="0,00" 
                                     style="
                                         flex: 1;
                                         border: none;
@@ -358,37 +368,36 @@ function exibirFormularioAdicionar() {
                                         height: 100%;
                                         margin: 0;
                                         padding: 0;
-                                        appearance: textfield; /* Remove setas no Firefox */
-                                        -webkit-appearance: none; /* Remove setas no Chrome/Safari */
+                                        appearance: textfield;
+                                        -webkit-appearance: none;
                                         line-height: 1;
                                     ">
                             </div>
                         </div>
 
-
                         <div>
                             <label style="font-weight: bold; display: block; margin-bottom: 8px; font-size: 0.9rem;">Categoria</label>
-                    <select id="addTipo" style="
-                            width: 100%; 
-                            padding: 12px; 
-                            padding-right: 35px; /* Adicionamos este espaço para a seta não encostar na borda */
-                            border-radius: 8px; 
-                            border: 1px solid #ddd; 
-                            background: white; 
-                            outline: none;
-                            appearance: none; /* Opcional: remove a seta padrão se quiser usar uma customizada no futuro */
-                            -webkit-appearance: none;
-                            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
-                            background-repeat: no-repeat;
-                            background-position: right 12px top 50%; /* Posiciona a seta com 12px de distância da borda direita */
-                            background-size: 12px auto;
-                        ">
-                            <option value="" disabled selected>Selecione</option>
-                            <option value="Carregador">Carregador</option>
-                            <option value="Smartwatch">Smartwatch</option>
-                            <option value="Fone de Ouvido">Fone de Ouvido</option>
-                            <option value="Cabo">Cabo</option>
-                        </select>
+                            <select id="addTipo" style="
+                                    width: 100%; 
+                                    padding: 12px; 
+                                    padding-right: 35px;
+                                    border-radius: 8px; 
+                                    border: 1px solid #ddd; 
+                                    background: white; 
+                                    outline: none;
+                                    appearance: none;
+                                    -webkit-appearance: none;
+                                    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+                                    background-repeat: no-repeat;
+                                    background-position: right 12px top 50%;
+                                    background-size: 12px auto;
+                                ">
+                                <option value="" disabled ${!modoEdicao ? 'selected' : ''}>Selecione</option>
+                                <option value="Carregador" ${modoEdicao && produto.tipo === 'Carregador' ? 'selected' : ''}>Carregador</option>
+                                <option value="Smartwatch" ${modoEdicao && produto.tipo === 'Smartwatch' ? 'selected' : ''}>Smartwatch</option>
+                                <option value="Fone de Ouvido" ${modoEdicao && produto.tipo === 'Fone de Ouvido' ? 'selected' : ''}>Fone de Ouvido</option>
+                                <option value="Cabo" ${modoEdicao && produto.tipo === 'Cabo' ? 'selected' : ''}>Cabo</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -409,7 +418,7 @@ function exibirFormularioAdicionar() {
 
                 <button type="button" id="btn-salvar-produto" onclick="salvarNovoProduto()" 
                     style="padding: 20px; background: var(--accent-color); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem; box-shadow: 0 4px 15px rgba(0, 71, 171, 0.2);">
-                    Salvar produto
+                    ${modoEdicao ? 'Alterar produto' : 'Salvar produto'}
                 </button>
             </form>
         </div>
@@ -422,7 +431,24 @@ function exibirFormularioAdicionar() {
             </div>
         </div>
     `;
+
+    // Lógica para preencher as cores existentes em caso de edição
+    if (modoEdicao && produto.cor) {
+        if (produto.cor["Estoque C"]) {
+            estoqueAlvoAtual = 'C';
+            Object.entries(produto.cor["Estoque C"]).forEach(([cor, qtd]) => {
+                adicionarCorAoEstoque(cor, qtd);
+            });
+        }
+        if (produto.cor["Estoque E"]) {
+            estoqueAlvoAtual = 'E';
+            Object.entries(produto.cor["Estoque E"]).forEach(([cor, qtd]) => {
+                adicionarCorAoEstoque(cor, qtd);
+            });
+        }
+    }
 }
+
 let estoqueAlvoAtual = ''; 
 
 function abrirSeletorCores(estoque) {
@@ -440,7 +466,7 @@ function abrirSeletorCores(estoque) {
     `).join('');
 }
 
-function adicionarCorAoEstoque(cor) {
+function adicionarCorAoEstoque(cor, quantidade = 0) {
     const container = document.getElementById(`container-cores-${estoqueAlvoAtual}`);
     
     if (container.querySelector(`[data-cor="${cor}"]`)) {
@@ -453,14 +479,14 @@ function adicionarCorAoEstoque(cor) {
         <div style="
             display: flex; 
             align-items: center; 
-            justify-content: space-between; /* Força o alinhamento nas extremidades */
+            justify-content: space-between; 
             gap: 5px; 
             background: #f9f9f9; 
             padding: 6px 10px; 
             border-radius: 8px; 
             border: 1px solid #eee; 
             animation: scaleIn 0.2s ease;
-            width: 100%; /* Garante que ocupe o espaço do grid */
+            width: 100%; 
             box-sizing: border-box;
         ">
             <div style="display: flex; align-items: center; gap: 6px; overflow: hidden;">
@@ -469,7 +495,7 @@ function adicionarCorAoEstoque(cor) {
             </div>
             
             <div style="display: flex; align-items: center; gap: 4px; flex-shrink: 0;">
-                <input type="number" value="0" min="0" data-estoque="Estoque ${estoqueAlvoAtual}" data-cor="${cor}" 
+                <input type="number" value="${quantidade}" min="0" data-estoque="Estoque ${estoqueAlvoAtual}" data-cor="${cor}" 
                     style="
                         width: 38px; 
                         border: 1px solid #ddd; 
@@ -523,102 +549,129 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function salvarNovoProduto() {
     const btn = document.getElementById('btn-salvar-produto');
-    
-    // 1. Captura de Campos Básicos
-    const nome = document.getElementById('addNome').value;
+    const form = document.getElementById('formAdicionar');
+    const idEdicao = form.getAttribute('data-id-edicao');
+    const modoEdicao = idEdicao !== ""; 
+
+    const nome = document.getElementById('addNome').value.trim();
+    const valorRaw = document.getElementById('addValor').value;
+    const valor = parseFloat(valorRaw);
     const tipo = document.getElementById('addTipo').value;
-    const valorInput = document.getElementById('addValor').value;
-    const inputImagem = document.getElementById('addImagem');
+    const imagemFile = document.getElementById('addImagem').files[0];
 
-        if (!nome) {
-            mostrarAlerta("O campo 'Nome' é obrigatório!", "erro");
-            return;
-        }
-        if (!inputImagem.files || inputImagem.files.length === 0) {
-            mostrarAlerta("Selecione uma imagem para o produto!", "erro");
-            return;
-        }
-        if (!valorInput) {
-            mostrarAlerta("O campo 'Valor' é obrigatório!", "erro");
-            return;
-        }
-        if (!tipo) {
-            mostrarAlerta("Selecione uma categoria!", "erro");
-            return;
-        }
+    // --- VALIDAÇÕES EM ORDEM (CIMA PARA BAIXO) ---
+    
+    // 1. Nome
+    if (!nome) {
+        mostrarAlerta("Digite um nome para o produto!", "erro");
+        return;
+    }
 
-        // Se chegar aqui, todos os campos estão preenchidos
-        btn.disabled = true;
-        btn.innerText = "Salvando...";
+    // 2. Imagem (Obrigatória apenas no cadastro)
+    if (!modoEdicao && !imagemFile) {
+        mostrarAlerta("Selecione uma imagem do produto!", "erro");
+        return;
+    }
+
+    // 3. Valor
+    if (!valorRaw || isNaN(valor) || valor <= 0) {
+        mostrarAlerta("Digite o valor do produto!", "erro");
+        return;
+    }
+
+    // 4. Categoria
+    if (!tipo) {
+        mostrarAlerta("Escolha a categoria do produto!", "erro");
+        return;
+    }
+
+    // --- FIM DAS VALIDAÇÕES ---
+
+    btn.disabled = true;
+    btn.innerText = "Salvando...";
 
     try {
-        // 2. Captura de Cores e Quantidades (Dinâmico)
-        // Criamos o objeto no formato que o seu banco espera
-        let coresFinal = { "Estoque C": {}, "Estoque E": {} };
-
-        // Buscamos todos os inputs de número dentro dos containers de cores
-        const inputsCores = document.querySelectorAll('input[data-cor]');
+        let urlImagem = "";
         
-        inputsCores.forEach(input => {
-            // Pegamos o valor, se estiver vazio vira 0
-            const qtd = parseInt(input.value) || 0; 
-            
-            const cor = input.getAttribute('data-cor');
-            const estoque = input.getAttribute('data-estoque');
-            
-            // Removemos o "if (qtd > 0)", assim ele salva mesmo sendo zero
-            coresFinal[estoque][cor] = qtd;
-        });
-
-        // 3. Upload da Imagem para o bucket 'fotos-produtos'
-        let imagem_url = "";
-        if (inputImagem.files && inputImagem.files[0]) {
-            const arquivo = inputImagem.files[0];
-            const extensao = arquivo.name.split('.').pop();
-            const nomeArquivo = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${extensao}`;
-            const caminhoArquivo = `public/${nomeArquivo}`;
-
+        // Upload da imagem para a pasta 'fotos-produtos'
+        if (imagemFile) {
+            const nomeArquivo = `${Date.now()}_${imagemFile.name}`;
             const { data: uploadData, error: uploadError } = await _supabase.storage
-                .from('fotos-produtos') // Nome do seu bucket
-                .upload(caminhoArquivo, arquivo);
+                .from('fotos-produtos') // Nome da pasta atualizado
+                .upload(nomeArquivo, imagemFile);
 
             if (uploadError) throw uploadError;
 
-            // Gerar URL pública
-            const { data: urlData } = _supabase.storage
+            const { data: publicUrlData } = _supabase.storage
                 .from('fotos-produtos')
-                .getPublicUrl(caminhoArquivo);
+                .getPublicUrl(nomeArquivo);
             
-            imagem_url = urlData.publicUrl;
+            urlImagem = publicUrlData.publicUrl;
         }
 
-        // 4. Inserção no Supabase (Tabela 'produtos')
-        const { error: insertError } = await _supabase
-            .from('produtos')
-            .insert([
-                { 
-                    nome: nome, 
-                    tipo: tipo, 
-                    valor: parseFloat(valorInput), 
-                    cor: coresFinal, 
-                    imagem_url: imagem_url 
-                }
-            ]);
+        const coresC = {};
+        const ordemC = []; // <-- ADICIONADO PARA ORDEM
+        document.querySelectorAll('#container-cores-C input').forEach(input => {
+            const cor = input.dataset.cor;
+            coresC[cor] = parseInt(input.value) || 0;
+            ordemC.push(cor); // <-- ADICIONADO PARA ORDEM
+        });
 
-        if (insertError) throw insertError;
+        const coresE = {};
+        const ordemE = []; // <-- ADICIONADO PARA ORDEM
+        document.querySelectorAll('#container-cores-E input').forEach(input => {
+            const cor = input.dataset.cor;
+            coresE[cor] = parseInt(input.value) || 0;
+            ordemE.push(cor); // <-- ADICIONADO PARA ORDEM
+        });
 
-        mostrarAlerta("Produto cadastrado com sucesso!", "sucesso");
+        const dadosProduto = {
+            nome,
+            valor,
+            tipo,
+            cor: {
+                "Estoque C": coresC,
+                "Estoque E": coresE,
+                "ordemC": ordemC, // <-- SALVANDO A ORDEM
+                "ordemE": ordemE  // <-- SALVANDO A ORDEM
+            }
+        };
+
+        if (urlImagem) {
+            dadosProduto.imagem_url = urlImagem;
+        }
+
+        if (modoEdicao) {
+            const { error } = await _supabase
+                .from('produtos')
+                .update(dadosProduto)
+                .eq('id', idEdicao);
+            
+            if (error) throw error;
+            
+            mostrarAlerta("Produto alterado com sucesso!", "sucesso");
+        } else {
+            if (!urlImagem) dadosProduto.imagem_url = ""; 
+            
+            const { error } = await _supabase
+                .from('produtos')
+                .insert([dadosProduto]);
+            
+            if (error) throw error;
+
+            mostrarAlerta("Produto cadastrado com sucesso!", "sucesso");
+        }
 
         setTimeout(() => {
-            exibirFormularioAdicionar();
-        }, 500); 
+            mostrarEstoque();
+        }, 1500);
 
     } catch (error) {
         console.error("Erro ao salvar:", error);
-        alert("Erro: " + error.message);
+        mostrarAlerta("Erro ao salvar produto: " + error.message, "erro");
     } finally {
         btn.disabled = false;
-        btn.innerText = "Salvar Produto";
+        btn.innerText = modoEdicao ? "Alterar produto" : "Salvar produto";
     }
 }
 
@@ -635,4 +688,182 @@ function mostrarAlerta(mensagem, tipo = 'sucesso') {
         toast.classList.add('toast-hidden');
         setTimeout(() => toast.remove(), 500);
     }, 3000);
+}
+
+async function exibirBuscaAlterar() {
+    const mainContent = document.getElementById('main-content');
+    
+    mainContent.innerHTML = `
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; width: 100%; animation: fadeIn 0.3s ease;">
+            <div style="text-align: center; width: 100%; max-width: 600px;">
+                <h1 style="margin-bottom: 10px;">Alterar produto</h1>
+                <p style="margin-bottom: 30px; color: #666;">Selecione o produto abaixo para prosseguir</p>
+                
+                <div class="container-busca-alterar">
+                    <div class="wrapper-input-select">
+                        <input type="text" id="inputBuscaAlterar" 
+                               placeholder="Pesquise..." 
+                               autocomplete="off" 
+                               oninput="filtrarSugestoesAlterar()"
+                               onclick="mostrarTodasSugestoes()"
+                        >
+                        <img src="data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E" 
+                             class="seta-busca-alterar" 
+                             onclick="toggleListaAlterar(event)">
+                        
+                        <div id="listaSugestoes"></div>
+                    </div>
+                    <button id="btnProsseguirAlterar" class="btn-prosseguir" disabled onclick="prosseguirParaEdicao()">Prosseguir</button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Busca produtos por ordem de inserção (id crescente no Supabase geralmente reflete isso)
+    const { data: produtos } = await _supabase
+        .from('produtos')
+        .select('nome, id')
+        .order('updated_at', { ascending: false });
+        
+    window.listaProdutosCache = produtos || [];
+}
+
+function filtrarSugestoesAlterar() {
+    const input = document.getElementById('inputBuscaAlterar');
+    const lista = document.getElementById('listaSugestoes');
+    const btn = document.getElementById('btnProsseguirAlterar');
+    const termo = input.value.toLowerCase().trim();
+    
+    // Reseta o botão sempre que digitar
+    btn.disabled = true;
+
+    if (termo === "") {
+        lista.style.display = "none";
+        return;
+    }
+
+    // Lógica: Alguma palavra do nome deve COMEÇAR com o termo
+    const filtrados = window.listaProdutosCache.filter(p => {
+        const palavras = p.nome.toLowerCase().split(" ");
+        return palavras.some(palavra => palavra.startsWith(termo));
+    });
+
+    if (filtrados.length > 0) {
+        lista.innerHTML = filtrados.map(p => `
+            <div class="sugestao-item" onclick="selecionarProdutoAlterar('${p.nome}', '${p.id}')">
+                ${p.nome}
+            </div>
+        `).join('');
+        lista.style.display = "block";
+    } else {
+        lista.style.display = "none";
+    }
+}
+
+function selecionarProdutoAlterar(nome, id) {
+    const input = document.getElementById('inputBuscaAlterar');
+    const lista = document.getElementById('listaSugestoes');
+    const btn = document.getElementById('btnProsseguirAlterar');
+    
+    input.value = nome;
+    input.dataset.idSelecionado = id; // Guarda o ID para o próximo passo
+    lista.style.display = "none";
+    btn.disabled = false; // Libera o botão
+}
+
+function prosseguirParaEdicao() {
+    const id = document.getElementById('inputBuscaAlterar').dataset.idSelecionado;
+    alert("Iniciando edição do produto ID: " + id);
+    // Aqui no futuro chamaremos a função de montar o formulário com dados preenchidos
+}
+
+function mostrarTodasSugestoes() {
+    const lista = document.getElementById('listaSugestoes');
+    if (window.listaProdutosCache && window.listaProdutosCache.length > 0) {
+        renderizarListaFiltrada(window.listaProdutosCache);
+        lista.style.display = "block";
+    }
+}
+
+function toggleListaAlterar(event) {
+    event.stopPropagation(); // Impede fechar imediatamente
+    const lista = document.getElementById('listaSugestoes');
+    if (lista.style.display === "block") {
+        lista.style.display = "none";
+    } else {
+        mostrarTodasSugestoes();
+    }
+}
+
+function filtrarSugestoesAlterar() {
+    const input = document.getElementById('inputBuscaAlterar');
+    const lista = document.getElementById('listaSugestoes');
+    const btn = document.getElementById('btnProsseguirAlterar');
+    const termo = input.value.toLowerCase().trim();
+    
+    btn.disabled = true;
+
+    if (termo === "") {
+        renderizarListaFiltrada(window.listaProdutosCache);
+        return;
+    }
+
+    const filtrados = window.listaProdutosCache.filter(p => {
+        const palavras = p.nome.toLowerCase().split(" ");
+        return palavras.some(palavra => palavra.startsWith(termo));
+    });
+
+    if (filtrados.length > 0) {
+        renderizarListaFiltrada(filtrados);
+        lista.style.display = "block";
+    } else {
+        lista.style.display = "none";
+    }
+}
+
+// Função auxiliar para renderizar o HTML da lista
+function renderizarListaFiltrada(dados) {
+    const lista = document.getElementById('listaSugestoes');
+    lista.innerHTML = dados.map(p => `
+        <div class="sugestao-item" onclick="selecionarProdutoAlterar('${p.nome}', '${p.id}')">
+            ${p.nome}
+        </div>
+    `).join('');
+}
+
+// Fecha a lista se clicar fora do campo de busca
+document.addEventListener('click', (e) => {
+    const container = document.querySelector('.wrapper-input-select');
+    const lista = document.getElementById('listaSugestoes');
+    if (lista && !container.contains(e.target)) {
+        lista.style.display = 'none';
+    }
+});
+
+async function prosseguirParaEdicao() {
+    const id = document.getElementById('inputBuscaAlterar').dataset.idSelecionado;
+    if (!id) return;
+
+    const btn = document.getElementById('btnProsseguirAlterar');
+    btn.disabled = true;
+    btn.innerText = "Carregando...";
+
+    try {
+        const { data: produto, error } = await _supabase
+            .from('produtos')
+            .select('*')
+            .eq('id', id)
+            .single();
+
+        if (error) throw error;
+
+        // Aqui chamamos a sua função original, mas passando os dados do banco
+        exibirFormularioAdicionar(produto);
+    } catch (error) {
+        console.error("Erro ao buscar produto:", error);
+        mostrarAlerta("Erro ao carregar dados do produto", "erro");
+    } finally {
+        btn.disabled = false;
+        btn.innerText = "Prosseguir";
+    }
 }
