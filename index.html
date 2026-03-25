@@ -308,19 +308,25 @@
 
     /* Botão Flutuante (Hambúrguer) */
 .btn-menu-movel {
-        display: flex;
-        position: absolute;  /* Muda de fixed para absolute */
-        top: 0;
-        right: -70px;       /* Joga o ícone para fora da lateral direita da barra */
-        width: 70px;
-        height: 70px;
-        background-color: transparent; 
-        border: none;
-        z-index: 3000;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-    }
+    display: flex;
+    position: absolute; 
+    top: 10px;          /* Dei uma leve folga do topo */
+    right: -60px;       /* Ajustado para não ficar colado na borda da tela */
+    width: 50px;        /* Reduzi um pouco para o design da borda ficar elegante */
+    height: 50px;
+    z-index: 3000;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    
+    /* O Design que você quer */
+    background-color: #1f1f1f;
+    border: 1px solid var(--accent-color);
+    border-radius: 8px;
+    
+    /* Suaviza a aparição */
+    transition: all 0.3s ease;
+}
 
     .btn-menu-movel img {
         width: 40px;        /* Mesmo tamanho dos ícones do menu */
