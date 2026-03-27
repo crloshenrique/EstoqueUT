@@ -1416,7 +1416,7 @@ function solicitarSenha(acao) {
                 <p style="margin-top: 5px; color: #666; font-size: clamp(0.8rem, 3vw, 1rem);">Digite a sua senha para prosseguir</p>
             </div>
             
-            <div style="display: flex; gap: 10px; align-items: center; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee;">
+            <div style="display: flex; gap: 10px; align-items: center; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee;">
                 <input type="password" id="campoSenhaUT" placeholder="Senha" 
                     style="padding: 10px 20px; border-radius: 25px; border: 2px solid #eee; outline: none; font-size: 1rem; width: 200px; transition: border-color 0.3s;"
                     onfocus="this.style.borderColor='var(--accent-color)'"
