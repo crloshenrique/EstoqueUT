@@ -65,8 +65,9 @@ let html = `
             const cores = dadosEstoque[nomeEstoque] || {};
             
             // Título do Estoque
-            listaCoresHtml += `<div style="font-weight: bold; margin-top: 10px; margin-bottom: 5px; color: var(--accent-color); border-bottom: 1px solid #eee; width: 100%; font-size: 0.85rem;">${nomeEstoque}</div>`;
+const margemTopDinamica = nomeEstoque === "Estoque E" ? "0px" : "10px";
 
+listaCoresHtml += `<div style="font-weight: bold; margin-top: ${margemTopDinamica}; margin-bottom: 5px; color: var(--accent-color); border-bottom: 1px solid #eee; width: 100%; font-size: 0.85rem;">${nomeEstoque}</div>`;
             // Criamos uma mini-grid para as cores deste estoque específico
             listaCoresHtml += `<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; justify-items: center; width: 100%; margin-bottom: 10px;">`;
 
