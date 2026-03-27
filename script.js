@@ -354,27 +354,36 @@ function mostrarOpcoesAlterar() {
     const mainContent = document.getElementById('main-content');
     mainContent.innerHTML = `
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 70vh; gap: 40px; padding: 20px;">
-            <h1 style="margin-bottom: 20px;">O que deseja fazer?</h1>
-            <div style="display: flex; gap: 50px; flex-wrap: wrap; justify-content: center;">
-                <div class="opcao-alterar" style="text-align: center; cursor: pointer;" onclick="exibirFormularioAdicionar()">
-                    <div style="width: 120px; height: 120px; background: #f4f4f4; border-radius: 20px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--accent-color); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
-                        <img src="imagens/adicionar.png" style="width: 60px; height: 60px; object-fit: contain;">
+            <h1 style="margin-bottom: 20px; font-size: clamp(1.2rem, 5vw, 2rem); text-align: center;">O que deseja fazer?</h1>
+            
+            <div style="
+                display: flex; 
+                /* No PC o gap é 50px, no Mobile ele diminui gradualmente para até 10px */
+                gap: clamp(10px, 4vw, 50px); 
+                flex-wrap: nowrap; 
+                justify-content: center;
+                width: 100%;
+                max-width: 600px;
+            ">
+                <div class="opcao-alterar" style="text-align: center; cursor: pointer; flex: 1; max-width: 120px;" onclick="exibirFormularioAdicionar()">
+                    <div style="aspect-ratio: 1/1; background: #f4f4f4; border-radius: 20px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--accent-color); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                        <img src="imagens/adicionar.png" style="width: 50%; height: 50%; object-fit: contain;">
                     </div>
-                    <p style="margin-top: 15px; font-weight: bold; color: var(--text-color);">Adicionar</p>
+                    <p style="margin-top: 15px; font-weight: bold; color: var(--text-color); font-size: clamp(0.8rem, 3vw, 1rem);">Adicionar</p>
                 </div>
 
-                <div class="opcao-alterar" style="text-align: center; cursor: pointer;" onclick="exibirBuscaAlterar()">
-                    <div style="width: 120px; height: 120px; background: #f4f4f4; border-radius: 20px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--accent-color); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
-                        <img src="imagens/alterar.png" style="width: 60px; height: 60px; object-fit: contain;">
+                <div class="opcao-alterar" style="text-align: center; cursor: pointer; flex: 1; max-width: 120px;" onclick="exibirBuscaAlterar()">
+                    <div style="aspect-ratio: 1/1; background: #f4f4f4; border-radius: 20px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--accent-color); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                        <img src="imagens/alterar.png" style="width: 50%; height: 50%; object-fit: contain;">
                     </div>
-                    <p style="margin-top: 15px; font-weight: bold; color: var(--text-color);">Alterar</p>
+                    <p style="margin-top: 15px; font-weight: bold; color: var(--text-color); font-size: clamp(0.8rem, 3vw, 1rem);">Alterar</p>
                 </div>
 
-                <div class="opcao-alterar" style="text-align: center; cursor: pointer;" onclick="exibirBuscaApagar()">
-                    <div style="width: 120px; height: 120px; background: #f4f4f4; border-radius: 20px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--accent-color); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
-                        <img src="imagens/apagar.png" style="width: 60px; height: 60px; object-fit: contain;">
+                <div class="opcao-alterar" style="text-align: center; cursor: pointer; flex: 1; max-width: 120px;" onclick="exibirBuscaApagar()">
+                    <div style="aspect-ratio: 1/1; background: #f4f4f4; border-radius: 20px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--accent-color); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                        <img src="imagens/apagar.png" style="width: 50%; height: 50%; object-fit: contain;">
                     </div>
-                    <p style="margin-top: 15px; font-weight: bold; color: var(--text-color);">Apagar</p>
+                    <p style="margin-top: 15px; font-weight: bold; color: var(--text-color); font-size: clamp(0.8rem, 3vw, 1rem);">Apagar</p>
                 </div>
 
             </div>
@@ -389,7 +398,7 @@ function exibirFormularioAdicionar(produto = null) {
     mainContent.innerHTML = `
         <div style="max-width: 1000px; margin: 0 auto; animation: fadeIn 0.3s ease;">
             <h1 style="text-align: center; margin-bottom: 30px; font-size: 1.8rem; border-bottom: 2px solid #f4f4f4; padding-bottom: 10px; width: 100%;">
-                ${modoEdicao ? 'Alterar produto' : 'Cadastrar novo produto'}
+                ${modoEdicao ? 'Alterar produto' : 'Cadastrar produto'}
             </h1>
 
             <form id="formAdicionar" data-id-edicao="${modoEdicao ? produto.id : ''}" style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; align-items: start;">
@@ -506,19 +515,29 @@ function exibirFormularioAdicionar(produto = null) {
 
     // Lógica para preencher as cores existentes em caso de edição
     if (modoEdicao && produto.cor) {
-        if (produto.cor["Estoque C"]) {
-            estoqueAlvoAtual = 'C';
-            Object.entries(produto.cor["Estoque C"]).forEach(([cor, qtd]) => {
-                adicionarCorAoEstoque(cor, qtd);
-            });
-        }
-        if (produto.cor["Estoque E"]) {
-            estoqueAlvoAtual = 'E';
-            Object.entries(produto.cor["Estoque E"]).forEach(([cor, qtd]) => {
-                adicionarCorAoEstoque(cor, qtd);
-            });
-        }
+    // 1. Preencher Estoque C respeitando a ordem salva
+    if (produto.cor["Estoque C"]) {
+        estoqueAlvoAtual = 'C';
+        const ordemC = produto.cor["ordemC"] || Object.keys(produto.cor["Estoque C"]);
+        
+        ordemC.forEach(cor => {
+            const qtd = produto.cor["Estoque C"][cor];
+            adicionarCorAoEstoque(cor, qtd);
+        });
     }
+
+    // 2. Preencher Estoque E respeitando a ordem salva
+    if (produto.cor["Estoque E"]) {
+        estoqueAlvoAtual = 'E';
+        const ordemE = produto.cor["ordemE"] || Object.keys(produto.cor["Estoque E"]);
+        
+        ordemE.forEach(cor => {
+            const qtd = produto.cor["Estoque E"][cor];
+            adicionarCorAoEstoque(cor, qtd);
+        });
+    }
+    estoqueAlvoAtual = null;
+}
 }
 
 let estoqueAlvoAtual = ''; 
