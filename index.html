@@ -6,104 +6,238 @@
     <title>PDV Unter Tech</title>
     <style>
 
-/* Estilos para a busca de alteração - Centralizada */
-.container-busca-alterar {
+#secao-inicio {
     display: flex;
-    gap: 12px;
-    align-items: center;
+    flex-direction: column;
+    align-items: center;    /* Centraliza horizontalmente */
+    justify-content: center; /* Centraliza verticalmente (opcional) */
+    text-align: center;      /* Centraliza as linhas de texto */
+    padding: 20px;
+    min-height: 80vh;       /* Faz com que ocupe quase a tela toda para centralizar melhor */
+}
+
+#secao-inicio h1 {
+    margin-bottom: 5px;
+}
+
+#secao-inicio p {
+    color: #666;
+    max-width: 300px;       /* Evita que o texto fique muito largo em telas grandes */
+    margin-top: 15px;
+}
+
+
+/* Animação do ícone de carregamento */
+.loader-container {
+    display: flex;
     justify-content: center;
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
-    position: relative;
-}
-
-.wrapper-input-select {
-    position: relative;
-    flex: 1;
-    max-width: 500px;
-}
-
-#inputBuscaAlterar {
-    width: 100%;
-    padding: 12px 45px 12px 20px; /* Padding extra na direita para a seta */
-    border-radius: 25px;
-    border: 2px solid #eee;
-    outline: none;
-    font-size: 1rem;
-    transition: border-color 0.3s;
-    text-align: left; /* Garante texto alinhado à esquerda */
-}
-
-#inputBuscaAlterar:focus {
-    border-color: var(--accent-color);
-}
-
-.seta-busca-alterar {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 15px;
-    cursor: pointer;
-    /* Filtro para deixar o ícone azul (aproximado do seu --accent-color) */
-    filter: invert(18%) sepia(88%) saturate(3452%) hue-rotate(209deg) brightness(91%) contrast(101%);
-}
-
-/* Padronização do Placeholder */
-#inputBuscaAlterar::placeholder {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 1rem;
-    color: #999;
-}
-
-#listaSugestoes {
-    position: absolute;
-    top: calc(100% + 5px);
-    left: 10px;
-    right: 10px;
-    background: white;
-    border: 1px solid #eee;
-    border-radius: 12px;
-    max-height: 250px;
-    overflow-y: auto;
-    z-index: 1000;
-    display: none;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    text-align: left; /* Resultados alinhados à esquerda */
-}
-
-.sugestao-item {
-    padding: 12px 20px;
-    cursor: pointer;
-    font-size: 0.95rem;
-    border-bottom: 1px solid #f9f9f9;
-}
-
-.sugestao-item:hover {
-    background-color: #f0f7ff;
-    color: var(--accent-color);
-}
-
-.btn-prosseguir {
-    padding: 12px 30px;
-    background-color: var(--accent-color);
-    color: white;
-    border: none;
-    border-radius: 25px; /* Arredondado para combinar com o input */
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s;
-    height: 48px; /* Alinha a altura com o input */
-    display: flex;
     align-items: center;
+    height: 200px; /* Garante que fique centralizado na área de conteúdo */
+    width: 100%;
 }
 
-.btn-prosseguir:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-    opacity: 0.7;
+.loader {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3; /* Cor de fundo da trilha */
+    border-top: 4px solid var(--accent-color); /* O azul do seu site */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
 }
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+        #lista-registros-corpo {
+            max-height: 400px; 
+            overflow-y: auto;   /* Ativa vertical */
+            overflow-x: hidden; /* DESATIVA HORIZONTAL */
+            border: 1px solid #eee;
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            background: #fff;
+            width: 100%;        /* Garante que não passe do limite */
+            box-sizing: border-box; 
+        }
+
+        /* Estilo do botão Limpar */
+        .container-botoes-registros {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn-limpar-registros {
+            background-color: var(--accent-color); /* Usa o azul padrão do seu sistema */
+            color: white;
+            border: none;
+            padding: 12px 30px; 
+            border-radius: 25px; /* Formato arredondado igual ao 'Salvar' */
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px; /* Espaço extra no final da página */
+        }
+
+        .btn-limpar-registros:hover {
+            filter: brightness(1.1); /* Dá um leve brilho no azul ao passar o mouse */
+            transform: scale(1.05);  /* Efeito de aumento suave */
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn-limpar-registros:active {
+            transform: scale(0.98);
+        }
+
+        /* --- SEÇÃO DE REGISTROS SIMPLIFICADA --- */
+        #secao-registros h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .container-lista-registros {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 10px;
+        }
+
+        .header-registros {
+            padding: 15px 25px; /* Mesmo padding lateral dos itens */
+            background-color: var(--accent-color);
+            color: white;
+            font-weight: bold;
+            border-radius: 12px 12px 0 0;
+            text-align: left; /* Alinhado à esquerda como solicitado */
+        }
+
+        .item-registro {
+            display: grid;
+            grid-template-columns: 1fr auto; /* Nome ocupa o espaço e Data ocupa apenas o necessário */
+            gap: 15px;
+            padding: 18px 25px;
+            margin: 10px 0;
+            background-color: #f9f9f9;
+            border-radius: 12px;
+            transition: all 0.2s;
+            align-items: center;
+        }
+
+        .item-registro:hover {
+            background-color: #f0f7ff;
+            transform: translateX(5px);
+        }
+
+        .registro-nome { 
+            font-weight: 600; 
+            color: var(--text-color);
+        }
+
+        .registro-data { 
+            text-align: right; 
+            color: #888; 
+            font-size: 0.85rem; 
+        }
+
+        .container-busca-alterar {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .wrapper-input-select {
+            position: relative;
+            flex: 1;
+            max-width: 500px;
+        }
+
+        #inputBuscaAlterar {
+            width: 100%;
+            padding: 12px 45px 12px 20px; /* Padding extra na direita para a seta */
+            border-radius: 25px;
+            border: 2px solid #eee;
+            outline: none;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            text-align: left; /* Garante texto alinhado à esquerda */
+        }
+
+        #inputBuscaAlterar:focus {
+            border-color: var(--accent-color);
+        }
+
+        .seta-busca-alterar {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 15px;
+            cursor: pointer;
+            /* Filtro para deixar o ícone azul (aproximado do seu --accent-color) */
+            filter: invert(18%) sepia(88%) saturate(3452%) hue-rotate(209deg) brightness(91%) contrast(101%);
+        }
+
+        /* Padronização do Placeholder */
+        #inputBuscaAlterar::placeholder {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 1rem;
+            color: #999;
+        }
+
+        #listaSugestoes {
+            position: absolute;
+            top: calc(100% + 5px);
+            width: 100%;
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            max-height: 250px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: left; /* Resultados alinhados à esquerda */
+        }
+
+        .sugestao-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            border-bottom: 1px solid #f9f9f9;
+        }
+
+        .sugestao-item:hover {
+            background-color: #f0f7ff;
+            color: var(--accent-color);
+        }
+
+        .btn-prosseguir {
+            padding: 12px 30px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 25px; /* Arredondado para combinar com o input */
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            height: 45px; /* Alinha a altura com o input */
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-prosseguir:disabled {
+            background-color: #0047ab;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
 
         /* Estilos para os Alertas (Toasts) */
         .toast-sucesso, .toast-erro {
@@ -354,17 +488,22 @@
             display: flex;
             justify-content: center;
         }
-
-        #inputBusca {
-            width: 100%;
-            max-width: 700px;
-            padding: 12px 20px;
-            border: 2px solid #eee;
-            border-radius: 25px;
-            outline: none;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
+#inputBusca {
+    width: 100%;
+    max-width: 700px;
+    /* Mantive seus 12px (cima/baixo) e 20px (esquerda), 
+       e adicionei 90px na direita para o texto não bater nos ícones */
+    padding: 12px 90px 12px 20px; 
+    
+    border: 2px solid #eee;
+    border-radius: 25px;
+    outline: none;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    
+    /* Garante que o padding não quebre o tamanho do input */
+    box-sizing: border-box; 
+}
 
         #inputBusca:focus {
             border-color: var(--accent-color);
@@ -686,7 +825,7 @@
             <span>Menu</span>
         </div>
 
-        <div class="sidebar-item">
+        <div class="sidebar-item" onclick="mostrarInicio()">
             <img src="imagens/menu/menu-telainicial.png" alt="Inicio">
             <span>Início</span>
         </div>
@@ -701,7 +840,7 @@
             <span>Controle</span>
         </div>
 
-        <div class="sidebar-item">
+        <div class="sidebar-item" onclick="mostrarSecao('secao-registros')">
             <img src="imagens/menu/menu-registros.png" alt="Registros">
             <span>Registros</span>
         </div>
@@ -709,8 +848,21 @@
         </nav>
 
     <main id="main-content">
-        <h1>EstoqueUT</h1>
-        <p>Bem-vindo ao sistema de gestão. O menu lateral está configurado para expandir ao passar o rato.</p>
+        <section id="secao-inicio">
+            <h1>Unter Tech</h1>
+            <p>Bem-vindo ao sistema de gestão. Selecione uma opção no menu lateral.</p>
+        </section>
+
+        <section id="secao-registros" style="display:none;">
+            <h1>Registros de atividade</h1>
+            <div class="container-lista-registros">
+                <div class="header-registros">
+                    <span>Histórico</span>
+                </div>
+                <div id="lista-registros-corpo">
+                    </div>
+            </div>
+        </section>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

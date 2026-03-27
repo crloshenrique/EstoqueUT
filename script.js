@@ -5,8 +5,15 @@ let filtroTipoAtivo = ""; // Guarda o tipo selecionado pelo usuário
 
 // Função exclusiva para a tela de Estoque
 async function mostrarEstoque() {
+    resetarFiltrosEstoque();
     const mainContent = document.getElementById('main-content');
-    mainContent.innerHTML = '<p>Carregando produtos...</p>';
+
+    // Substituído o texto pelo ícone centralizado
+    mainContent.innerHTML = `
+        <div class="loader-container">
+            <div class="loader"></div>
+        </div>
+    `;
 
     const { data: produtos, error } = await _supabase
         .from('produtos')
@@ -18,17 +25,35 @@ async function mostrarEstoque() {
         return;
     }
 
-    let html = `
-            <h1 style="text-align: center; width: 100%; margin-bottom: 30px;">Estoque</h1>
-            <div class="busca-container">
-            <div class="busca-wrapper">
-                <input type="text" id="inputBusca" placeholder="Pesquisar produto..." onkeyup="filtrarProdutos()">
-                <img src="imagens/filtro.png" class="icone-filtro-busca" onclick="toggleMenuFiltro()">
-                <div id="menuFiltro" class="menu-filtro"></div>
+// ... dentro da função mostrarEstoque ...
+let html = `
+    <h1 style="text-align: center; width: 100%; margin-bottom: 30px;">Estoque</h1>
+    <div class="busca-container">
+        <div class="busca-wrapper">
+            <input type="text" id="inputBusca" placeholder="Pesquisar produto..." onkeyup="filtrarProdutos()">
+            
+            <div style="
+                position: absolute; 
+                right: 15px; 
+                top: 50%; 
+                transform: translateY(-50%); 
+                display: flex; 
+                gap: 12px; 
+                align-items: center;
+                border-left: 1px solid #e0e0e0; /* A linha cinza claro */
+                padding-left: 12px;            /* Espaço entre a linha e o primeiro ícone */
+                height: 25px;                  /* Altura da linha vertical */
+            ">
+                <img src="imagens/categoria.png" title="Categorias" style="width: 20px; cursor: pointer;" onclick="toggleMenuFiltro()">
+                <img src="imagens/filtro.png" title="Filtros de Estoque" style="width: 20px; cursor: pointer;" onclick="toggleMenuEstoque()">
             </div>
+
+            <div id="menuFiltro" class="menu-filtro"></div>
+            <div id="menuEstoque" class="menu-filtro"></div>
         </div>
-        <div class="grid-produtos" id="gridProdutos">
-    `;
+    </div>
+    <div class="grid-produtos" id="gridProdutos">
+`;
 
     produtos.forEach(item => {
         const dadosEstoque = item.cor || {}; 
@@ -86,48 +111,52 @@ async function mostrarEstoque() {
             listaCoresHtml += `</div>`; // Fecha a mini-grid de cores
         });
 
-const preco = item.valor 
-    ? Number(item.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }).replace(/\s/g, '') 
-    : 'R$0,00';
+        const preco = item.valor 
+            ? Number(item.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }).replace(/\s/g, '') 
+            : 'R$0,00';
 
-html += `
-    <div class="card-container" data-tipo="${item.tipo || ''}" onclick="girarCarta(this)">
-        <div class="card-body">
-            <div class="card-front">
-                <div class="foto-quadrada">
-                    <img src="${item.imagem_url || 'imagens/placeholder.png'}" alt="${item.nome}">
-                </div>
-                <div class="info-produto" style="padding: 15px; display: flex; flex-direction: column;">
-                    
-                    <h3 class="nome-produto" style="margin: 0; font-size: 1rem; color: #0047ab; line-height: 1.2rem; height: 2.4rem; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
-                        ${item.nome}
-                    </h3>
+        // Filtro para Vermelho Vivo (aplicado apenas se estoqueGeral for 0)
+        const filtroIcone = estoqueGeral === 0 
+            ? "filter: brightness(0) saturate(100%) invert(15%) sepia(95%) saturate(6932%) hue-rotate(358deg) brightness(95%) contrast(112%);" 
+            : "";
 
-                    <div style="width: 100%; height: 1px; background-color: #eee; margin: 8px 0;"></div>
-                
+        html += `
+            <div class="card-container" data-tipo="${item.tipo || ''}" onclick="girarCarta(this)">
+                <div class="card-body">
+                    <div class="card-front">
+                        <div class="foto-quadrada">
+                            <img src="${item.imagem_url || 'imagens/placeholder.png'}" alt="${item.nome}">
+                        </div>
+                        <div class="info-produto" style="padding: 15px; display: flex; flex-direction: column;">
+                            
+                            <h3 class="nome-produto" style="margin: 0; font-size: 1rem; color: #0047ab; line-height: 1.2rem; height: 2.4rem; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                ${item.nome}
+                            </h3>
 
-<div style="display: flex; align-items: center; gap: 22px;">
-    
-    <div style="display: flex; align-items: center; gap: 4px;">
-        <img src="imagens/estoque.png" class="icone-estoque-p">
-        <span class="numero-estoque">${estoqueGeral}</span>
-    </div>
-    
-    <div style="display: flex; align-items: center; gap: 4px;">
-        <img src="imagens/dinheiro.png" class="icone-estoque-p">
-        <span class="numero-estoque">${preco}</span>
-    </div>
-    
-</div>
+                            <div style="width: 100%; height: 1px; background-color: #eee; margin: 8px 0;"></div>
+                        
+                            <div style="display: flex; align-items: center; gap: 22px;">
+                                
+                                <div style="display: flex; align-items: center; gap: 4px;">
+                                    <img src="imagens/estoque.png" class="icone-estoque-p" style="${filtroIcone}">
+                                    <span class="numero-estoque">${estoqueGeral}</span>
+                                </div>
+                                
+                                <div style="display: flex; align-items: center; gap: 4px;">
+                                    <img src="imagens/dinheiro.png" class="icone-estoque-p">
+                                    <span class="numero-estoque">${preco}</span>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-back" style="flex-direction: column; justify-content: flex-start; padding: 15px; overflow-y: auto;">
+                        <h4 style="font-size: 0.9rem; margin-bottom: 5px; text-align: center; width: 100%;">Distribuição</h4>
+                        ${listaCoresHtml || '<p style="color: #999;">Sem dados</p>'}
+                    </div>
                 </div>
             </div>
-            <div class="card-back" style="flex-direction: column; justify-content: flex-start; padding: 15px; overflow-y: auto;">
-                <h4 style="font-size: 0.9rem; margin-bottom: 5px; text-align: center; width: 100%;">Distribuição</h4>
-                ${listaCoresHtml || '<p style="color: #999;">Sem dados</p>'}
-            </div>
-        </div>
-    </div>
-`;
+        `;
     });
 
     html += '</div>';
@@ -157,27 +186,62 @@ function girarCarta(elemento) {
 
 function filtrarProdutos() {
     const termoBusca = document.getElementById('inputBusca').value.trim().toLowerCase();
-    const cards = document.querySelectorAll('.card-container');
+    const grid = document.getElementById('gridProdutos');
+    const cards = Array.from(document.querySelectorAll('.card-container'));
+    
+    let encontrouAlgum = false; // Contador para verificar resultados
 
     cards.forEach(card => {
         const nomeProduto = card.querySelector('.nome-produto').innerText.toLowerCase();
         const tipoProduto = (card.getAttribute('data-tipo') || "").toLowerCase();
-        
-        // Regra 1: O nome do produto deve bater com o que foi digitado (início de palavras)
+        const qtdEstoque = parseInt(card.querySelector('.numero-estoque').innerText);
+
+        // 1. Filtro de Texto
         const palavrasNome = nomeProduto.split(" ");
         const bateNome = termoBusca === "" || palavrasNome.some(p => p.startsWith(termoBusca));
 
-        // Regra 2: O tipo do produto deve ser IGUAL ao filtro selecionado
-        // Se filtroTipoAtivo estiver vazio, ele ignora essa regra (mostra todos)
+        // 2. Filtro de Categoria
         const bateTipo = filtroTipoAtivo === "" || tipoProduto === filtroTipoAtivo.toLowerCase();
 
-        // Só mostra o card se ele passar nas DUAS regras ao mesmo tempo
-        if (bateNome && bateTipo) {
+        // 3. Filtro de Status de Estoque
+        let bateEstoque = true;
+        if (filtroEstoqueAtivo === "Sem estoque") {
+            bateEstoque = (qtdEstoque === 0);
+        } else if (filtroEstoqueAtivo === "Acabando") {
+            bateEstoque = (qtdEstoque > 0 && qtdEstoque < 5);
+        }
+
+        // Aplicação da visibilidade
+        if (bateNome && bateTipo && bateEstoque) {
             card.style.display = "block";
+            encontrouAlgum = true; // Marcar que existe pelo menos um resultado
         } else {
             card.style.display = "none";
         }
     });
+
+    // 4. Lógica de "Sem resultados"
+    // Remove qualquer mensagem anterior para não duplicar
+    const mensagemAntiga = document.getElementById('msg-sem-resultado');
+    if (mensagemAntiga) mensagemAntiga.remove();
+
+    if (!encontrouAlgum) {
+        const msg = document.createElement('div');
+        msg.id = 'msg-sem-resultado';
+        msg.innerHTML = "Sem resultados.";
+        msg.style.cssText = "grid-column: 1 / -1; text-align: center; padding: 50px; color: #666; font-size: 1.1rem;";
+        grid.appendChild(msg);
+    }
+
+    // 5. Ordenação Especial para "Acabando"
+    if (filtroEstoqueAtivo === "Acabando") {
+        cards.sort((a, b) => {
+            const qtdA = parseInt(a.querySelector('.numero-estoque').innerText);
+            const qtdB = parseInt(b.querySelector('.numero-estoque').innerText);
+            return qtdA - qtdB;
+        });
+        cards.forEach(card => grid.appendChild(card));
+    }
 }
 
 function toggleMenuFiltro() {
@@ -305,6 +369,14 @@ function mostrarOpcoesAlterar() {
                     </div>
                     <p style="margin-top: 15px; font-weight: bold; color: var(--text-color);">Alterar</p>
                 </div>
+
+                <div class="opcao-alterar" style="text-align: center; cursor: pointer;" onclick="exibirBuscaApagar()">
+                    <div style="width: 120px; height: 120px; background: #f4f4f4; border-radius: 20px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--accent-color); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                        <img src="imagens/apagar.png" style="width: 60px; height: 60px; object-fit: contain;">
+                    </div>
+                    <p style="margin-top: 15px; font-weight: bold; color: var(--text-color);">Apagar</p>
+                </div>
+
             </div>
         </div>
     `;
@@ -597,7 +669,7 @@ async function salvarNovoProduto() {
         if (imagemFile) {
             const nomeArquivo = `${Date.now()}_${imagemFile.name}`;
             const { data: uploadData, error: uploadError } = await _supabase.storage
-                .from('fotos-produtos') // Nome da pasta atualizado
+                .from('fotos-produtos') 
                 .upload(nomeArquivo, imagemFile);
 
             if (uploadError) throw uploadError;
@@ -610,19 +682,19 @@ async function salvarNovoProduto() {
         }
 
         const coresC = {};
-        const ordemC = []; // <-- ADICIONADO PARA ORDEM
+        const ordemC = []; 
         document.querySelectorAll('#container-cores-C input').forEach(input => {
             const cor = input.dataset.cor;
             coresC[cor] = parseInt(input.value) || 0;
-            ordemC.push(cor); // <-- ADICIONADO PARA ORDEM
+            ordemC.push(cor); 
         });
 
         const coresE = {};
-        const ordemE = []; // <-- ADICIONADO PARA ORDEM
+        const ordemE = []; 
         document.querySelectorAll('#container-cores-E input').forEach(input => {
             const cor = input.dataset.cor;
             coresE[cor] = parseInt(input.value) || 0;
-            ordemE.push(cor); // <-- ADICIONADO PARA ORDEM
+            ordemE.push(cor); 
         });
 
         const dadosProduto = {
@@ -632,8 +704,8 @@ async function salvarNovoProduto() {
             cor: {
                 "Estoque C": coresC,
                 "Estoque E": coresE,
-                "ordemC": ordemC, // <-- SALVANDO A ORDEM
-                "ordemE": ordemE  // <-- SALVANDO A ORDEM
+                "ordemC": ordemC, 
+                "ordemE": ordemE  
             }
         };
 
@@ -661,6 +733,9 @@ async function salvarNovoProduto() {
 
             mostrarAlerta("Produto cadastrado com sucesso!", "sucesso");
         }
+
+        // --- ADICIONADO: REGISTRO DE ATIVIDADE ---
+        await _supabase.from('registros').insert([{ nome_produto: nome }]);
 
         setTimeout(() => {
             mostrarEstoque();
@@ -707,8 +782,8 @@ async function exibirBuscaAlterar() {
                                oninput="filtrarSugestoesAlterar()"
                                onclick="mostrarTodasSugestoes()"
                         >
-                        <img src="data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E" 
-                             class="seta-busca-alterar" 
+                        <img src="data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230047ab' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E" 
+                             style="position: absolute; right: 18px; top: 50%; transform: translateY(-50%); width: 16px; cursor: pointer;" 
                              onclick="toggleListaAlterar(event)">
                         
                         <div id="listaSugestoes"></div>
@@ -866,4 +941,443 @@ async function prosseguirParaEdicao() {
         btn.disabled = false;
         btn.innerText = "Prosseguir";
     }
+}
+
+function mostrarSecao(idSecao) {
+    const main = document.getElementById('main-content');
+    
+    // Verificamos se o botão "Limpar" existe. Se não existir, reiniciamos o HTML da seção.
+    if (!document.querySelector('.btn-limpar-registros')) {
+        main.innerHTML = `
+            <section id="secao-inicio">
+                <h1>UnterTech</h1>
+                <p>Bem-vindo ao sistema de gestão. Selecione uma opção no menu lateral.</p>
+            </section>
+            <section id="secao-registros" style="display:none;">
+                <h1>Registros de atividade</h1>
+                <div class="container-lista-registros">
+                    <div class="header-registros">
+                        <span>Histórico</span>
+                    </div>
+                    <div id="lista-registros-corpo"></div>
+                    
+                    <div class="container-botoes-registros">
+                        <button class="btn-limpar-registros" onclick="limparTodosRegistros()">Limpar histórico</button>
+                    </div>
+                </div>
+            </section>
+        `;
+    }
+
+    // Esconde todas e mostra a selecionada
+    document.querySelectorAll('main section').forEach(s => s.style.display = 'none');
+    const alvo = document.getElementById(idSecao);
+    if (alvo) alvo.style.display = 'block';
+
+    if (idSecao === 'secao-registros') {
+        carregarRegistros();
+    }
+}
+
+async function carregarRegistros() {
+    const corpo = document.getElementById('lista-registros-corpo');
+    if (!corpo) return; // Segurança caso a seção tenha sido apagada
+
+    corpo.innerHTML = '<p style="padding:20px;">Carregando registros...</p>';
+
+    const { data, error } = await _supabase // Usando a variável correta com _
+        .from('registros')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error(error);
+        corpo.innerHTML = '<p style="padding:20px; color:red;">Erro ao carregar do banco.</p>';
+        return;
+    }
+
+    if (data.length === 0) {
+        corpo.innerHTML = '<p style="padding:20px;">Nenhum registro encontrado.</p>';
+        return;
+    }
+
+    corpo.innerHTML = '';
+    data.forEach(reg => {
+        const dataFormatada = new Date(reg.created_at).toLocaleString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        const div = document.createElement('div');
+        div.className = 'item-registro';
+        div.innerHTML = `
+            <span class="registro-nome">${reg.nome_produto}</span>
+            <span class="registro-data">${dataFormatada}</span>
+        `;
+    
+        corpo.appendChild(div);
+    });
+}
+
+async function limparTodosRegistros() {
+    try {
+        // Deleta todos os registros onde o ID for maior que 0
+        const { error } = await _supabase
+            .from('registros')
+            .delete()
+            .gt('id', 0); 
+
+        if (error) throw error;
+
+        // Alerta personalizado com o mesmo estilo do cadastro de produtos
+        mostrarAlerta("Histórico limpo com sucesso!", "sucesso");
+        
+        // Atualiza a lista na tela
+        carregarRegistros();
+
+    } catch (error) {
+        console.error("Erro ao limpar:", error);
+        mostrarAlerta("Erro ao limpar registros: " + error.message, "erro");
+    }
+}
+
+async function exibirBuscaApagar() {
+    const mainContent = document.getElementById('main-content');
+    
+    // ESTILO IDÊNTICO AO SEU "ALTERAR" (Fino e arredondado)
+    const estiloFinoArredondado = `
+        width: 100%;
+        height: 45px;
+        padding: 0 45px 0 20px;
+        font-size: 15px;
+        border: 1px solid #e0e0e0;
+        border-radius: 25px;
+        outline: none;
+        background-color: #fff;
+        box-sizing: border-box;
+        transition: all 0.2s ease;
+    `;
+
+    mainContent.innerHTML = `
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; width: 100%; animation: fadeIn 0.3s ease;">
+            <div style="text-align: center; width: 100%; max-width: 600px;">
+                <h1 style="margin-bottom: 10px; color: #0047ab;">Apagar produto</h1>
+                <p style="margin-bottom: 30px; color: #666;">Selecione o produto abaixo para remover</p>
+                
+                <div class="container-busca-alterar">
+                    <div class="wrapper-input-select">
+                        <input type="text" id="inputBuscaAlterar" 
+                               placeholder="Pesquise..." 
+                               autocomplete="off" 
+                               oninput="filtrarSugestoesApagar()"
+                               onclick="mostrarTodasSugestoesApagar()"
+                        >
+                        
+                        <img src="data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230047ab' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E" 
+                             style="position: absolute; right: 18px; top: 50%; transform: translateY(-50%); width: 16px; cursor: pointer;"
+                             onclick="toggleListaApagar(event)">
+                        
+                        <div id="listaSugestoesApagar" class="lista-sugestoes"></div>
+                    </div>
+                    <button id="btnProsseguirApagar" class="btn-prosseguir" disabled onclick="confirmarExclusao()" 
+                            style="height: 45px; border-radius: 25px; padding: 0 25px; margin: 0; background-color: #0047ab; color: white; border: none;">
+                        Apagar
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Carrega o cache para a busca funcionar
+    const { data: produtos } = await _supabase
+        .from('produtos')
+        .select('nome, id')
+        .order('updated_at', { ascending: false });
+        
+    window.listaProdutosCacheApagar = produtos || [];
+}
+
+// 1. Filtra os produtos conforme você digita no campo
+function filtrarSugestoesApagar() {
+    const input = document.getElementById('inputBuscaAlterar');
+    const lista = document.getElementById('listaSugestoesApagar');
+    const btn = document.getElementById('btnProsseguirApagar');
+    const termo = input.value.toLowerCase().trim();
+    
+    btn.disabled = true; // Desabilita o botão enquanto não selecionar da lista
+
+    if (termo === "") {
+        // Se apagar o texto, mostra a lista completa (comportamento de Select)
+        renderizarListaFiltradaApagar(window.listaProdutosCacheApagar);
+        lista.style.display = "block";
+        return;
+    }
+
+    const filtrados = window.listaProdutosCacheApagar.filter(p => {
+        const palavras = p.nome.toLowerCase().split(" ");
+        return palavras.some(palavra => palavra.startsWith(termo));
+    });
+
+    if (filtrados.length > 0) {
+        renderizarListaFiltradaApagar(filtrados);
+        lista.style.display = "block";
+    } else {
+        lista.style.display = "none";
+    }
+}
+
+// 2. Mostra todas as opções ao clicar no campo ou na seta
+function mostrarTodasSugestoesApagar() {
+    const lista = document.getElementById('listaSugestoesApagar');
+    if (window.listaProdutosCacheApagar && window.listaProdutosCacheApagar.length > 0) {
+        renderizarListaFiltradaApagar(window.listaProdutosCacheApagar);
+        lista.style.display = "block";
+    }
+}
+
+// 3. Abre e fecha a lista ao clicar no ícone da seta
+function toggleListaApagar(event) {
+    event.stopPropagation(); // Impede que o clique feche a lista imediatamente
+    const lista = document.getElementById('listaSugestoesApagar');
+    if (lista.style.display === "block") {
+        lista.style.display = "none";
+    } else {
+        mostrarTodasSugestoesApagar();
+    }
+}
+
+// 4. Renderiza os itens dentro da lista (idêntico ao menu alterar)
+function renderizarListaFiltradaApagar(dados) {
+    const lista = document.getElementById('listaSugestoesApagar');
+    
+    // Aplicando estilo via JS para garantir que ela flutue sobre o botão
+    lista.style.position = "absolute";
+    lista.style.width = "100%";
+    lista.style.zIndex = "1000";
+    lista.style.backgroundColor = "#fff";
+    lista.style.border = "1px solid #e0e0e0";
+    lista.style.borderRadius = "15px";
+    lista.style.marginTop = "5px";
+    lista.style.maxHeight = "200px";
+    lista.style.overflowY = "auto";
+    lista.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";
+
+    lista.innerHTML = dados.map(p => `
+        <div class="sugestao-item" 
+             style="padding: 12px 20px; cursor: pointer; border-bottom: 1px solid #f5f5f5; text-align: left;"
+             onclick="selecionarProdutoApagar('${p.nome.replace(/'/g, "\\'")}', '${p.id}')">
+            ${p.nome}
+        </div>
+    `).join('');
+}
+
+// 5. Quando o usuário clica em um produto da lista
+function selecionarProdutoApagar(nome, id) {
+    const input = document.getElementById('inputBuscaAlterar');
+    const lista = document.getElementById('listaSugestoesApagar');
+    const btn = document.getElementById('btnProsseguirApagar');
+    
+    input.value = nome;
+    input.dataset.idSelecionado = id; // Guarda o ID para o delete
+    lista.style.display = "none";     // Esconde a lista
+    btn.disabled = false;             // Libera o botão "Apagar"
+    btn.classList.remove('confirmando');
+    btn.style.backgroundColor = "#0047ab";
+    btn.innerText = "Apagar";
+}
+
+async function confirmarExclusao() {
+    const btn = document.getElementById('btnProsseguirApagar');
+    const input = document.getElementById('inputBuscaAlterar');
+    const id = input.dataset.idSelecionado;
+
+    if (!id) return;
+
+    // Se o botão AINDA NÃO está no estado de "confirmar" (vermelho)
+    if (!btn.classList.contains('confirmando')) {
+        // 1. Muda a cor e o texto
+        btn.style.backgroundColor = "#D00000"; // Vermelho
+        btn.innerText = "Apagar";
+        
+        // 2. Adiciona uma classe de controle
+        btn.classList.add('confirmando');
+
+        // 3. Opcional: Se o usuário não clicar de novo em 3 segundos, o botão volta ao normal
+        setTimeout(() => {
+            if (btn.classList.contains('confirmando')) {
+                btn.classList.remove('confirmando');
+                btn.style.backgroundColor = "#0047ab"; // Volta ao azul original
+            }
+        }, 3000);
+
+        return; // Para aqui, esperando o segundo clique
+    }
+
+    // --- SEGUNDO CLIQUE: Executa a exclusão real ---
+    btn.disabled = true;
+
+    try {
+        const { error } = await _supabase
+            .from('produtos')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+
+        mostrarAlerta("Produto removido com sucesso!", "sucesso");
+        exibirBuscaApagar(); // Recarrega a tela para limpar tudo
+
+    } catch (error) {
+        console.error("Erro ao deletar:", error);
+        mostrarAlerta("Erro ao remover produto", "erro");
+        
+        // Reseta o botão em caso de erro
+        btn.disabled = false;
+        btn.classList.remove('confirmando');
+        btn.style.backgroundColor = "#0047ab";
+        btn.innerText = "Apagar";
+    }
+}
+// Fecha a lista de apagar se clicar fora do campo ou da lista
+document.addEventListener('click', (e) => {
+    const container = document.querySelector('.container-busca-alterar');
+    const listaApagar = document.getElementById('listaSugestoesApagar');
+    
+    // Se a lista existir e o clique NÃO for dentro do container da busca
+    if (listaApagar && container && !container.contains(e.target)) {
+        listaApagar.style.display = 'none';
+    }
+});
+
+let filtroEstoqueAtivo = "Todos"; // Controla o filtro de estoque
+
+function toggleMenuEstoque() {
+    const menu = document.getElementById('menuEstoque');
+    // Fecha o outro menu se estiver aberto
+    document.getElementById('menuFiltro').classList.remove('ativo');
+    menu.classList.toggle('ativo');
+    
+    renderizarMenuEstoque();
+}
+
+function renderizarMenuEstoque() {
+    const menu = document.getElementById('menuEstoque');
+    const opcoes = ["Todos", "Sem estoque", "Acabando"];
+    
+    let html = "";
+    opcoes.forEach(opcao => {
+        const isAtivo = filtroEstoqueAtivo === opcao;
+        // "Todos" fica sempre em negrito ou conforme a seleção
+        const style = isAtivo ? "font-weight: bold; color: var(--accent-color);" : "";
+        const bTag = (opcao === "Todos") ? "<b>Todos</b>" : opcao;
+        
+        html += `<div class="item-categoria ${isAtivo ? 'ativo' : ''}" 
+                     style="${style}" 
+                     onclick="setFiltroEstoque('${opcao}')">${bTag}</div>`;
+    });
+    
+    menu.innerHTML = html;
+}
+
+function setFiltroEstoque(opcao) {
+    filtroEstoqueAtivo = opcao;
+    document.getElementById('menuEstoque').classList.remove('ativo');
+    filtrarProdutos(); // Chama a função que já existe, vamos atualizá-la abaixo
+}
+
+// Fecha os menus ao clicar fora deles
+document.addEventListener('click', function(event) {
+    const menuFiltro = document.getElementById('menuFiltro');
+    const menuEstoque = document.getElementById('menuEstoque');
+    
+    // Pegamos os ícones para evitar que o menu feche no exato momento em que você clica para abrir
+    const isClickInsideFiltro = menuFiltro && menuFiltro.contains(event.target);
+    const isClickInsideEstoque = menuEstoque && menuEstoque.contains(event.target);
+    
+    // Selecionamos as imagens dos ícones (ajuste os seletores se necessário)
+    const icones = document.querySelectorAll('.busca-wrapper img');
+    let clicouEmIcone = false;
+    icones.forEach(img => {
+        if (img.contains(event.target)) clicouEmIcone = true;
+    });
+
+    if (!isClickInsideFiltro && !isClickInsideEstoque && !clicouEmIcone) {
+        if (menuFiltro) menuFiltro.classList.remove('ativo');
+        if (menuEstoque) menuEstoque.classList.remove('ativo');
+    }
+});
+
+function toggleMenuFiltro() {
+    const menu = document.getElementById('menuFiltro');
+    const menuEstoque = document.getElementById('menuEstoque');
+    
+    // Fecha o de estoque se estiver aberto
+    if (menuEstoque) menuEstoque.classList.remove('ativo');
+    
+    const estaAtivo = menu.classList.toggle('ativo');
+    
+    // Se abriu o menu, renderiza as categorias baseadas no cache atual
+    if (estaAtivo) {
+        renderizarMenuCategorias();
+    }
+}
+
+async function renderizarMenuCategorias() {
+    const menu = document.getElementById('menuFiltro');
+    
+    // Busca os produtos atuais para saber quais categorias existem
+    const { data: produtos } = await _supabase.from('produtos').select('tipo');
+    const tiposUnicos = [...new Set(produtos.map(p => p.tipo).filter(t => t))];
+
+    let htmlCategorias = `<div class="item-categoria ${filtroTipoAtivo === "" ? "ativo" : ""}" 
+                               onclick="filtrarPorTipo('', this)"><b>Todos</b></div>`;
+    
+    tiposUnicos.sort().forEach(tipo => {
+        let classeAtiva = (tipo === filtroTipoAtivo) ? "item-categoria ativo" : "item-categoria";
+        htmlCategorias += `<div class="${classeAtiva}" onclick="filtrarPorTipo('${tipo}', this)">${tipo}</div>`;
+    });
+
+    menu.innerHTML = htmlCategorias;
+}
+
+function toggleMenuEstoque() {
+    const menu = document.getElementById('menuEstoque');
+    // Fecha o de categorias se estiver aberto
+    const menuFiltro = document.getElementById('menuFiltro');
+    if (menuFiltro) menuFiltro.classList.remove('ativo');
+    
+    menu.classList.toggle('ativo');
+    renderizarMenuEstoque();
+}
+
+function resetarFiltrosEstoque() {
+    // 1. Volta as variáveis globais ao estado inicial
+    filtroTipoAtivo = ""; 
+    filtroEstoqueAtivo = "Todos";
+
+    // 2. Fecha os menus flutuantes caso estejam abertos
+    const menuFiltro = document.getElementById('menuFiltro');
+    const menuEstoque = document.getElementById('menuEstoque');
+    
+    if (menuFiltro) menuFiltro.classList.remove('ativo');
+    if (menuEstoque) menuEstoque.classList.remove('ativo');
+
+    // 3. Remove o destaque visual (classe 'ativo') de todos os itens dos menus
+    document.querySelectorAll('.item-categoria').forEach(item => {
+        item.classList.remove('ativo');
+    });
+}
+
+function mostrarInicio() {
+    const mainContent = document.getElementById('main-content');
+    
+    // Define o conteúdo da tela inicial
+    mainContent.innerHTML = `
+        <section id="secao-inicio">
+            <h1>Unter Tech</h1>
+            <p>Bem-vindo ao sistema de gestão. Selecione uma opção no menu lateral.</p>
+        </section>
+    `;
 }
