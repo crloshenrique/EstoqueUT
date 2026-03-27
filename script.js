@@ -1409,14 +1409,14 @@ function solicitarSenha(acao) {
     const mainContent = document.getElementById('main-content');
     
     mainContent.innerHTML = `
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 70vh; gap: 30px; padding: 20px; animation: fadeIn 0.3s ease;">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 70vh; gap: 40px; padding: 20px; animation: fadeIn 0.3s ease;">
             
             <div style="text-align: center;">
-                <h1 style="margin-bottom: 5px; font-size: clamp(1.6rem, 6vw, 2rem); width: 100%;">Validação de acesso</h1>
-                <p style="margin-top: 5px; color: #666; font-size: clamp(0.8rem, 3vw, 1rem);">Digite a sua senha para prosseguir</p>
+                <h1 style="margin-bottom: 5px; font-size: clamp(1.6rem, 5vw, 1.8rem); width: 100%;">Validação de acesso</h1>
+                <p style="margin-top: 5px; color: #666; font-size: clamp(0.9rem, 3vw, 1rem);">Digite a sua senha para prosseguir</p>
             </div>
             
-            <div style="display: flex; gap: 10px; align-items: center; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee;">
+            <div style="display: flex; gap: 10px; align-items: center; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee;">
                 <input type="password" id="campoSenhaUT" placeholder="Senha" 
                     style="padding: 10px 20px; border-radius: 25px; border: 2px solid #eee; outline: none; font-size: 1rem; width: 200px; transition: border-color 0.3s;"
                     onfocus="this.style.borderColor='var(--accent-color)'"
