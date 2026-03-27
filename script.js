@@ -65,9 +65,8 @@ let html = `
             const cores = dadosEstoque[nomeEstoque] || {};
             
             // Título do Estoque
-const margemTopDinamica = nomeEstoque === "Estoque E" ? "0px" : "10px";
+            listaCoresHtml += `<div style="font-weight: bold; margin-top: 10px; margin-bottom: 5px; color: var(--accent-color); border-bottom: 1px solid #eee; width: 100%; font-size: 0.85rem;">${nomeEstoque}</div>`;
 
-listaCoresHtml += `<div style="font-weight: bold; margin-top: ${margemTopDinamica}; margin-bottom: 5px; color: var(--accent-color); border-bottom: 1px solid #eee; width: 100%; font-size: 0.85rem;">${nomeEstoque}</div>`;
             // Criamos uma mini-grid para as cores deste estoque específico
             listaCoresHtml += `<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; justify-items: center; width: 100%; margin-bottom: 10px;">`;
 
@@ -152,6 +151,7 @@ listaCoresHtml += `<div style="font-weight: bold; margin-top: ${margemTopDinamic
                         </div>
                     </div>
                     <div class="card-back" style="flex-direction: column; justify-content: flex-start; padding: 15px; overflow-y: auto;">
+                        <h4 style="font-size: 0.9rem; margin-bottom: 5px; text-align: center; width: 100%;">Distribuição</h4>
                         ${listaCoresHtml || '<p style="color: #999;">Sem dados</p>'}
                     </div>
                 </div>
