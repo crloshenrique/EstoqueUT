@@ -1409,12 +1409,12 @@ function solicitarSenha(acao) {
     const mainContent = document.getElementById('main-content');
     
     mainContent.innerHTML = `
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 70vh; gap: 40px; padding: 20px; animation: fadeIn 0.3s ease;">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 70vh; gap: 2px; padding: 20px; animation: fadeIn 0.3s ease;">
             
-            <div style="text-align: center;">
-                <h1 style="margin-bottom: 10px; font-size: clamp(1.6rem, 5vw, 1.8rem); width: 100%;">Validação de acesso</h1>
-                <p style="margin-top: 15px; color: #666; font-size: clamp(0.95rem, 2.5vw, 1rem);">Digite a sua senha para prosseguir</p>
-            </div>
+<div style="text-align: center;">
+    <h1 style="margin-bottom: 10px;">Validação de acesso</h1>
+    <p style="margin-bottom: 30px; color: #666;">Digite a sua senha para prosseguir</p>
+</div>
 
             <div style="display: flex; gap: 5px; align-items: center; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee;">
                 <input type="password" id="campoSenhaUT" placeholder="Senha" 
