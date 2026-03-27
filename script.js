@@ -354,7 +354,7 @@ function mostrarOpcoesAlterar() {
     const mainContent = document.getElementById('main-content');
     mainContent.innerHTML = `
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 70vh; gap: 40px; padding: 20px;">
-            <h1 style="margin-bottom: 10px; font-size: clamp(4rem, 8vw, 2rem); text-align: center; width: 100%;">O que deseja fazer?</h1>
+            <h1 style="margin-bottom: 10px; font-size: clamp(1.8rem, 6vw, 2rem); text-align: center; width: 100%;">O que deseja fazer?</h1>
             
             <div style="
                 display: flex; 
