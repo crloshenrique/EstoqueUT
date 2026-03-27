@@ -365,21 +365,21 @@ function mostrarOpcoesAlterar() {
                 width: 100%;
                 max-width: 600px;
             ">
-                <div class="opcao-alterar" style="text-align: center; cursor: pointer; flex: 1; max-width: 120px;" onclick="exibirFormularioAdicionar()">
+                <div class="opcao-alterar" style="text-align: center; cursor: pointer; flex: 1; max-width: 120px;" onclick="solicitarSenha('adicionar')">
                     <div style="aspect-ratio: 1/1; background: #f4f4f4; border-radius: 20px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--accent-color); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
                         <img src="imagens/adicionar.png" style="width: 50%; height: 50%; object-fit: contain;">
                     </div>
                     <p style="margin-top: 15px; font-weight: bold; color: var(--text-color); font-size: clamp(0.8rem, 3vw, 1rem);">Adicionar</p>
                 </div>
 
-                <div class="opcao-alterar" style="text-align: center; cursor: pointer; flex: 1; max-width: 120px;" onclick="exibirBuscaAlterar()">
+                <div class="opcao-alterar" style="text-align: center; cursor: pointer; flex: 1; max-width: 120px;" onclick="solicitarSenha('alterar')">
                     <div style="aspect-ratio: 1/1; background: #f4f4f4; border-radius: 20px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--accent-color); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
                         <img src="imagens/alterar.png" style="width: 50%; height: 50%; object-fit: contain;">
                     </div>
                     <p style="margin-top: 15px; font-weight: bold; color: var(--text-color); font-size: clamp(0.8rem, 3vw, 1rem);">Alterar</p>
                 </div>
 
-                <div class="opcao-alterar" style="text-align: center; cursor: pointer; flex: 1; max-width: 120px;" onclick="exibirBuscaApagar()">
+                <div class="opcao-alterar" style="text-align: center; cursor: pointer; flex: 1; max-width: 120px;" onclick="solicitarSenha('apagar')">
                     <div style="aspect-ratio: 1/1; background: #f4f4f4; border-radius: 20px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--accent-color); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
                         <img src="imagens/apagar.png" style="width: 50%; height: 50%; object-fit: contain;">
                     </div>
@@ -1399,4 +1399,65 @@ function mostrarInicio() {
             <p>Bem-vindo ao sistema de gestão. Selecione uma opção no menu lateral.</p>
         </section>
     `;
+}
+
+// Variável para saber para onde ir após o login
+let acaoPendente = "";
+
+function solicitarSenha(acao) {
+    acaoPendente = acao;
+    const mainContent = document.getElementById('main-content');
+    
+    mainContent.innerHTML = `
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 70vh; gap: 30px; padding: 20px; animation: fadeIn 0.3s ease;">
+            
+            <div style="text-align: center;">
+                <h1 style="margin-bottom: 5px; font-size: clamp(1.6rem, 6vw, 2rem); width: 100%;">Validação de acesso</h1>
+                <p style="margin-top: 5px; color: #666; font-size: clamp(0.8rem, 3vw, 1rem);">Digite a sua senha para prosseguir</p>
+            </div>
+            
+            <div style="display: flex; gap: 10px; align-items: center; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee;">
+                <input type="password" id="campoSenhaUT" placeholder="Senha" 
+                    style="padding: 10px 20px; border-radius: 25px; border: 2px solid #eee; outline: none; font-size: 1rem; width: 200px; transition: border-color 0.3s;"
+                    onfocus="this.style.borderColor='var(--accent-color)'"
+                    onblur="this.style.borderColor='#eee'"
+                    onkeypress="if(event.key === 'Enter') confirmarSenhaUT()">
+                
+                <button onclick="confirmarSenhaUT()" 
+                    style="padding: 12px 25px; background-color: var(--accent-color); color: white; border: none; border-radius: 25px; font-weight: bold; cursor: pointer; transition: transform 0.2s;"
+                    onmouseover="this.style.transform='scale(1.05)'"
+                    onmouseout="this.style.transform='scale(1)'">
+                    Confirmar
+                </button>
+            </div>
+            
+            <div id="erroSenha" style="display: none;"></div>
+        </div>
+    `;
+    
+    setTimeout(() => document.getElementById('campoSenhaUT').focus(), 100);
+}
+
+function confirmarSenhaUT() {
+    const senhaDigitada = document.getElementById('campoSenhaUT').value;
+    const senhaCorreta = "ut";
+    const erroMsg = document.getElementById('erroSenha');
+
+    if (senhaDigitada === senhaCorreta) {
+        // Redireciona conforme a opção escolhida anteriormente
+        if (acaoPendente === 'adicionar') exibirFormularioAdicionar();
+        else if (acaoPendente === 'alterar') exibirBuscaAlterar();
+        else if (acaoPendente === 'apagar') exibirBuscaApagar();
+    } else {
+        erroMsg.style.display = "block";
+        document.getElementById('campoSenhaUT').value = "";
+        document.getElementById('campoSenhaUT').style.borderColor = "#dc3545";
+        // Balanço de erro visual
+        document.getElementById('campoSenhaUT').animate([
+            { transform: 'translateX(0)' },
+            { transform: 'translateX(-5px)' },
+            { transform: 'translateX(5px)' },
+            { transform: 'translateX(0)' }
+        ], { duration: 200 });
+    }
 }
