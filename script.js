@@ -315,13 +315,14 @@ document.addEventListener('click', (event) => {
 const MAPA_CORES = {
     "preto": "#000000",
     "branco": "#ffffff",
+    "rosa": "#ff69b4",
     "azul": "#0047ab",
+    "ciano": "#00ffff",
     "vermelho": "#ff0000",
-    "verde": "#008000",
+    "verde": "#039e03ff",
     "amarelo": "#ffdf00",
+    "laranja": "#ff9100ff",
     "cinza": "#808080",
-    "laranja": "#ffa500",
-    "rosa": "#ffc0cb",
     "roxo": "#800080",
     "transparente": "repeating-conic-gradient(#ffffff 0% 25%, #bbbbbb 0% 50%) 50% / 6px 6px"
 };
@@ -474,10 +475,17 @@ function exibirFormularioAdicionar(produto = null) {
                                     background-size: 12px auto;
                                 ">
                                 <option value="" disabled ${!modoEdicao ? 'selected' : ''}>Selecione</option>
-                                <option value="Carregador" ${modoEdicao && produto.tipo === 'Carregador' ? 'selected' : ''}>Carregador</option>
-                                <option value="Smartwatch" ${modoEdicao && produto.tipo === 'Smartwatch' ? 'selected' : ''}>Smartwatch</option>
-                                <option value="Fone de Ouvido" ${modoEdicao && produto.tipo === 'Fone de Ouvido' ? 'selected' : ''}>Fone de Ouvido</option>
-                                <option value="Cabo" ${modoEdicao && produto.tipo === 'Cabo' ? 'selected' : ''}>Cabo</option>
+                                <option value="Smartwatches" ${modoEdicao && produto.tipo === 'Smartwatches' ? 'selected' : ''}>Smartwatches</option>
+                                <option value="Fones" ${modoEdicao && produto.tipo === 'Fones' ? 'selected' : ''}>Fones</option>
+                                <option value="Carregadores" ${modoEdicao && produto.tipo === 'Carregadores' ? 'selected' : ''}>Carregadores</option>
+                                <option value="Cabos" ${modoEdicao && produto.tipo === 'Cabos' ? 'selected' : ''}>Cabos</option>
+                                <option value="Adaptadores" ${modoEdicao && produto.tipo === 'Adaptadores' ? 'selected' : ''}>Adaptadores</option>
+                                <option value="Suportes" ${modoEdicao && produto.tipo === 'Suportes' ? 'selected' : ''}>Suportes</option>
+                                <option value="Mouses" ${modoEdicao && produto.tipo === 'Mouses' ? 'selected' : ''}>Mouses</option>
+                                <option value="Teclados" ${modoEdicao && produto.tipo === 'Teclados' ? 'selected' : ''}>Teclados</option>
+                                <option value="Setup" ${modoEdicao && produto.tipo === 'Setup' ? 'selected' : ''}>Setup</option>
+                                <option value="Hardware" ${modoEdicao && produto.tipo === 'Hardware' ? 'selected' : ''}>Hardware</option>
+                                <option value="Acessórios" ${modoEdicao && produto.tipo === 'Acessórios' ? 'selected' : ''}>Acessórios</option>
                             </select>
                         </div>
                     </div>
