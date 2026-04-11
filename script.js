@@ -486,6 +486,7 @@ function exibirFormularioAdicionar(produto = null) {
                                 <option value="Setup" ${modoEdicao && produto.tipo === 'Setup' ? 'selected' : ''}>Setup</option>
                                 <option value="Hardware" ${modoEdicao && produto.tipo === 'Hardware' ? 'selected' : ''}>Hardware</option>
                                 <option value="Acessórios" ${modoEdicao && produto.tipo === 'Acessórios' ? 'selected' : ''}>Acessórios</option>
+                                <option value="Casa" ${modoEdicao && produto.tipo === 'Casa' ? 'selected' : ''}>Casa</option>
                             </select>
                         </div>
                     </div>
