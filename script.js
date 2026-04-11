@@ -1353,17 +1353,21 @@ function toggleMenuFiltro() {
     }
 }
 
-async function renderizarMenuCategorias() {
+function renderizarMenuCategorias() {
     const menu = document.getElementById('menuFiltro');
     
-    // Busca os produtos atuais para saber quais categorias existem
-    const { data: produtos } = await _supabase.from('produtos').select('tipo');
-    const tiposUnicos = [...new Set(produtos.map(p => p.tipo).filter(t => t))];
+    // Escreva as categorias na ordem exata que você deseja que apareçam no site
+    const categorias = [
+        "Smartwatches", "Fones", "Carregadores", "Cabos", 
+        "Adaptadores", "Suportes", "Mouses", "Teclados", 
+        "Setup", "Hardware", "Acessórios", "Casa"
+    ];
 
     let htmlCategorias = `<div class="item-categoria ${filtroTipoAtivo === "" ? "ativo" : ""}" 
                                onclick="filtrarPorTipo('', this)"><b>Todos</b></div>`;
     
-    tiposUnicos.sort().forEach(tipo => {
+    // Aqui ele apenas percorre a sua lista acima, sem dar "sort" (alfabética)
+    categorias.forEach(tipo => {
         let classeAtiva = (tipo === filtroTipoAtivo) ? "item-categoria ativo" : "item-categoria";
         htmlCategorias += `<div class="${classeAtiva}" onclick="filtrarPorTipo('${tipo}', this)">${tipo}</div>`;
     });
