@@ -928,11 +928,16 @@ function filtrarSugestoesAlterar() {
 // Função auxiliar para renderizar o HTML da lista
 function renderizarListaFiltrada(dados) {
     const lista = document.getElementById('listaSugestoes');
-    lista.innerHTML = dados.map(p => `
-        <div class="sugestao-item" onclick="selecionarProdutoAlterar('${p.nome}', '${p.id}')">
-            ${p.nome}
-        </div>
-    `).join('');
+    lista.innerHTML = dados.map(p => {
+        // Criamos uma variável com o nome tratado (escapando a aspa simples)
+        const nomeEscapado = p.nome.replace(/'/g, "\\'");
+        
+        return `
+            <div class="sugestao-item" onclick="selecionarProdutoAlterar('${nomeEscapado}', '${p.id}')">
+                ${p.nome}
+            </div>
+        `;
+    }).join('');
 }
 
 // Fecha a lista se clicar fora do campo de busca
