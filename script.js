@@ -324,6 +324,7 @@ const MAPA_CORES = {
     "laranja": "#ff9100ff",
     "cinza": "#808080",
     "roxo": "#800080",
+    "colorido": "conic-gradient(red, yellow, lime, aqua, blue, magenta, red)",
     "transparente": "repeating-conic-gradient(#ffffff 0% 25%, #bbbbbb 0% 50%) 50% / 6px 6px"
 };
 
