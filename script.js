@@ -487,6 +487,7 @@ function exibirFormularioAdicionar(produto = null) {
                                 <option value="Setup" ${modoEdicao && produto.tipo === 'Setup' ? 'selected' : ''}>Setup</option>
                                 <option value="Hardware" ${modoEdicao && produto.tipo === 'Hardware' ? 'selected' : ''}>Hardware</option>
                                 <option value="Acessórios" ${modoEdicao && produto.tipo === 'Acessórios' ? 'selected' : ''}>Acessórios</option>
+                                <option value="Eletroportáteis" ${modoEdicao && produto.tipo === 'Eletroportáteis' ? 'selected' : ''}>Eletroportáteis</option>
                                 <option value="Casa" ${modoEdicao && produto.tipo === 'Casa' ? 'selected' : ''}>Casa</option>
                             </select>
                         </div>
@@ -1365,7 +1366,7 @@ function renderizarMenuCategorias() {
     const categorias = [
         "Smartwatches", "Fones", "Carregadores", "Cabos", 
         "Adaptadores", "Suportes", "Mouses", "Teclados", 
-        "Setup", "Hardware", "Acessórios", "Casa"
+        "Setup", "Hardware", "Acessórios", "Eletroportáteis", "Casa"
     ];
 
     let htmlCategorias = `<div class="item-categoria ${filtroTipoAtivo === "" ? "ativo" : ""}" 
