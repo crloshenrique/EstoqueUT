@@ -185,20 +185,37 @@ function girarCarta(elemento) {
 }
 
 function filtrarProdutos() {
-    const termoBusca = document.getElementById('inputBusca').value.trim().toLowerCase();
+    const termoBusca = document.getElementById('inputBusca').value.toLowerCase();
     const grid = document.getElementById('gridProdutos');
     const cards = Array.from(document.querySelectorAll('.card-container'));
     
-    let encontrouAlgum = false; // Contador para verificar resultados
+    // 1. Termos que o usuário digitou
+    const termosBusca = termoBusca.split(" ").filter(t => t.trim() !== "");
+    
+    let encontrouAlgum = false;
 
     cards.forEach(card => {
         const nomeProduto = card.querySelector('.nome-produto').innerText.toLowerCase();
         const tipoProduto = (card.getAttribute('data-tipo') || "").toLowerCase();
         const qtdEstoque = parseInt(card.querySelector('.numero-estoque').innerText);
 
-        // 1. Filtro de Texto
-        const palavrasNome = nomeProduto.split(" ");
-        const bateNome = termoBusca === "" || palavrasNome.some(p => p.startsWith(termoBusca));
+        // --- LÓGICA ANTI-REPETIÇÃO ---
+        const palavrasNome = nomeProduto.split(" ").filter(p => p.trim() !== "");
+        
+        // Criamos uma cópia das palavras do nome para podermos "riscar" as que já foram usadas
+        let palavrasDisponiveis = [...palavrasNome];
+
+        const bateNome = termosBusca.every(termo => {
+            // Procuramos o índice de uma palavra que comece com o termo
+            const index = palavrasDisponiveis.findIndex(p => p.startsWith(termo));
+            
+            if (index !== -1) {
+                // Se achou, removemos essa palavra da lista de disponíveis para ela não ser usada de novo
+                palavrasDisponiveis.splice(index, 1);
+                return true;
+            }
+            return false;
+        });
 
         // 2. Filtro de Categoria
         const bateTipo = filtroTipoAtivo === "" || tipoProduto === filtroTipoAtivo.toLowerCase();
@@ -211,17 +228,15 @@ function filtrarProdutos() {
             bateEstoque = (qtdEstoque > 0 && qtdEstoque < 5);
         }
 
-        // Aplicação da visibilidade
         if (bateNome && bateTipo && bateEstoque) {
             card.style.display = "block";
-            encontrouAlgum = true; // Marcar que existe pelo menos um resultado
+            encontrouAlgum = true; 
         } else {
             card.style.display = "none";
         }
     });
 
-    // 4. Lógica de "Sem resultados"
-    // Remove qualquer mensagem anterior para não duplicar
+    // Lógica de "Sem resultados"
     const mensagemAntiga = document.getElementById('msg-sem-resultado');
     if (mensagemAntiga) mensagemAntiga.remove();
 
@@ -233,7 +248,7 @@ function filtrarProdutos() {
         grid.appendChild(msg);
     }
 
-    // 5. Ordenação Especial para "Acabando"
+    // Ordenação Especial para "Acabando"
     if (filtroEstoqueAtivo === "Acabando") {
         cards.sort((a, b) => {
             const qtdA = parseInt(a.querySelector('.numero-estoque').innerText);
