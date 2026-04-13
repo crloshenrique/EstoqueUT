@@ -243,7 +243,7 @@ function filtrarProdutos() {
     if (!encontrouAlgum) {
         const msg = document.createElement('div');
         msg.id = 'msg-sem-resultado';
-        msg.innerHTML = "Sem resultados.";
+        msg.innerHTML = "Sem resultados";
         msg.style.cssText = "grid-column: 1 / -1; text-align: center; padding: 50px; color: #666; font-size: 1.1rem;";
         grid.appendChild(msg);
     }
@@ -852,25 +852,40 @@ function filtrarSugestoesAlterar() {
     const input = document.getElementById('inputBuscaAlterar');
     const lista = document.getElementById('listaSugestoes');
     const btn = document.getElementById('btnProsseguirAlterar');
-    const termo = input.value.toLowerCase().trim();
     
-    // Reseta o botão sempre que digitar
+    // 1. Pegamos o valor bruto (sem o .trim() que impede a busca de 2 palavras)
+    const valorBusca = input.value.toLowerCase();
+    
     btn.disabled = true;
 
-    if (termo === "") {
+    // 2. Criamos os termos da busca (ex: ["carregador", "v8"])
+    const termosBusca = valorBusca.split(" ").filter(t => t.trim() !== "");
+
+    if (termosBusca.length === 0) {
         lista.style.display = "none";
         return;
     }
 
-    // Lógica: Alguma palavra do nome deve COMEÇAR com o termo
+    // 3. A Lógica que funcionou no Estoque (Rigorosa)
     const filtrados = window.listaProdutosCache.filter(p => {
-        const palavras = p.nome.toLowerCase().split(" ");
-        return palavras.some(palavra => palavra.startsWith(termo));
+        const palavrasDoNome = p.nome.toLowerCase().split(" ").filter(pal => pal.trim() !== "");
+        let palavrasDisponiveis = [...palavrasDoNome];
+
+        // "Para cada termo digitado, existe uma palavra no nome começando com ele?"
+        return termosBusca.every(termo => {
+            const index = palavrasDisponiveis.findIndex(pNome => pNome.startsWith(termo));
+            if (index !== -1) {
+                palavrasDisponiveis.splice(index, 1); // "Rifa" a palavra para não repetir
+                return true;
+            }
+            return false;
+        });
     });
 
+    // 4. Renderização (Verifiquei que você usa sugestao-item com onclick)
     if (filtrados.length > 0) {
         lista.innerHTML = filtrados.map(p => `
-            <div class="sugestao-item" onclick="selecionarProdutoAlterar('${p.nome}', '${p.id}')">
+            <div class="sugestao-item" onclick="selecionarProdutoAlterar('${p.nome.replace(/'/g, "\\'")}', '${p.id}')">
                 ${p.nome}
             </div>
         `).join('');
@@ -912,32 +927,6 @@ function toggleListaAlterar(event) {
         lista.style.display = "none";
     } else {
         mostrarTodasSugestoes();
-    }
-}
-
-function filtrarSugestoesAlterar() {
-    const input = document.getElementById('inputBuscaAlterar');
-    const lista = document.getElementById('listaSugestoes');
-    const btn = document.getElementById('btnProsseguirAlterar');
-    const termo = input.value.toLowerCase().trim();
-    
-    btn.disabled = true;
-
-    if (termo === "") {
-        renderizarListaFiltrada(window.listaProdutosCache);
-        return;
-    }
-
-    const filtrados = window.listaProdutosCache.filter(p => {
-        const palavras = p.nome.toLowerCase().split(" ");
-        return palavras.some(palavra => palavra.startsWith(termo));
-    });
-
-    if (filtrados.length > 0) {
-        renderizarListaFiltrada(filtrados);
-        lista.style.display = "block";
-    } else {
-        lista.style.display = "none";
     }
 }
 
@@ -1151,29 +1140,46 @@ async function exibirBuscaApagar() {
 
 // 1. Filtra os produtos conforme você digita no campo
 function filtrarSugestoesApagar() {
-    const input = document.getElementById('inputBuscaAlterar');
+    const input = document.getElementById('inputBuscaAlterar'); // Mantido seu ID original do HTML
     const lista = document.getElementById('listaSugestoesApagar');
     const btn = document.getElementById('btnProsseguirApagar');
-    const termo = input.value.toLowerCase().trim();
     
-    btn.disabled = true; // Desabilita o botão enquanto não selecionar da lista
+    // Pegando o valor para permitir múltiplas palavras (como no Estoque)
+    const valorBusca = input.value.toLowerCase();
+    
+    btn.disabled = true;
 
-    if (termo === "") {
-        // Se apagar o texto, mostra a lista completa (comportamento de Select)
+    // Criando os termos da busca
+    const termosBusca = valorBusca.split(" ").filter(t => t.trim() !== "");
+
+    if (termosBusca.length === 0) {
         renderizarListaFiltradaApagar(window.listaProdutosCacheApagar);
         lista.style.display = "block";
         return;
     }
 
+    // APLICANDO A LÓGICA DO ESTOQUE (Rigorosa e Anti-repetição)
     const filtrados = window.listaProdutosCacheApagar.filter(p => {
-        const palavras = p.nome.toLowerCase().split(" ");
-        return palavras.some(palavra => palavra.startsWith(termo));
+        const palavrasDoNome = p.nome.toLowerCase().split(" ").filter(pal => pal.trim() !== "");
+        let palavrasDisponiveis = [...palavrasDoNome];
+
+        // "Para cada termo digitado, existe uma palavra no nome começando com ele?"
+        return termosBusca.every(termo => {
+            const index = palavrasDisponiveis.findIndex(pNome => pNome.startsWith(termo));
+            if (index !== -1) {
+                palavrasDisponiveis.splice(index, 1); // "Rifa" a palavra para não repetir
+                return true;
+            }
+            return false;
+        });
     });
 
     if (filtrados.length > 0) {
         renderizarListaFiltradaApagar(filtrados);
         lista.style.display = "block";
     } else {
+        // Se não condiz, limpa e esconde para eliminar as opções antigas da tela
+        lista.innerHTML = "";
         lista.style.display = "none";
     }
 }
