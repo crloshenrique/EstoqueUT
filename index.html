@@ -7,42 +7,44 @@
     <title>PDV Unter Tech</title>
     <style>
 
-/* Ajuste para eliminar o "fantasma" da terceira linha no Celular */
+/* Ajuste preciso para eliminar a rebarba e o espaço branco no Celular */
 @media (max-width: 768px) {
     .nome-produto {
         font-size: 0.78rem !important;
-        line-height: 1rem !important; /* Altura exata de cada linha */
+        line-height: 1rem !important;
         
-        /* Definimos a altura máxima como EXATAMENTE 2x o line-height */
-        max-height: 2rem !important; 
-        height: auto !important;     /* Deixa o card diminuir se o título for curto */
+        /* Reduzimos a altura para 1.9rem para garantir que a 3ª linha seja cortada */
+        height: 1.9rem !important; 
         
         display: -webkit-box !important;
         -webkit-line-clamp: 2 !important;
         line-clamp: 2 !important;
         -webkit-box-orient: vertical !important;
-        overflow: hidden !important; /* Corta o que passar de 2rem */
-        
+        overflow: hidden !important;
         margin-bottom: 0 !important;
     }
 
     /* A LINHA CINZA (O divisor) */
     .info-produto div[style*="height: 1px"] {
         display: block !important;
-        margin-top: 2px !important;    /* Espaço entre o fim das 2 linhas e a régua */
-        margin-bottom: 8px !important; /* Espaço entre a régua e o estoque */
+        /* margin-top negativa para colar no título */
+        margin-top: -1px !important; 
+        /* margin-bottom zerada para não empurrar o estoque */
+        margin-bottom: 0 !important;
         opacity: 0.5;
     }
 
     /* O ESTOQUE TOTAL */
     .info-produto p {
-        margin: 0 !important;
+        /* Puxa o estoque para cima da linha cinza, eliminando o buraco */
+        margin-top: 4px !important; 
+        margin-bottom: 0 !important;
         line-height: 1.1rem !important;
         font-size: 0.82rem !important;
     }
 
     .info-produto {
-        padding: 8px 12px 12px 12px !important;
+        padding: 5px 12px 10px 12px !important;
     }
 }
 
