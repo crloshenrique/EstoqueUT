@@ -882,13 +882,18 @@ function filtrarSugestoesAlterar() {
         });
     });
 
-    // 4. Renderização (Verifiquei que você usa sugestao-item com onclick)
+    // 4. Renderização (AJUSTADA PARA ACEITAR ASPAS)
     if (filtrados.length > 0) {
-        lista.innerHTML = filtrados.map(p => `
-            <div class="sugestao-item" onclick="selecionarProdutoAlterar('${p.nome.replace(/'/g, "\\'")}', '${p.id}')">
-                ${p.nome}
-            </div>
-        `).join('');
+        lista.innerHTML = filtrados.map(p => {
+            // Escapa aspas simples para o JS e aspas duplas para o atributo HTML
+            const nomeSeguro = p.nome.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+            
+            return `
+                <div class="sugestao-item" onclick="selecionarProdutoAlterar('${nomeSeguro}', '${p.id}')">
+                    ${p.nome}
+                </div>
+            `;
+        }).join('');
         lista.style.display = "block";
     } else {
         lista.style.display = "none";
@@ -1140,45 +1145,53 @@ async function exibirBuscaApagar() {
 
 // 1. Filtra os produtos conforme você digita no campo
 function filtrarSugestoesApagar() {
-    const input = document.getElementById('inputBuscaAlterar'); // Mantido seu ID original do HTML
+    const input = document.getElementById('inputBuscaAlterar'); 
     const lista = document.getElementById('listaSugestoesApagar');
     const btn = document.getElementById('btnProsseguirApagar');
     
-    // Pegando o valor para permitir múltiplas palavras (como no Estoque)
+    // 1. Pegamos o valor bruto
     const valorBusca = input.value.toLowerCase();
     
     btn.disabled = true;
 
-    // Criando os termos da busca
+    // 2. Criamos os termos da busca
     const termosBusca = valorBusca.split(" ").filter(t => t.trim() !== "");
 
     if (termosBusca.length === 0) {
-        renderizarListaFiltradaApagar(window.listaProdutosCacheApagar);
-        lista.style.display = "block";
+        lista.style.display = "none";
         return;
     }
 
-    // APLICANDO A LÓGICA DO ESTOQUE (Rigorosa e Anti-repetição)
+    // 3. A Lógica que funcionou no Estoque (Rigorosa)
     const filtrados = window.listaProdutosCacheApagar.filter(p => {
         const palavrasDoNome = p.nome.toLowerCase().split(" ").filter(pal => pal.trim() !== "");
         let palavrasDisponiveis = [...palavrasDoNome];
 
-        // "Para cada termo digitado, existe uma palavra no nome começando com ele?"
         return termosBusca.every(termo => {
             const index = palavrasDisponiveis.findIndex(pNome => pNome.startsWith(termo));
             if (index !== -1) {
-                palavrasDisponiveis.splice(index, 1); // "Rifa" a palavra para não repetir
+                palavrasDisponiveis.splice(index, 1);
                 return true;
             }
             return false;
         });
     });
 
+    // 4. Renderização (Igual ao Alterar, mas com text-align: left para não centralizar)
     if (filtrados.length > 0) {
-        renderizarListaFiltradaApagar(filtrados);
+        lista.innerHTML = filtrados.map(p => {
+            const nomeSeguro = p.nome.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+            
+            return `
+                <div class="sugestao-item" 
+                     style="text-align: left;" 
+                     onclick="selecionarProdutoApagar('${nomeSeguro}', '${p.id}')">
+                    ${p.nome}
+                </div>
+            `;
+        }).join('');
         lista.style.display = "block";
     } else {
-        // Se não condiz, limpa e esconde para eliminar as opções antigas da tela
         lista.innerHTML = "";
         lista.style.display = "none";
     }
