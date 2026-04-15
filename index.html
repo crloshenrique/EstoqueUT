@@ -7,6 +7,26 @@
     <title>PDV Unter Tech</title>
     <style>
 
+/* Ajustes para o título do produto apenas no Celular */
+@media (max-width: 768px) {
+    .nome-produto {
+        font-size: 0.85rem !important; /* Diminui o tamanho da fonte */
+        line-height: 1.1rem !important; /* Ajusta o espaçamento entre linhas */
+        height: 2.2rem !important;      /* Define a altura para exatamente 2 linhas */
+        margin-bottom: 0 !important;   /* Remove o espaço abaixo do título */
+    }
+
+    /* Remove a linha separadora cinza para eliminar o espaço em branco */
+    .info-produto div[style*="height: 1px"] {
+        display: none !important;
+    }
+
+    /* Reduz o padding interno do card para aproximar as informações */
+    .info-produto {
+        padding: 10px 15px !important;
+    }
+}
+
 /* Estilo específico para telas de Computador */
 @media (min-width: 768px) {
     .nome-produto {
