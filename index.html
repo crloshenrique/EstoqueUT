@@ -7,31 +7,36 @@
     <title>PDV Unter Tech</title>
     <style>
 
-/* Ajuste equilibrado de espaçamento no Celular */
+/* Ajuste para eliminar o "fantasma" da terceira linha no Celular */
 @media (max-width: 768px) {
     .nome-produto {
         font-size: 0.78rem !important;
-        line-height: 1rem !important;
-        height: 2rem !important;
+        line-height: 1rem !important; /* Altura exata de cada linha */
+        
+        /* Definimos a altura máxima como EXATAMENTE 2x o line-height */
+        max-height: 2rem !important; 
+        height: auto !important;     /* Deixa o card diminuir se o título for curto */
+        
         display: -webkit-box !important;
         -webkit-line-clamp: 2 !important;
         line-clamp: 2 !important;
         -webkit-box-orient: vertical !important;
-        overflow: hidden !important;
-        margin-bottom: 0 !important; /* Remove margem extra do título */
+        overflow: hidden !important; /* Corta o que passar de 2rem */
+        
+        margin-bottom: 0 !important;
     }
 
     /* A LINHA CINZA (O divisor) */
     .info-produto div[style*="height: 1px"] {
         display: block !important;
-        margin-top: -2px !important;    /* Sobe a linha um pouco em direção ao título */
-        margin-bottom: 8px !important;  /* CRUCIAL: Cria o espaço entre a linha e o estoque */
+        margin-top: 2px !important;    /* Espaço entre o fim das 2 linhas e a régua */
+        margin-bottom: 8px !important; /* Espaço entre a régua e o estoque */
         opacity: 0.5;
     }
 
     /* O ESTOQUE TOTAL */
     .info-produto p {
-        margin: 0 !important;           /* Remove margens padrão que criam buracos */
+        margin: 0 !important;
         line-height: 1.1rem !important;
         font-size: 0.82rem !important;
     }
