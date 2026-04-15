@@ -7,34 +7,37 @@
     <title>PDV Unter Tech</title>
     <style>
 
-/* Ajustes finos para o título e espaçamento no Celular */
 @media (max-width: 768px) {
     .nome-produto {
-        font-size: 0.78rem !important; /* Diminuído um pouco mais */
-        line-height: 1rem !important;    /* Ajuste para não encavalar as letras */
-        height: 2rem !important;         /* Altura fixa para 2 linhas */
-        margin-bottom: 2px !important;   /* Espaço mínimo antes da linha */
+        font-size: 0.78rem !important;
+        line-height: 1rem !important;
+        
+        /* Standard e Vendor Prefixes para compatibilidade */
         display: -webkit-box !important;
-        -webkit-line-clamp: 2;           /* Força o limite de 2 linhas */
-        -webkit-box-orient: vertical;
-        overflow: hidden;
+        -webkit-box-orient: vertical !important;
+        -webkit-line-clamp: 2 !important; 
+        line-clamp: 2 !important; /* Propriedade padrão */
+        
+        overflow: hidden !important;
+        height: 2rem !important;
+        
+        /* Margem negativa agressiva para subir a linha cinza */
+        margin-bottom: -10px !important; 
+        padding-bottom: 0 !important;
     }
 
     /* Ajuste da linha cinza (separador) */
     .info-produto div[style*="height: 1px"] {
-        display: block !important;       /* Garante que ela apareça */
-        margin: 2px 0 !important;        /* Reduz o espaço acima e abaixo da linha */
-        opacity: 0.6;                    /* Deixa a linha mais sutil */
+        display: block !important;
+        margin-top: 0 !important;
+        margin-bottom: 2px !important; /* Espaço mínimo para o estoque */
+        position: relative !important;
+        z-index: 1;
     }
 
-    /* Aproxima as informações de estoque */
     .info-produto {
-        padding: 8px 12px !important;    /* Card um pouco mais compacto */
-    }
-
-    /* Reduz margens internas dos textos de estoque */
-    .info-produto p {
-        margin: 1px 0 !important;
+        /* Ajuste do padding superior do container para ajudar no visual */
+        padding-top: 5px !important;
     }
 }
 
