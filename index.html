@@ -7,15 +7,18 @@
     <title>PDV Unter Tech</title>
     <style>
 
-/* Ajustes finos para o título e espaçamento no Celular */
+/* Ajustes para colar a linha cinza no título no Celular */
 @media (max-width: 768px) {
     .nome-produto {
         font-size: 0.78rem !important;
-        line-height: 1rem !important;
-        height: 2rem !important;
+        line-height: 0.9rem !important; /* Diminuído para o texto ficar mais denso */
         
-        /* Margem negativa puxa o que está abaixo para cima */
-        margin-bottom: -8px !important; 
+        /* Forçamos o fim da altura fixa que estava segurando a linha longe */
+        height: auto !important; 
+        max-height: 1.8rem !important; /* Limite para 2 linhas */
+        
+        /* Margem negativa agressiva para "sugar" a linha para cima */
+        margin-bottom: -12px !important; 
         padding-bottom: 0 !important;
 
         display: -webkit-box !important;
@@ -28,18 +31,20 @@
     /* Ajuste da linha cinza (separador) */
     .info-produto div[style*="height: 1px"] {
         display: block !important;
-        /* margin: Superior Direita Inferior Esquerda */
-        margin: 0px 0 4px 0 !important; 
+        margin-top: 0 !important;
+        margin-bottom: 4px !important; 
+        position: relative !important;
+        z-index: 2; /* Garante que a linha fique visível mesmo com margem negativa */
         opacity: 0.6;
     }
 
-    /* Aproxima as informações de estoque */
+    /* Ajuste de respiro do card */
     .info-produto {
-        padding: 5px 12px 8px 12px !important;
+        padding: 4px 12px 8px 12px !important;
     }
 
     .info-produto p {
-        margin: 1px 0 !important;
+        margin: 0px 0 !important;
     }
 }
 
