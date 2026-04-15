@@ -7,40 +7,45 @@
     <title>PDV Unter Tech</title>
     <style>
 
-/* Ajuste equilibrado de espaçamento no Celular */
 @media (max-width: 768px) {
-.nome-produto {
-        font-size: 0.78rem !important;
-        line-height: 1rem !important;
-        
-        /* Ajuste aqui: troque height fixo por max-height ou auto */
-        height: auto !important; 
-        max-height: 2rem !important; /* 2 linhas x 1rem de line-height */
-        
+    .nome-produto {
+        /* 1. Reset de comportamento */
+        display: block !important; /* Reset inicial */
         display: -webkit-box !important;
-        -webkit-line-clamp: 2 !important;
-        line-clamp: 2 !important;
         -webkit-box-orient: vertical !important;
         overflow: hidden !important;
+        text-overflow: ellipsis !important;
         
-        /* Garante que o texto que "sobrar" não apareça de jeito nenhum */
-        text-overflow: ellipsis !important; 
+        /* 2. Controle rigoroso de linhas */
+        -webkit-line-clamp: 2 !important;
+        line-clamp: 2 !important;
+
+        /* 3. Trava de altura (O "Pulo do Gato") */
+        /* Se o line-height é 1rem, a altura máxima PRECISA ser 2rem */
+        line-height: 1rem !important;
+        height: 2rem !important; 
+        max-height: 2rem !important;
+        
+        /* 4. Limpeza de espaço */
         margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+        word-break: break-word !important; /* Evita que palavras gigantes quebrem o layout */
     }
 
-    /* A LINHA CINZA (O divisor) */
+    /* Caso o erro persista, pode haver um <span> ou <a> dentro da div. 
+       Este seletor abaixo garante que o conteúdo interno também seja cortado */
+    .nome-produto * {
+        display: inline;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* A LINHA CINZA */
     .info-produto div[style*="height: 1px"] {
         display: block !important;
-        margin-top: -2px !important;    /* Sobe a linha um pouco em direção ao título */
-        margin-bottom: 8px !important;  /* CRUCIAL: Cria o espaço entre a linha e o estoque */
+        margin-top: 2px !important; 
+        margin-bottom: 8px !important;
         opacity: 0.5;
-    }
-
-    /* O ESTOQUE TOTAL */
-    .info-produto p {
-        margin: 0 !important;           /* Remove margens padrão que criam buracos */
-        line-height: 1.1rem !important;
-        font-size: 0.82rem !important;
     }
 
     .info-produto {
