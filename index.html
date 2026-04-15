@@ -7,20 +7,13 @@
     <title>PDV Unter Tech</title>
     <style>
 
-/* Ajustes para colar a linha cinza no título no Celular */
+/* Ajustes finos para o título e compactação do estoque no Celular */
 @media (max-width: 768px) {
     .nome-produto {
         font-size: 0.78rem !important;
-        line-height: 0.9rem !important; /* Diminuído para o texto ficar mais denso */
-        
-        /* Forçamos o fim da altura fixa que estava segurando a linha longe */
-        height: auto !important; 
-        max-height: 1.8rem !important; /* Limite para 2 linhas */
-        
-        /* Margem negativa agressiva para "sugar" a linha para cima */
-        margin-bottom: -12px !important; 
-        padding-bottom: 0 !important;
-
+        line-height: 1rem !important;
+        height: 2rem !important;
+        margin-bottom: 2px !important; /* Espaço pequeno entre texto e linha */
         display: -webkit-box !important;
         -webkit-line-clamp: 2 !important;
         line-clamp: 2 !important;
@@ -28,23 +21,24 @@
         overflow: hidden !important;
     }
 
-    /* Ajuste da linha cinza (separador) */
+    /* A LINHA CINZA */
     .info-produto div[style*="height: 1px"] {
         display: block !important;
-        margin-top: 0 !important;
-        margin-bottom: 4px !important; 
-        position: relative !important;
-        z-index: 2; /* Garante que a linha fique visível mesmo com margem negativa */
+        margin: 0 !important; /* Removemos as margens da linha para controle total */
         opacity: 0.6;
     }
 
-    /* Ajuste de respiro do card */
-    .info-produto {
-        padding: 4px 12px 8px 12px !important;
+    /* O ESTOQUE (Informações abaixo da linha) */
+    .info-produto p {
+        /* A MÁGICA ESTÁ AQUI: */
+        margin-top: -6px !important; /* Puxa o estoque para cima da linha cinza */
+        margin-bottom: 0 !important;
+        font-size: 0.85rem !important; /* Ajuste leve para combinar com o título */
     }
 
-    .info-produto p {
-        margin: 0px 0 !important;
+    /* Remove espaço extra do container */
+    .info-produto {
+        padding: 8px 12px 10px 12px !important;
     }
 }
 
