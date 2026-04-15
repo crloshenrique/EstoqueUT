@@ -7,45 +7,42 @@
     <title>PDV Unter Tech</title>
     <style>
 
+/* AJUSTE UNIFICADO PARA MOBILE (CORREÇÃO DE VAZAMENTO) */
 @media (max-width: 768px) {
     .nome-produto {
-        /* 1. Reset de comportamento */
-        display: block !important; /* Reset inicial */
+        /* 1. Forçamos o tamanho da fonte para não aumentar sozinho */
+        font-size: 0.78rem !important;
+        line-height: 1rem !important;
+        
+        /* 2. Trava de segurança: Altura exata para 2 linhas (1rem * 2) */
+        height: 2rem !important;
+        max-height: 2rem !important;
+        
+        /* 3. Comportamento de corte */
         display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        line-clamp: 2 !important;
         -webkit-box-orient: vertical !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
         
-        /* 2. Controle rigoroso de linhas */
-        -webkit-line-clamp: 2 !important;
-        line-clamp: 2 !important;
-
-        /* 3. Trava de altura (O "Pulo do Gato") */
-        /* Se o line-height é 1rem, a altura máxima PRECISA ser 2rem */
-        line-height: 1rem !important;
-        height: 2rem !important; 
-        max-height: 2rem !important;
-        
-        /* 4. Limpeza de espaço */
-        margin-bottom: 0 !important;
-        padding-bottom: 0 !important;
-        word-break: break-word !important; /* Evita que palavras gigantes quebrem o layout */
+        /* 4. Reset de espaçamentos que empurram o texto */
+        margin: 0 0 5px 0 !important;
+        padding: 0 !important;
     }
 
-    /* Caso o erro persista, pode haver um <span> ou <a> dentro da div. 
-       Este seletor abaixo garante que o conteúdo interno também seja cortado */
-    .nome-produto * {
-        display: inline;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    /* A LINHA CINZA */
+    /* Ajuste da linha cinza para não encavalar */
     .info-produto div[style*="height: 1px"] {
         display: block !important;
-        margin-top: 2px !important; 
+        margin-top: 2px !important;
         margin-bottom: 8px !important;
         opacity: 0.5;
+    }
+
+    .info-produto p {
+        margin: 0 !important;
+        line-height: 1.1rem !important;
+        font-size: 0.82rem !important;
     }
 
     .info-produto {
@@ -679,20 +676,6 @@
         flex-direction: column !important;
         justify-content: flex-start !important; 
         flex-grow: 1 !important;
-    }
-
-    .info-produto h3 {
-        font-size: 0.85rem;
-        height: auto !important; 
-        min-height: 2.2rem;
-        line-height: 1.1rem;
-        margin-bottom: 8px !important; 
-        /* Garante que o texto longo não quebre o layout */
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
     }
     
     .estoque-geral-container {
