@@ -9,16 +9,23 @@
 
 /* Ajuste equilibrado de espaçamento no Celular */
 @media (max-width: 768px) {
-    .nome-produto {
+.nome-produto {
         font-size: 0.78rem !important;
         line-height: 1rem !important;
-        height: 2rem !important;
+        
+        /* Ajuste aqui: troque height fixo por max-height ou auto */
+        height: auto !important; 
+        max-height: 2rem !important; /* 2 linhas x 1rem de line-height */
+        
         display: -webkit-box !important;
         -webkit-line-clamp: 2 !important;
         line-clamp: 2 !important;
         -webkit-box-orient: vertical !important;
         overflow: hidden !important;
-        margin-bottom: 0 !important; /* Remove margem extra do título */
+        
+        /* Garante que o texto que "sobrar" não apareça de jeito nenhum */
+        text-overflow: ellipsis !important; 
+        margin-bottom: 0 !important;
     }
 
     /* A LINHA CINZA (O divisor) */
