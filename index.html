@@ -7,38 +7,37 @@
     <title>PDV Unter Tech</title>
     <style>
 
-/* Ajustes finos para o título e compactação do estoque no Celular */
+/* Ajuste equilibrado de espaçamento no Celular */
 @media (max-width: 768px) {
     .nome-produto {
         font-size: 0.78rem !important;
         line-height: 1rem !important;
         height: 2rem !important;
-        margin-bottom: 2px !important; /* Espaço pequeno entre texto e linha */
         display: -webkit-box !important;
         -webkit-line-clamp: 2 !important;
         line-clamp: 2 !important;
         -webkit-box-orient: vertical !important;
         overflow: hidden !important;
+        margin-bottom: 0 !important; /* Remove margem extra do título */
     }
 
-    /* A LINHA CINZA */
+    /* A LINHA CINZA (O divisor) */
     .info-produto div[style*="height: 1px"] {
         display: block !important;
-        margin: 0 !important; /* Removemos as margens da linha para controle total */
-        opacity: 0.6;
+        margin-top: -2px !important;    /* Sobe a linha um pouco em direção ao título */
+        margin-bottom: 8px !important;  /* CRUCIAL: Cria o espaço entre a linha e o estoque */
+        opacity: 0.5;
     }
 
-    /* O ESTOQUE (Informações abaixo da linha) */
+    /* O ESTOQUE TOTAL */
     .info-produto p {
-        /* A MÁGICA ESTÁ AQUI: */
-        margin-top: -6px !important; /* Puxa o estoque para cima da linha cinza */
-        margin-bottom: 0 !important;
-        font-size: 0.85rem !important; /* Ajuste leve para combinar com o título */
+        margin: 0 !important;           /* Remove margens padrão que criam buracos */
+        line-height: 1.1rem !important;
+        font-size: 0.82rem !important;
     }
 
-    /* Remove espaço extra do container */
     .info-produto {
-        padding: 8px 12px 10px 12px !important;
+        padding: 8px 12px 12px 12px !important;
     }
 }
 
