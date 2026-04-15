@@ -9,12 +9,13 @@
 
 /* Ajuste preciso para eliminar a rebarba da terceira linha no Celular */
 @media (max-width: 768px) {
-    .nome-produto {
+.nome-produto {
         font-size: 0.78rem !important;
-        line-height: 1rem !important;
+        line-height: 16px !important; /* Altura da linha fixa em pixels */
         
-        /* Reduzimos para 1.8rem para garantir que a 3ª linha seja totalmente bloqueada */
-        height: 1.8rem !important; 
+        /* Travamos a altura em EXATAMENTE 32px (16px * 2 linhas) */
+        /* Isso impede fisicamente a terceira linha de aparecer */
+        height: 32px !important; 
         
         display: -webkit-box !important;
         -webkit-line-clamp: 2 !important;
@@ -22,6 +23,7 @@
         -webkit-box-orient: vertical !important;
         overflow: hidden !important;
         margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
     }
 
     /* A LINHA CINZA (Mantida exatamente como você queria) */
