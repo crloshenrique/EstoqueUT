@@ -7,23 +7,34 @@
     <title>PDV Unter Tech</title>
     <style>
 
-/* Ajustes para o título do produto apenas no Celular */
+/* Ajustes finos para o título e espaçamento no Celular */
 @media (max-width: 768px) {
     .nome-produto {
-        font-size: 0.85rem !important; /* Diminui o tamanho da fonte */
-        line-height: 1.1rem !important; /* Ajusta o espaçamento entre linhas */
-        height: 2.2rem !important;      /* Define a altura para exatamente 2 linhas */
-        margin-bottom: 0 !important;   /* Remove o espaço abaixo do título */
+        font-size: 0.78rem !important; /* Diminuído um pouco mais */
+        line-height: 1rem !important;    /* Ajuste para não encavalar as letras */
+        height: 2rem !important;         /* Altura fixa para 2 linhas */
+        margin-bottom: 2px !important;   /* Espaço mínimo antes da linha */
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2;           /* Força o limite de 2 linhas */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
 
-    /* Remove a linha separadora cinza para eliminar o espaço em branco */
+    /* Ajuste da linha cinza (separador) */
     .info-produto div[style*="height: 1px"] {
-        display: none !important;
+        display: block !important;       /* Garante que ela apareça */
+        margin: 2px 0 !important;        /* Reduz o espaço acima e abaixo da linha */
+        opacity: 0.6;                    /* Deixa a linha mais sutil */
     }
 
-    /* Reduz o padding interno do card para aproximar as informações */
+    /* Aproxima as informações de estoque */
     .info-produto {
-        padding: 10px 15px !important;
+        padding: 8px 12px !important;    /* Card um pouco mais compacto */
+    }
+
+    /* Reduz margens internas dos textos de estoque */
+    .info-produto p {
+        margin: 1px 0 !important;
     }
 }
 
