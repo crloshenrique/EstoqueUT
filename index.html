@@ -9,13 +9,10 @@
 
 @media (max-width: 768px) {
     .nome-produto {
-        /* 1. Diminuí de 0.78rem para 0.72rem */
         font-size: 0.72rem !important;
-        
-        /* Ajustei o line-height para 0.9rem para as linhas ficarem mais juntas */
         line-height: 0.9rem !important;
         
-        /* 2. A trava de segurança agora é 1.8rem (0.9rem do line-height * 2 linhas) */
+        /* Mantemos a trava de 2 linhas */
         height: 1.8rem !important;
         max-height: 1.8rem !important;
         
@@ -26,21 +23,20 @@
         overflow: hidden !important;
         text-overflow: ellipsis !important;
         
-        /* Diminuí a margem de baixo de 5px para 2px */
-        margin: 0 0 2px 0 !important;
+        /* 1. AUMENTADO: De 2px para 8px para dar mais respiro */
+        margin: 0 0 8px 0 !important; 
         padding: 0 !important;
     }
 
     /* Ajuste da linha cinza (O divisor) */
     .info-produto div[style*="height: 1px"] {
         display: block !important;
-        /* margin-top negativo faz a linha subir em direção ao título */
-        margin-top: -2px !important; 
+        /* 2. CORRIGIDO: Removi o valor negativo para a linha não subir */
+        margin-top: 0 !important;    
         margin-bottom: 8px !important;
         opacity: 0.5;
     }
 
-    /* Mantive o restante igual para não desconfigurar o card */
     .info-produto p {
         margin: 0 !important;
         line-height: 1.1rem !important;
