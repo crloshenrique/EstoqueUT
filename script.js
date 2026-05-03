@@ -411,6 +411,9 @@ function mostrarOpcoesAlterar() {
 function exibirFormularioAdicionar(produto = null) {
     const mainContent = document.getElementById('main-content');
     const modoEdicao = produto !== null; // Se recebeu um produto, é modo edição
+    const nomeSeguro = modoEdicao 
+    ? produto.nome.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;")
+    : '';
 
     mainContent.innerHTML = `
         <div style="max-width: 1000px; margin: 0 auto; animation: fadeIn 0.3s ease;">
@@ -424,7 +427,7 @@ function exibirFormularioAdicionar(produto = null) {
                     <div style="background: white; padding: 25px; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
                         <div style="margin-bottom: 15px;">
                             <label style="font-weight: bold; display: block; margin-bottom: 8px; font-size: 0.9rem;">Nome</label>
-                            <input type="text" id="addNome" value="${modoEdicao ? produto.nome : ''}" placeholder="Ex: Smartwatch Ultra 9" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; outline: none;">
+                            <input type="text" id="addNome" value="${nomeSeguro}" placeholder="Ex: Smartwatch Ultra 9" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; outline: none;">
                         </div>
 
                         <div style="margin-bottom: 15px;">
@@ -939,8 +942,7 @@ function toggleListaAlterar(event) {
 function renderizarListaFiltrada(dados) {
     const lista = document.getElementById('listaSugestoes');
     lista.innerHTML = dados.map(p => {
-        // Criamos uma variável com o nome tratado (escapando a aspa simples)
-        const nomeEscapado = p.nome.replace(/'/g, "\\'");
+        const nomeEscapado = p.nome.replace(/'/g, "\\'").replace(/"/g, "&quot;");
         
         return `
             <div class="sugestao-item" onclick="selecionarProdutoAlterar('${nomeEscapado}', '${p.id}')">
@@ -1233,13 +1235,16 @@ function renderizarListaFiltradaApagar(dados) {
     lista.style.overflowY = "auto";
     lista.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";
 
-    lista.innerHTML = dados.map(p => `
+    lista.innerHTML = dados.map(p => {
+    const nomeSeguro = p.nome.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+    return `
         <div class="sugestao-item" 
              style="padding: 12px 20px; cursor: pointer; border-bottom: 1px solid #f5f5f5; text-align: left;"
-             onclick="selecionarProdutoApagar('${p.nome.replace(/'/g, "\\'")}', '${p.id}')">
+             onclick="selecionarProdutoApagar('${nomeSeguro}', '${p.id}')">
             ${p.nome}
         </div>
-    `).join('');
+    `;
+}).join('');
 }
 
 // 5. Quando o usuário clica em um produto da lista
@@ -1248,7 +1253,7 @@ function selecionarProdutoApagar(nome, id) {
     const lista = document.getElementById('listaSugestoesApagar');
     const btn = document.getElementById('btnProsseguirApagar');
     
-    input.value = nome;
+    input.value = nome.replace(/&quot;/g, '"');
     input.dataset.idSelecionado = id; // Guarda o ID para o delete
     lista.style.display = "none";     // Esconde a lista
     btn.disabled = false;             // Libera o botão "Apagar"
