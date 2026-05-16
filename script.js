@@ -3,6 +3,33 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let filtroTipoAtivo = ""; // Guarda o tipo selecionado pelo usuário
 
+const Marcas = [
+    "Baseus",
+    "Ugreen",
+    "Vention",
+    "Essager",
+    "Toocki",
+    "Logitech",
+    "Lenovo",
+    "Elgin",
+    "Multi",
+    //"Fortrek",
+];
+
+function obterSeloMarca(nomeProduto) {
+    if (!nomeProduto) return '';
+    const marcaEncontrada = Marcas.find(marca => {
+        const regex = new RegExp(`(^|\\s)${marca}(\\s|$)`, 'i');
+        return regex.test(nomeProduto);
+    });
+    if (!marcaEncontrada) return '';
+    return `
+        <div style="position: absolute; top: 0; left: 8px; right: 0; z-index: 10; overflow: hidden;">
+            <img src="imagens/marcas/${marcaEncontrada}.png" alt="${marcaEncontrada}" style="width: 40%; display: block; border-radius: 0 0 10px 10px;">
+        </div>
+    `;
+}
+
 // Função exclusiva para a tela de Estoque
 async function mostrarEstoque() {
     resetarFiltrosEstoque();
@@ -120,10 +147,13 @@ let html = `
             ? "filter: brightness(0) saturate(100%) invert(15%) sepia(95%) saturate(6932%) hue-rotate(358deg) brightness(95%) contrast(112%);" 
             : "";
 
+        const seloMarcaHtml = obterSeloMarca(item.nome);
+
         html += `
             <div class="card-container" data-tipo="${item.tipo || ''}" onclick="girarCarta(this)">
                 <div class="card-body">
-                    <div class="card-front">
+                    <div class="card-front" style="position: relative;">
+                        ${seloMarcaHtml}
                         <div class="foto-quadrada">
                             <img src="${item.imagem_url || 'imagens/placeholder.png'}" alt="${item.nome}">
                         </div>
@@ -183,6 +213,13 @@ function girarCarta(elemento) {
         elemento.classList.add('girado');
     }
 }
+
+document.addEventListener('click', function(event) {
+    if (event.target.closest('.card-container')) return;
+    document.querySelectorAll('.card-container.girado').forEach(carta => {
+        carta.classList.remove('girado');
+    });
+});
 
 function filtrarProdutos() {
     const termoBusca = document.getElementById('inputBusca').value.toLowerCase();
