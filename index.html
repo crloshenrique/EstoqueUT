@@ -75,13 +75,43 @@
     margin-top: 15px;
 }
 
+.card-container.sem-estoque .foto-quadrada img {
+    filter: grayscale(100%);
+    opacity: 0.5;
+}
 
-/* Animação do ícone de carregamento */
+.card-container.sem-estoque .nome-produto,
+.card-container.sem-estoque .numero-estoque {
+    color: #999;
+}
+
+.card-container.sem-estoque {
+    position: relative;
+}
+
+.card-container:hover .card-front {
+    border-color: var(--accent-color);
+}
+
+.card-container.sem-estoque::after {
+    content: "Indisponível";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 6px;
+    z-index: 2;
+}
+
 .loader-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 200px; /* Garante que fique centralizado na área de conteúdo */
+    height: calc(100vh - 80px);
     width: 100%;
 }
 

@@ -16,26 +16,25 @@ const Marcas = [
     //"Fortrek",
 ];
 
-function obterSeloMarca(nomeProduto) {
+function obterSeloMarca(nomeProduto, semEstoque = false) {
     if (!nomeProduto) return '';
     const marcaEncontrada = Marcas.find(marca => {
         const regex = new RegExp(`(^|\\s)${marca}(\\s|$)`, 'i');
         return regex.test(nomeProduto);
     });
     if (!marcaEncontrada) return '';
+    const estiloCinza = semEstoque ? 'filter: grayscale(100%);' : '';
     return `
         <div style="position: absolute; top: 0; left: 8px; right: 0; z-index: 10; overflow: hidden;">
-            <img src="imagens/marcas/${marcaEncontrada}.png" alt="${marcaEncontrada}" style="width: 40%; display: block; border-radius: 0 0 10px 10px;">
+            <img src="imagens/marcas/${marcaEncontrada}.png" alt="${marcaEncontrada}" style="width: 40%; display: block; border-radius: 0 0 10px 10px; ${estiloCinza}">
         </div>
     `;
 }
 
-// Função exclusiva para a tela de Estoque
 async function mostrarEstoque() {
     resetarFiltrosEstoque();
     const mainContent = document.getElementById('main-content');
 
-    // Substituído o texto pelo ícone centralizado
     mainContent.innerHTML = `
         <div class="loader-container">
             <div class="loader"></div>
@@ -52,7 +51,14 @@ async function mostrarEstoque() {
         return;
     }
 
-// ... dentro da função mostrarEstoque ...
+    produtos.sort((a, b) => {
+    const totalA = a.variacoes?.variacoes ? a.variacoes.variacoes.reduce((s, v) => s + (parseInt(v.quantidade) || 0), 0) : 0;
+    const totalB = b.variacoes?.variacoes ? b.variacoes.variacoes.reduce((s, v) => s + (parseInt(v.quantidade) || 0), 0) : 0;
+    if (totalA === 0 && totalB > 0) return 1;
+    if (totalA > 0 && totalB === 0) return -1;
+    return 0;
+    });
+
 let html = `
     <h1 style="text-align: center; width: 100%; margin-bottom: 30px;">Estoque</h1>
     <div class="busca-container">
@@ -67,9 +73,9 @@ let html = `
                 display: flex; 
                 gap: 12px; 
                 align-items: center;
-                border-left: 1px solid #e0e0e0; /* A linha cinza claro */
-                padding-left: 12px;            /* Espaço entre a linha e o primeiro ícone */
-                height: 25px;                  /* Altura da linha vertical */
+                border-left: 1px solid #e0e0e0;
+                padding-left: 12px;
+                height: 25px;
             ">
                 <img src="imagens/categoria.png" title="Categorias" style="width: 20px; cursor: pointer;" onclick="toggleMenuFiltro()">
                 <img src="imagens/filtro.png" title="Filtros de Estoque" style="width: 20px; cursor: pointer;" onclick="toggleMenuEstoque()">
@@ -81,108 +87,70 @@ let html = `
     </div>
     <div class="grid-produtos" id="gridProdutos">
 `;
+let divisorInserido = false;
 
     produtos.forEach(item => {
-        const dadosEstoque = item.cor || {}; 
-        let estoqueGeral = 0;
-        let listaCoresHtml = "";
-
-        // Percorre Estoque C e Estoque E
-        ["Estoque C", "Estoque E"].forEach((nomeEstoque) => {
-            const cores = dadosEstoque[nomeEstoque] || {};
-            
-            // Título do Estoque
-            listaCoresHtml += `<div style="font-weight: bold; margin-top: 10px; margin-bottom: 5px; color: var(--accent-color); border-bottom: 1px solid #eee; width: 100%; font-size: 0.85rem;">${nomeEstoque}</div>`;
-
-            // Criamos uma mini-grid para as cores deste estoque específico
-            listaCoresHtml += `<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; justify-items: center; width: 100%; margin-bottom: 10px;">`;
-
-            // --- LÓGICA PARA MANTER A ORDEM ---
-            const chaveOrdem = nomeEstoque === "Estoque C" ? "ordemC" : "ordemE";
-            const ordemParaUsar = dadosEstoque[chaveOrdem] || Object.keys(cores);
-
-            ordemParaUsar.forEach((cor) => {
-                const qtd = cores[cor];
-                const quantidade = Number(qtd) || 0;
-                estoqueGeral += quantidade;
-
-                const hexCorBolinha = obterHexDaCor(cor);
-
-                listaCoresHtml += `
-                    <div style="
-                        display: flex; 
-                        align-items: center; 
-                        justify-content: center; 
-                        background-color: #ebebeb; 
-                        border-radius: 20px; 
-                        padding: 4px 0;
-                        border: 1px solid #e0e0e0;
-                        width: 100%;
-                        max-width: 60px;
-                    ">
-                        <span style="
-                            width: 14px; 
-                            height: 14px; 
-                            background: ${hexCorBolinha};
-                            border-radius: 50%; 
-                            margin-right: 5px; 
-                            display: inline-block;
-                            flex-shrink: 0;
-                            box-sizing: border-box; 
-                        "></span>
-                        <strong style="line-height: 1; font-size: 0.85rem; min-width: 15px; text-align: center;">${quantidade}</strong>
-                    </div>
-                `;
-            });
-
-            listaCoresHtml += `</div>`; // Fecha a mini-grid de cores
-        });
-
-        const preco = item.valor 
+        const precoFormatado = item.valor 
             ? Number(item.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }).replace(/\s/g, '') 
             : 'R$0,00';
 
-        // Filtro para Vermelho Vivo (aplicado apenas se estoqueGeral for 0)
-        const filtroIcone = estoqueGeral === 0 
-            ? "filter: brightness(0) saturate(100%) invert(15%) sepia(95%) saturate(6932%) hue-rotate(358deg) brightness(95%) contrast(112%);" 
-            : "";
+const preco = precoFormatado.replace('R$', '<span style="font-size: 0.7em; margin-right: 2px;">R$</span>');
 
-        const seloMarcaHtml = obterSeloMarca(item.nome);
+        const variacoesJson = item.variacoes 
+            ? encodeURIComponent(JSON.stringify(item.variacoes)) 
+            : '';
+
+const estoqueTotal = item.variacoes?.variacoes
+    ? item.variacoes.variacoes.reduce((soma, v) => soma + (parseInt(v.quantidade) || 0), 0)
+    : 0;
+
+        const seloMarcaHtml = obterSeloMarca(item.nome, estoqueTotal === 0);
+
+if (estoqueTotal === 0 && !divisorInserido) {
+    html += `
+        <div id="divisorSemEstoque" style="display: contents;">
+            <h3 style="grid-column: 1 / -1; color: #999; font-size: 0.95rem; font-weight: 600; margin: 10px 0 -20px 0;">Sem estoque</h3>
+            <div style="grid-column: 1 / -1; height: 1px; background-color: #eee; margin: 10px 0;"></div>
+        </div>
+    `;
+    divisorInserido = true;
+}
 
         html += `
-            <div class="card-container" data-tipo="${item.tipo || ''}" onclick="girarCarta(this)">
-                <div class="card-body">
-                    <div class="card-front" style="position: relative;">
+            <div class="card-container ${estoqueTotal === 0 ? 'sem-estoque' : ''}" data-tipo="${item.tipo || ''}" data-estoque-total="${estoqueTotal}"
+                onclick="abrirModalVariacoes('${variacoesJson}', '${item.nome.replace(/'/g, "\\'")}')"
+onmouseenter="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 24px rgba(0,71,171,0.15)'"
+                onmouseleave="this.style.transform='translateY(0)'; this.style.boxShadow=''"
+                style="
+                    cursor: pointer;
+                    transition: transform 0.2s ease, box-shadow 0.2s ease;
+                    perspective: none;
+                    border-radius: 16px;
+                ">
+                <div class="card-body" style="
+                    transform: none;
+                    transform-style: flat;
+                    transition: none;
+                    border-radius: 16px;
+                ">
+                    <div class="card-front" style="position: relative; backface-visibility: visible; border-radius: 16px; overflow: hidden;">
                         ${seloMarcaHtml}
                         <div class="foto-quadrada">
                             <img src="${item.imagem_url || 'imagens/placeholder.png'}" alt="${item.nome}">
                         </div>
                         <div class="info-produto" style="padding: 15px; display: flex; flex-direction: column;">
                             
-                            <h3 class="nome-produto" style=" font-size: 1rem; color: #0047ab; line-height: 1.2rem; height: 2.4rem; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+<h3 class="nome-produto" style="font-size: 0.9rem; color: ${estoqueTotal === 0 ? '#999' : '#0047ab'}; line-height: 1.2rem; height: 2.4rem; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
                                 ${item.nome}
                             </h3>
 
-                            <div style="width: 100%; height: 1px; background-color: #eee; margin: 8px 0;"></div>
+                            <div style="width: 100%; height: 1px; background-color: #eee; margin: -2px 0 8px 0;"></div>
                         
-                            <div style="display: flex; align-items: center; gap: 22px;">
-                                
-                                <div style="display: flex; align-items: center; gap: 4px;">
-                                    <img src="imagens/estoque.png" class="icone-estoque-p" style="${filtroIcone}">
-                                    <span class="numero-estoque">${estoqueGeral}</span>
-                                </div>
-                                
-                                <div style="display: flex; align-items: center; gap: 4px;">
-                                    <img src="imagens/dinheiro.png" class="icone-estoque-p">
-                                    <span class="numero-estoque">${preco}</span>
-                                </div>
-                                
+                            <div style="display: flex; align-items: center; justify-content: flex-start; gap: 4px;">
+<img src="imagens/dinheiro.png" class="icone-estoque-p" style="${estoqueTotal === 0 ? 'filter: grayscale(100%); opacity: 0.5;' : ''}">
+                                <span class="numero-estoque" style="margin-left: 4px;">${preco}</span>
                             </div>
                         </div>
-                    </div>
-                    <div class="card-back" style="flex-direction: column; justify-content: flex-start; padding: 15px; overflow-y: auto;">
-                        <h4 style="font-size: 0.9rem; margin-bottom: 5px; text-align: center; width: 100%;">Distribuição</h4>
-                        ${listaCoresHtml || '<p style="color: #999;">Sem dados</p>'}
                     </div>
                 </div>
             </div>
@@ -192,6 +160,143 @@ let html = `
     html += '</div>';
     mainContent.innerHTML = html;
     carregarTiposFiltro(produtos);
+}
+
+function abrirModalVariacoes(variacoesEncoded, nomeProduto) {
+    const dados = variacoesEncoded ? JSON.parse(decodeURIComponent(variacoesEncoded)) : null;
+
+    if (!document.getElementById('_modalAnim')) {
+        const style = document.createElement('style');
+        style.id = '_modalAnim';
+        style.textContent = `
+            @keyframes modalEntrada {
+                from { opacity: 0; transform: scale(0.88) translateY(12px); }
+                to   { opacity: 1; transform: scale(1)    translateY(0); }
+            }
+            @keyframes overlayEntrada {
+                from { background: rgba(0,0,0,0); }
+                to   { background: rgba(0,0,0,0.5); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    const modal = document.createElement('div');
+    modal.id = 'modalVariacoesEstoque';
+    modal.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.5); z-index: 9999;
+        display: flex; align-items: center; justify-content: center;
+        padding: 20px; box-sizing: border-box;
+        animation: overlayEntrada 0.2s ease both;
+    `;
+
+    let conteudo = '';
+
+    if (!dados || !dados.eixos || !dados.variacoes || dados.variacoes.length === 0) {
+        conteudo = `<p style="color: #999; text-align: center; padding: 20px;">Sem variações cadastradas.</p>`;
+    } else {
+const { eixos, variacoes } = dados;
+
+// Empacota as variações do produto à esquerda, seguidas da quantidade,
+// e preenche o resto com espaços vazios.
+const slots = [...eixos, 'quantidade'];
+while (slots.length < 4) slots.push(null);
+
+const linhas = variacoes.map((v, i) => {
+    const celulas = slots.map(eixo => {
+        if (!eixo) {
+            return `<div style="flex: 1;"></div>`;
+        }
+
+        const icone = `imagens/variacoes/${eixo}.png`;
+        let valor = '';
+
+                if (eixo === 'cor') {
+                    if (v.cor) {
+                        const hex = obterHexDaCor(v.cor);
+                        valor = `<span style="
+                            width: 16px; height: 16px; border-radius: 50%;
+                            background: ${hex}; display: inline-block;
+                            border: 1px solid #ccc; flex-shrink: 0;
+                        "></span>`;
+                    }
+                } else {
+                    valor = `<span style="font-size: 0.85rem; color: #333;">${v[eixo] ?? 0}</span>`;
+                }
+
+                return `
+                    <div style="display: flex; align-items: center; gap: 6px; flex: 1;">
+                        <img src="${icone}" style="width: 18px; height: 18px; object-fit: contain; flex-shrink: 0;">
+                        ${valor}
+                    </div>
+                `;
+            });
+
+            return `
+                <div style="
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    padding: 10px 14px;
+                    background: #f9f9f9;
+                    border-radius: 8px;
+                    border: 1px solid #eee;
+                ">
+                    ${celulas.join('')}
+                </div>
+            `;
+        });
+
+        conteudo = `
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                ${linhas.join('')}
+            </div>
+        `;
+    }
+
+    modal.innerHTML = `
+        <div style="
+            background: white;
+            border-radius: 16px;
+            max-width: 560px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            animation: modalEntrada 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        ">
+            <div style="
+                padding: 18px 20px;
+                border-bottom: 1px solid #eee;
+                display: flex; align-items: center; justify-content: space-between;
+                gap: 12px;
+            ">
+                <div style="flex: 1; min-width: 0; overflow: hidden;">
+                    <h3 style="
+                        margin: 0;
+                        font-size: 1rem;
+                        color: var(--accent-color);
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    ">${nomeProduto}</h3>
+                </div>
+                <button onclick="document.getElementById('modalVariacoesEstoque').remove()" style="
+                    background: none; border: none; font-size: 1.3rem;
+                    cursor: pointer; color: #999; line-height: 1;
+                    flex-shrink: 0;
+                ">&times;</button>
+            </div>
+            <div style="padding: 16px 20px; max-height: 65vh; overflow-y: auto;">
+                ${conteudo}
+            </div>
+        </div>
+    `;
+
+    modal.addEventListener('click', e => {
+        if (e.target === modal) modal.remove();
+    });
+
+    document.body.appendChild(modal);
 }
 
 // Função para girar a carta garantindo que apenas uma fique virada
@@ -230,11 +335,12 @@ function filtrarProdutos() {
     const termosBusca = termoBusca.split(" ").filter(t => t.trim() !== "");
     
     let encontrouAlgum = false;
+    let temSemEstoqueVisivel = false;
 
     cards.forEach(card => {
         const nomeProduto = card.querySelector('.nome-produto').innerText.toLowerCase();
         const tipoProduto = (card.getAttribute('data-tipo') || "").toLowerCase();
-        const qtdEstoque = parseInt(card.querySelector('.numero-estoque').innerText);
+        const qtdEstoque = parseInt(card.getAttribute('data-estoque-total')) || 0;
 
         // --- LÓGICA ANTI-REPETIÇÃO ---
         const palavrasNome = nomeProduto.split(" ").filter(p => p.trim() !== "");
@@ -262,16 +368,19 @@ function filtrarProdutos() {
         if (filtroEstoqueAtivo === "Sem estoque") {
             bateEstoque = (qtdEstoque === 0);
         } else if (filtroEstoqueAtivo === "Acabando") {
-            bateEstoque = (qtdEstoque > 0 && qtdEstoque < 5);
+            bateEstoque = (qtdEstoque > 0 && qtdEstoque <= 3);
         }
 
         if (bateNome && bateTipo && bateEstoque) {
-            card.style.display = "block";
-            encontrouAlgum = true; 
-        } else {
-            card.style.display = "none";
-        }
-    });
+                    card.style.display = "block";
+                    encontrouAlgum = true;
+                    if (qtdEstoque === 0) {
+                        temSemEstoqueVisivel = true;
+                    }
+                } else {
+                    card.style.display = "none";
+                }
+            });
 
     // Lógica de "Sem resultados"
     const mensagemAntiga = document.getElementById('msg-sem-resultado');
@@ -285,14 +394,27 @@ function filtrarProdutos() {
         grid.appendChild(msg);
     }
 
+
+const divisor = document.getElementById('divisorSemEstoque');
+    if (divisor) {
+        const filtroEstoqueOk = (filtroEstoqueAtivo === "" || filtroEstoqueAtivo === "Todos");
+        divisor.style.display = (filtroEstoqueOk && temSemEstoqueVisivel) ? "contents" : "none";
+    }
+
     // Ordenação Especial para "Acabando"
     if (filtroEstoqueAtivo === "Acabando") {
-        cards.sort((a, b) => {
-            const qtdA = parseInt(a.querySelector('.numero-estoque').innerText);
-            const qtdB = parseInt(b.querySelector('.numero-estoque').innerText);
+        const cardsOrdenados = [...cards].sort((a, b) => {
+            const qtdA = parseInt(a.getAttribute('data-estoque-total')) || 0;
+            const qtdB = parseInt(b.getAttribute('data-estoque-total')) || 0;
             return qtdA - qtdB;
         });
-        cards.forEach(card => grid.appendChild(card));
+        cardsOrdenados.forEach((card, index) => {
+            card.style.order = index;
+        });
+    } else {
+        cards.forEach(card => {
+            card.style.order = "";
+        });
     }
 }
 
@@ -445,9 +567,18 @@ function mostrarOpcoesAlterar() {
     `;
 }
 
+
+
+
+
+
+
+
+
+
 function exibirFormularioAdicionar(produto = null) {
     const mainContent = document.getElementById('main-content');
-    const modoEdicao = produto !== null; // Se recebeu um produto, é modo edição
+    const modoEdicao = produto !== null;
     const nomeSeguro = modoEdicao 
     ? produto.nome.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;")
     : '';
@@ -458,7 +589,7 @@ function exibirFormularioAdicionar(produto = null) {
                 ${modoEdicao ? 'Alterar produto' : 'Cadastrar produto'}
             </h1>
 
-            <form id="formAdicionar" data-id-edicao="${modoEdicao ? produto.id : ''}" style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; align-items: start;">
+            <form id="formAdicionar" data-id-edicao="${modoEdicao ? produto.id : ''}" style="display: grid; grid-template-columns: 1fr 1.6fr; gap: 30px; align-items: start;">
                 
                 <div id="bloco-dados-produto">
                     <div style="background: white; padding: 25px; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
@@ -549,62 +680,504 @@ function exibirFormularioAdicionar(produto = null) {
                     </div>
                 </div>
 
-                <div id="bloco-estoques-cores" style="display: flex; flex-direction: column; gap: 20px;">
-                    <div style="background: white; border: 1px solid #eee; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h3 style="font-size: 0.9rem; margin-bottom: 15px; color: var(--accent-color); font-weight: bold;">Estoque C</h3>
-                        <div id="container-cores-C" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 15px;"></div>
-                        <button type="button" onclick="abrirSeletorCores('C')" style="width: 100%; padding: 10px; border: 1px dashed var(--accent-color); background: #f0f7ff; color: var(--accent-color); border-radius: 8px; cursor: pointer; font-weight: bold;">+ Adicionar cor</button>
-                    </div>
-
-                    <div style="background: white; border: 1px solid #eee; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h3 style="font-size: 0.9rem; margin-bottom: 15px; color: var(--accent-color); font-weight: bold;">Estoque E</h3>
-                        <div id="container-cores-E" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 15px;"></div>
-                        <button type="button" onclick="abrirSeletorCores('E')" style="width: 100%; padding: 10px; border: 1px dashed var(--accent-color); background: #f0f7ff; color: var(--accent-color); border-radius: 8px; cursor: pointer; font-weight: bold;">+ Adicionar cor</button>
-                    </div>
-                </div>
-
+<div id="bloco-estoques-cores" style="display: flex; flex-direction: column; gap: 20px; min-width: 0;">
+    <div style="background: white; border: 1px solid #eee; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); width: 100%; box-sizing: border-box; min-width: 0;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+    <h3 style="font-size: 0.9rem; color: var(--accent-color); font-weight: bold; margin: 0;">Estoque</h3>
+    <img src="imagens/variacoes.png" onclick="abrirSeletorVariacao()" title="Variações" style="width: 22px; cursor: pointer;">
+</div>
+        <div id="container-variacoes" style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px; overflow-x: auto; min-width: 0;"></div>
+    </div>
+</div>
                 <button type="button" id="btn-salvar-produto" onclick="salvarNovoProduto()" 
                     style="padding: 20px; background: var(--accent-color); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem; box-shadow: 0 4px 15px rgba(0, 71, 171, 0.2);">
                     ${modoEdicao ? 'Alterar produto' : 'Salvar produto'}
                 </button>
             </form>
         </div>
+    `;
 
-        <div id="modalSeletorCores" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center;">
-            <div style="background: white; padding: 25px; border-radius: 15px; max-width: 400px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
-                <h3 style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Cor para Estoque <span id="labelEstoqueAlvo"></span></h3>
-                <div id="lista-opcoes-cores" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-height: 300px; overflow-y: auto;"></div>
-                <button type="button" onclick="document.getElementById('modalSeletorCores').style.display='none'" style="margin-top: 20px; width: 100%; padding: 10px; border: none; border-radius: 8px; background: #eee; cursor: pointer;">Cancelar</button>
+    // Se for edição e o produto tiver variações salvas, pré-carrega elas
+    if (modoEdicao && produto.variacoes && produto.variacoes.eixos && produto.variacoes.variacoes) {
+        eixosSelecionados = [...produto.variacoes.eixos];
+        renderizarBlocoVariacoes();
+        preencherVariacoesEdicao(produto.variacoes.variacoes);
+    }  else {
+        // Cadastro de produto novo: garante que não sobrou seleção de uma sessão anterior
+        eixosSelecionados = [];
+    }
+}
+
+function preencherVariacoesEdicao(variacoes) {
+    const linhas = document.querySelectorAll('.linha-combinacao');
+
+    variacoes.forEach((v, i) => {
+        // A primeira linha já é criada pelo renderizarBlocoVariacoes
+        // As demais precisam ser adicionadas
+        if (i > 0) adicionarLinhaCombinacao();
+
+        const linhasAtuais = document.querySelectorAll('.linha-combinacao');
+        const linha = linhasAtuais[i];
+        if (!linha) return;
+
+        eixosSelecionados.forEach(eixo => {
+            if (eixo === 'cor') {
+                const btn = linha.querySelector('[data-cor-selecionada]');
+                if (btn && v.cor) {
+                    const hex = obterHexDaCor(v.cor);
+                    btn.dataset.corSelecionada = v.cor;
+                    btn.innerHTML = `
+                        <span style="
+                            width: 18px; height: 18px; border-radius: 50%;
+                            background: ${hex}; display: inline-block;
+                            border: 1px solid #ccc;
+                        "></span>
+                    `;
+                }
+            } else {
+                const input = linha.querySelector(`[data-eixo="${eixo}"]`);
+                if (input && v[eixo]) input.value = v[eixo];
+            }
+        });
+
+        const inputQtd = linha.querySelector('[data-eixo="quantidade"]');
+        if (inputQtd) inputQtd.value = v.quantidade ?? 0;
+    });
+}
+
+// ============================================================
+// VARIÁVEIS GLOBAIS
+// ============================================================
+let eixosSelecionados = []; // ex: ["tipo", "cor", "tamanho"]
+
+// ============================================================
+// MODAL: ESCOLHER EIXOS DE VARIAÇÃO
+// ============================================================
+function abrirSeletorVariacao() {
+    const eixosDisponiveis = ["tipo", "cor", "tamanho"];
+
+    const naoSelecionados = eixosDisponiveis.filter(eixo => !eixosSelecionados.includes(eixo));
+    const eixosOrdenados = [...eixosSelecionados, ...naoSelecionados];
+
+    const modal = document.createElement('div');
+    modal.id = 'modalSeletorVariacao';
+    modal.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.6); z-index: 9999;
+        display: flex; align-items: center; justify-content: center;
+    `;
+
+    modal.innerHTML = `
+        <div style="
+            background: white; padding: 28px; border-radius: 16px;
+            max-width: 420px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        ">
+            <h3 style="margin-bottom: 8px; font-size: 1.1rem; color: var(--accent-color);">Variações</h3>
+            <p style="font-size: 0.85rem; color: #999; margin-bottom: 20px;">
+                Selecione e arraste para definir a ordem
+            </p>
+
+                <div id="lista-eixos-drag" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px;">
+                ${eixosOrdenados.map(eixo => `
+                    <div 
+                        class="eixo-item"
+                        data-eixo="${eixo}"
+                        draggable="true"
+                        onclick="toggleEixo(this)"
+                        style="
+                            display: flex; align-items: center; gap: 12px;
+                            padding: 12px 16px; border-radius: 10px;
+                            background: #f4f4f4; color: #999;
+                            cursor: grab; user-select: none;
+                            transition: all 0.2s; border: 2px solid transparent;
+                            font-weight: 600; font-size: 0.95rem; text-transform: capitalize;
+                        "
+                    >
+                        <span style="font-size: 1rem; opacity: 0.4;">⠿</span>
+                        ${eixo}
+                    </div>
+                `).join('')}
             </div>
+
+            <button onclick="concluirSeletorVariacao()" style="
+                width: 100%; padding: 13px; background: var(--accent-color);
+                color: white; border: none; border-radius: 10px;
+                font-weight: bold; font-size: 1rem; cursor: pointer;
+                transition: filter 0.2s;
+            " onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''">
+                Concluir
+            </button>
         </div>
     `;
 
-    // Lógica para preencher as cores existentes em caso de edição
-    if (modoEdicao && produto.cor) {
-    // 1. Preencher Estoque C respeitando a ordem salva
-    if (produto.cor["Estoque C"]) {
-        estoqueAlvoAtual = 'C';
-        const ordemC = produto.cor["ordemC"] || Object.keys(produto.cor["Estoque C"]);
-        
-        ordemC.forEach(cor => {
-            const qtd = produto.cor["Estoque C"][cor];
-            adicionarCorAoEstoque(cor, qtd);
-        });
-    }
+    document.body.appendChild(modal);
 
-    // 2. Preencher Estoque E respeitando a ordem salva
-    if (produto.cor["Estoque E"]) {
-        estoqueAlvoAtual = 'E';
-        const ordemE = produto.cor["ordemE"] || Object.keys(produto.cor["Estoque E"]);
-        
-        ordemE.forEach(cor => {
-            const qtd = produto.cor["Estoque E"][cor];
-            adicionarCorAoEstoque(cor, qtd);
-        });
+    // Marca os eixos já selecionados anteriormente
+    eixosSelecionados.forEach(eixo => {
+        const el = modal.querySelector(`[data-eixo="${eixo}"]`);
+        if (el) ativarEixoVisual(el);
+    });
+
+    iniciarDragEixos();
+}
+
+function toggleEixo(el) {
+    const eixo = el.dataset.eixo;
+    if (el.classList.contains('eixo-ativo')) {
+        desativarEixoVisual(el);
+    } else {
+        ativarEixoVisual(el);
     }
-    estoqueAlvoAtual = null;
 }
+
+function ativarEixoVisual(el) {
+    el.classList.add('eixo-ativo');
+    el.style.background = '#f0f7ff';
+    el.style.color = 'var(--accent-color)';
+    el.style.borderColor = 'var(--accent-color)';
 }
+
+function desativarEixoVisual(el) {
+    el.classList.remove('eixo-ativo');
+    el.style.background = '#f4f4f4';
+    el.style.color = '#999';
+    el.style.borderColor = 'transparent';
+}
+
+function concluirSeletorVariacao() {
+    const itens = document.querySelectorAll('#lista-eixos-drag .eixo-item');
+    eixosSelecionados = [];
+    itens.forEach(item => {
+        if (item.classList.contains('eixo-ativo')) {
+            eixosSelecionados.push(item.dataset.eixo);
+        }
+    });
+
+    document.getElementById('modalSeletorVariacao').remove();
+    renderizarBlocoVariacoes();
+}
+
+// ============================================================
+// DRAG AND DROP DOS EIXOS
+// ============================================================
+function iniciarDragEixos() {
+    const lista = document.getElementById('lista-eixos-drag');
+    let dragging = null;
+
+    lista.querySelectorAll('.eixo-item').forEach(item => {
+        item.addEventListener('dragstart', () => {
+            dragging = item;
+            setTimeout(() => item.style.opacity = '0.4', 0);
+        });
+        item.addEventListener('dragend', () => {
+            item.style.opacity = '1';
+            dragging = null;
+        });
+        item.addEventListener('dragover', e => {
+            e.preventDefault();
+            if (dragging && dragging !== item) {
+                const rect = item.getBoundingClientRect();
+                const meio = rect.top + rect.height / 2;
+                if (e.clientY < meio) {
+                    lista.insertBefore(dragging, item);
+                } else {
+                    lista.insertBefore(dragging, item.nextSibling);
+                }
+            }
+        });
+    });
+}
+
+// ============================================================
+// CAPTURAR DADOS DAS LINHAS EXISTENTES (antes de re-renderizar)
+// ============================================================
+function coletarDadosLinhasAtuais() {
+    const linhas = document.querySelectorAll('.linha-combinacao');
+    const dados = [];
+    linhas.forEach(linha => {
+        const entrada = {};
+        linha.querySelectorAll('input[data-eixo]').forEach(input => {
+            entrada[input.dataset.eixo] = input.value;
+        });
+        const btnCor = linha.querySelector('[data-cor-selecionada]');
+        if (btnCor) {
+            entrada._cor = btnCor.dataset.corSelecionada;
+            entrada._corHtml = btnCor.innerHTML;
+        }
+        dados.push(entrada);
+    });
+    return dados;
+}
+
+// ============================================================
+// RENDERIZAR BLOCO DE VARIAÇÕES NA TELA DO FORMULÁRIO
+// ============================================================
+function renderizarBlocoVariacoes() {
+    const container = document.getElementById('container-variacoes');
+
+    // Salva dados das linhas existentes antes de limpar
+    const dadosAnteriores = coletarDadosLinhasAtuais();
+
+    container.innerHTML = '';
+
+    if (eixosSelecionados.length === 0) return;
+
+    // Cabeçalho
+    const todosEixos = [...eixosSelecionados, 'quantidade'];
+    const cabecalho = document.createElement('div');
+    cabecalho.style.cssText = `display: flex; gap: 8px; align-items: center; width: 100%; margin-bottom: 4px;`;
+
+    todosEixos.forEach(eixo => {
+        const titulo = document.createElement('span');
+        let flexVal = '';
+        if (eixo === 'cor')             flexVal = 'flex: 0 0 42px;';
+        else if (eixo === 'tamanho')    flexVal = 'flex: 0 0 120px;';
+        else if (eixo === 'quantidade') flexVal = 'flex: 0 0 40px;';
+        else                            flexVal = 'flex: 0 0 160px;';
+
+        titulo.style.cssText = `
+            font-size: 0.78rem; font-weight: bold; color: #555;
+            text-transform: capitalize; min-width: 0; ${flexVal}
+        `;
+        titulo.innerText = eixo;
+        cabecalho.appendChild(titulo);
+    });
+
+    container.appendChild(cabecalho);
+
+    // Botão "Adicionar combinação"
+    const btnAdicionar = document.createElement('button');
+    btnAdicionar.type = 'button';
+    btnAdicionar.id = 'btn-adicionar-combinacao';
+    btnAdicionar.innerText = '+';
+    btnAdicionar.style.cssText = `
+        width: 100%; padding: 10px;
+        border: 1px dashed var(--accent-color);
+        background: #f0f7ff; color: var(--accent-color);
+        border-radius: 8px; cursor: pointer;
+        font-weight: normal; font-size: 1rem;
+        margin-top: 6px;
+    `;
+    btnAdicionar.onclick = adicionarLinhaCombinacao;
+    container.appendChild(btnAdicionar);
+
+    // Se havia linhas anteriores, restaura cada uma com seus dados
+    if (dadosAnteriores.length > 0) {
+        dadosAnteriores.forEach(dados => {
+            adicionarLinhaCombinacao();
+            const linhas = container.querySelectorAll('.linha-combinacao');
+            const linha = linhas[linhas.length - 1];
+            if (!linha) return;
+
+            linha.querySelectorAll('input[data-eixo]').forEach(input => {
+                if (dados[input.dataset.eixo] !== undefined) {
+                    input.value = dados[input.dataset.eixo];
+                }
+            });
+
+            const btnCor = linha.querySelector('[data-cor-selecionada]');
+            if (btnCor && dados._cor) {
+                btnCor.dataset.corSelecionada = dados._cor;
+                btnCor.innerHTML = dados._corHtml;
+            }
+        });
+    } else {
+        adicionarLinhaCombinacao();
+    }
+}
+
+// ============================================================
+// LINHA DE COMBINAÇÃO
+// ============================================================
+function adicionarLinhaCombinacao() {
+    const container = document.getElementById('container-variacoes');
+    const btn = document.getElementById('btn-adicionar-combinacao');
+    const linha = document.createElement('div');
+    linha.className = 'linha-combinacao';
+    linha.style.cssText = `display: flex; gap: 8px; align-items: center; width: 100%; margin-bottom: 6px;`;
+    eixosSelecionados.forEach(eixo => {
+        if (eixo === 'cor') {
+            // Botão de cor (abre modal de cores)
+            const btnCor = document.createElement('button');
+            btnCor.type = 'button';
+            btnCor.dataset.corSelecionada = '';
+            btnCor.style.cssText = `
+                flex: 0 0 42px; height: 36px;
+                border: 1px dashed var(--accent-color);
+                background: #f0f7ff; border-radius: 8px;
+                cursor: pointer; display: flex;
+                align-items: center; justify-content: center;
+            `;
+            btnCor.innerHTML = `<span style="font-size: 1rem; color: var(--accent-color);">+</span>`;
+            btnCor.onclick = () => abrirModalCores(btnCor);
+            linha.appendChild(btnCor);
+        } else {
+            // Input de texto (tipo ou tamanho)
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.dataset.eixo = eixo;
+            input.placeholder = eixo === 'tipo' ? 'Ex: V8' : 'Ex: 2m';
+            
+            // Refletindo o aumento dramático para 120px
+            input.style.cssText = `
+                flex: ${eixo === 'tamanho' ? '0 0 120px' : '0 0 160px'}; height: 36px; min-width: 0;
+                padding: 0 10px; border-radius: 8px;
+                border: 1px solid #ddd; outline: none;
+                font-size: 0.85rem;
+            `;
+            input.onfocus = () => input.style.borderColor = 'var(--accent-color)';
+            input.onblur = () => input.style.borderColor = '#ddd';
+            linha.appendChild(input);
+        }
+    });
+    // Campo quantidade
+    const inputQtd = document.createElement('input');
+    inputQtd.type = 'number';
+    inputQtd.min = '0';
+    inputQtd.value = '0';
+    inputQtd.dataset.eixo = 'quantidade';
+    
+    // Ajuste agressivo na largura e redução no padding para caber o número sem cortar
+    inputQtd.style.cssText = `
+        flex: 0 0 40px; height: 36px;
+        padding: 0 4px; border-radius: 8px;
+        border: 1px solid #ddd; outline: none;
+        font-size: 0.85rem; text-align: center;
+    `;
+    inputQtd.onfocus = () => inputQtd.style.borderColor = 'var(--accent-color)';
+    inputQtd.onblur = () => inputQtd.style.borderColor = '#ddd';
+    linha.appendChild(inputQtd);
+
+    // Ícone de lixeira para remover a linha
+    const btnRemover = document.createElement('img');
+    btnRemover.src = 'imagens/apagar.png';
+    btnRemover.title = 'Remover variação';
+    btnRemover.style.cssText = `
+        flex: 0 0 22px; width: 22px; height: 22px;
+        cursor: pointer;
+        transition: filter 0.2s ease;
+    `;
+    btnRemover.onmouseover = () => {
+        btnRemover.style.filter = 'brightness(0) saturate(100%) invert(15%) sepia(95%) saturate(6932%) hue-rotate(358deg) brightness(95%) contrast(112%)';
+    };
+    btnRemover.onmouseout = () => {
+        btnRemover.style.filter = '';
+    };
+    btnRemover.onclick = () => linha.remove();
+    linha.appendChild(btnRemover);
+
+    // Insere a linha antes do botão "Adicionar combinação"
+    container.insertBefore(linha, btn);
+}
+
+// ============================================================
+// MODAL DE CORES
+// ============================================================
+function abrirModalCores(btnAlvo) {
+    const modal = document.createElement('div');
+    modal.id = 'modalCores';
+    modal.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.6); z-index: 9999;
+        display: flex; align-items: center; justify-content: center;
+    `;
+
+    modal.innerHTML = `
+        <div style="background: white; padding: 25px; border-radius: 15px; max-width: 360px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+            <h3 style="margin-bottom: 16px; border-bottom: 1px solid #eee; padding-bottom: 10px; color: var(--accent-color);">Escolha a cor</h3>
+            
+            <div style="
+                display: grid; 
+                grid-template-columns: repeat(3, 1fr); 
+                gap: 10px; 
+                max-height: 260px; 
+                overflow-y: auto; 
+                padding-right: 15px;
+            ">
+                ${Object.keys(MAPA_CORES).map(cor => `
+                    <div onclick="selecionarCorNaLinha('${cor}', this)" style="
+                        cursor: pointer; text-align: center;
+                        padding: 10px 6px; border: 1px solid #eee;
+                        border-radius: 8px; transition: all 0.2s;
+                    " onmouseover="this.style.borderColor='var(--accent-color)'; this.style.background='#f0f7ff'"
+                       onmouseout="this.style.borderColor='#eee'; this.style.background='white'">
+                        <div style="
+                            width: 22px; height: 22px; border-radius: 50%;
+                            background: ${obterHexDaCor(cor)};
+                            margin: 0 auto 5px; border: 1px solid #ccc;
+                        "></div>
+                        <span style="font-size: 0.7rem; text-transform: capitalize;">${cor}</span>
+                    </div>
+                `).join('')}
+            </div>
+
+            <button onclick="document.getElementById('modalCores').remove()" style="
+                margin-top: 16px; width: 100%; padding: 10px;
+                border: none; border-radius: 8px; background: #eee;
+                cursor: pointer; font-weight: bold;
+            ">Cancelar</button>
+        </div>
+    `;
+
+    // Guarda referência ao botão que abriu o modal
+    modal._btnAlvo = btnAlvo;
+    document.body.appendChild(modal);
+}
+
+function selecionarCorNaLinha(cor, _el) {
+    const modal = document.getElementById('modalCores');
+    const btnAlvo = modal._btnAlvo;
+    const hex = obterHexDaCor(cor);
+
+    btnAlvo.dataset.corSelecionada = cor;
+    btnAlvo.innerHTML = `
+        <span style="
+            width: 18px; height: 18px; border-radius: 50%;
+            background: ${hex}; display: inline-block;
+            border: 1px solid #ccc;
+        "></span>
+    `;
+
+    modal.remove();
+}
+
+// ============================================================
+// COLETAR DADOS DAS VARIAÇÕES (usado no salvarNovoProduto)
+// ============================================================
+function coletarVariacoes() {
+    const linhas = document.querySelectorAll('.linha-combinacao');
+    const combinacoes = [];
+
+    linhas.forEach(linha => {
+        const combinacao = {};
+
+        eixosSelecionados.forEach(eixo => {
+            if (eixo === 'cor') {
+                const btn = linha.querySelector('[data-cor-selecionada]');
+                combinacao.cor = btn ? btn.dataset.corSelecionada : '';
+            } else {
+                const input = linha.querySelector(`[data-eixo="${eixo}"]`);
+                combinacao[eixo] = input ? input.value.trim() : '';
+            }
+        });
+
+        const inputQtd = linha.querySelector('[data-eixo="quantidade"]');
+        combinacao.qtd = inputQtd ? parseInt(inputQtd.value) || 0 : 0;
+        combinacoes.push(combinacao);
+    });
+
+    return {
+        eixos: [...eixosSelecionados],
+        combinacoes
+    };
+}
+
+
+
+
+
+
+
 
 let estoqueAlvoAtual = ''; 
 
@@ -750,7 +1323,6 @@ async function salvarNovoProduto() {
     try {
         let urlImagem = "";
         
-        // Upload da imagem para a pasta 'fotos-produtos'
         if (imagemFile) {
             const nomeArquivo = `${Date.now()}_${imagemFile.name}`;
             const { data: uploadData, error: uploadError } = await _supabase.storage
@@ -766,31 +1338,33 @@ async function salvarNovoProduto() {
             urlImagem = publicUrlData.publicUrl;
         }
 
-        const coresC = {};
-        const ordemC = []; 
-        document.querySelectorAll('#container-cores-C input').forEach(input => {
-            const cor = input.dataset.cor;
-            coresC[cor] = parseInt(input.value) || 0;
-            ordemC.push(cor); 
-        });
+        // Coleta as variações do novo sistema
+        const variacoes = [];
+        document.querySelectorAll('.linha-combinacao').forEach(linha => {
+            const variacao = {};
 
-        const coresE = {};
-        const ordemE = []; 
-        document.querySelectorAll('#container-cores-E input').forEach(input => {
-            const cor = input.dataset.cor;
-            coresE[cor] = parseInt(input.value) || 0;
-            ordemE.push(cor); 
+            eixosSelecionados.forEach(eixo => {
+                if (eixo === 'cor') {
+                    const btn = linha.querySelector('[data-cor-selecionada]');
+                    variacao.cor = btn ? btn.dataset.corSelecionada : '';
+                } else {
+                    const input = linha.querySelector(`[data-eixo="${eixo}"]`);
+                    variacao[eixo] = input ? input.value.trim() : '';
+                }
+            });
+
+            const inputQtd = linha.querySelector('[data-eixo="quantidade"]');
+            variacao.quantidade = inputQtd ? parseInt(inputQtd.value) || 0 : 0;
+            variacoes.push(variacao);
         });
 
         const dadosProduto = {
             nome,
             valor,
             tipo,
-            cor: {
-                "Estoque C": coresC,
-                "Estoque E": coresE,
-                "ordemC": ordemC, 
-                "ordemE": ordemE  
+            variacoes: {
+                variacoes,
+                eixos: [...eixosSelecionados]
             }
         };
 
@@ -819,7 +1393,7 @@ async function salvarNovoProduto() {
             mostrarAlerta("Produto cadastrado com sucesso!", "sucesso");
         }
 
-        // --- ADICIONADO: REGISTRO DE ATIVIDADE ---
+        // --- REGISTRO DE ATIVIDADE ---
         await _supabase.from('registros').insert([{ nome_produto: nome }]);
 
         setTimeout(() => {
