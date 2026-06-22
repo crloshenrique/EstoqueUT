@@ -196,70 +196,42 @@ function abrirModalVariacoes(variacoesEncoded, nomeProduto) {
     if (!dados || !dados.eixos || !dados.variacoes || dados.variacoes.length === 0) {
         conteudo = `<p style="color: #999; text-align: center; padding: 20px;">Sem variações cadastradas.</p>`;
     } else {
-        const { eixos, variacoes } = dados;
+const { eixos, variacoes } = dados;
 
-        const slots = [...eixos, 'quantidade'];
-        const isMobile = window.innerWidth <= 768;
-        const totalSlots = slots.length;
+// Empacota as variações do produto à esquerda, seguidas da quantidade,
+// e preenche o resto com espaços vazios.
+const slots = [...eixos, 'quantidade'];
+while (slots.length < 4) slots.push(null);
 
-        const linhas = variacoes.map((v, i) => {
-            let celulas;
+const linhas = variacoes.map((v, i) => {
+    const celulas = slots.map(eixo => {
+        if (!eixo) {
+            return `<div class="celula-variacao" style="flex: 1;"></div>`;
+        }
 
-            if (isMobile && totalSlots <= 3) {
-                // Mobile com 1 ou 2 variações + qtd: tudo em 1 linha
-                celulas = slots.map(eixo => {
-                    const icone = `imagens/variacoes/${eixo}.png`;
-                    let valor = '';
-                    if (eixo === 'cor') {
-                        if (v.cor) {
-                            const hex = obterHexDaCor(v.cor);
-                            valor = `<span style="
-                                width: 16px; height: 16px; border-radius: 50%;
-                                background: ${hex}; display: inline-block;
-                                border: 1px solid #ccc; flex-shrink: 0;
-                            "></span>`;
-                        }
-                    } else {
-                        valor = `<span style="font-size: 0.85rem; color: #333;">${v[eixo] ?? 0}</span>`;
+        const icone = `imagens/variacoes/${eixo}.png`;
+        let valor = '';
+
+                if (eixo === 'cor') {
+                    if (v.cor) {
+                        const hex = obterHexDaCor(v.cor);
+                        valor = `<span style="
+                            width: 16px; height: 16px; border-radius: 50%;
+                            background: ${hex}; display: inline-block;
+                            border: 1px solid #ccc; flex-shrink: 0;
+                        "></span>`;
                     }
-                    return `
-                        <div class="celula-variacao" style="display: flex; align-items: center; gap: 6px; flex: 1;">
-                            <img src="${icone}" style="width: 18px; height: 18px; object-fit: contain; flex-shrink: 0;">
-                            ${valor}
-                        </div>
-                    `;
-                });
-            } else {
-                // Desktop ou mobile com 3 variações + qtd: preenche até 4
-                const slotsCompletos = [...slots];
-                while (slotsCompletos.length < 4) slotsCompletos.push(null);
+                } else {
+                    valor = `<span style="font-size: 0.85rem; color: #333;">${v[eixo] ?? 0}</span>`;
+                }
 
-                celulas = slotsCompletos.map(eixo => {
-                    if (!eixo) {
-                        return `<div class="celula-variacao" style="flex: 1;"></div>`;
-                    }
-                    const icone = `imagens/variacoes/${eixo}.png`;
-                    let valor = '';
-                    if (eixo === 'cor') {
-                        if (v.cor) {
-                            const hex = obterHexDaCor(v.cor);
-                            valor = `<span style="
-                                width: 16px; height: 16px; border-radius: 50%;
-                                background: ${hex}; display: inline-block;
-                                border: 1px solid #ccc; flex-shrink: 0;
-                            "></span>`;
-                        }
-                    } else {
-                        valor = `<span style="font-size: 0.85rem; color: #333;">${v[eixo] ?? 0}</span>`;
-                    }
-                    return `
-                        <div class="celula-variacao" style="display: flex; align-items: center; gap: 6px; flex: 1;">
-                            <img src="${icone}" style="width: 18px; height: 18px; object-fit: contain; flex-shrink: 0;">
-                            ${valor}
-                        </div>
-                    `;
-                });
-            }
+                return `
+                    <div class="celula-variacao" style="display: flex; align-items: center; gap: 6px; flex: 1;">
+                        <img src="${icone}" style="width: 18px; height: 18px; object-fit: contain; flex-shrink: 0;">
+                        ${valor}
+                    </div>
+                `;
+            });
 
             return `
                 <div class="linha-variacao" style="
@@ -953,7 +925,7 @@ function renderizarBlocoVariacoes() {
     // Cabeçalho
     const todosEixos = [...eixosSelecionados, 'quantidade'];
     const cabecalho = document.createElement('div');
-    cabecalho.style.cssText = `display: flex; gap: 8px; align-items: center; width: 100%; margin-bottom: 4px;`;
+    cabecalho.style.cssText = `display: flex; gap: 8px; align-items: center; width: max-content; min-width: 100%; margin-bottom: 4px;`;
 
     todosEixos.forEach(eixo => {
         const titulo = document.createElement('span');
@@ -979,7 +951,7 @@ function renderizarBlocoVariacoes() {
     btnAdicionar.id = 'btn-adicionar-combinacao';
     btnAdicionar.innerText = '+';
     btnAdicionar.style.cssText = `
-        width: 100%; padding: 10px;
+        width: max-content; min-width: 100%; padding: 10px;
         border: 1px dashed var(--accent-color);
         background: #f0f7ff; color: var(--accent-color);
         border-radius: 8px; cursor: pointer;
@@ -1022,7 +994,7 @@ function adicionarLinhaCombinacao() {
     const btn = document.getElementById('btn-adicionar-combinacao');
     const linha = document.createElement('div');
     linha.className = 'linha-combinacao';
-    linha.style.cssText = `display: flex; gap: 8px; align-items: center; width: 100%; margin-bottom: 6px;`;
+    linha.style.cssText = `display: flex; gap: 8px; align-items: center; width: max-content; min-width: 100%; margin-bottom: 6px;`;
     eixosSelecionados.forEach(eixo => {
         if (eixo === 'cor') {
             // Botão de cor (abre modal de cores)
