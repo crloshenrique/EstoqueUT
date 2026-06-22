@@ -196,21 +196,19 @@ function abrirModalVariacoes(variacoesEncoded, nomeProduto) {
     if (!dados || !dados.eixos || !dados.variacoes || dados.variacoes.length === 0) {
         conteudo = `<p style="color: #999; text-align: center; padding: 20px;">Sem variações cadastradas.</p>`;
     } else {
-const { eixos, variacoes } = dados;
+        const { eixos, variacoes } = dados;
 
-// Empacota as variações do produto à esquerda, seguidas da quantidade,
-// e preenche o resto com espaços vazios.
-const slots = [...eixos, 'quantidade'];
-while (slots.length < 4) slots.push(null);
+        const slots = [...eixos];
+        while (slots.length < 3) slots.push(null);
 
-const linhas = variacoes.map((v, i) => {
-    const celulas = slots.map(eixo => {
-        if (!eixo) {
-            return `<div class="celula-variacao" style="flex: 1;"></div>`;
-        }
+        const linhas = variacoes.map((v, i) => {
+            const celulas = slots.map(eixo => {
+                if (!eixo) {
+                    return `<div style="flex: 1;"></div>`;
+                }
 
-        const icone = `imagens/variacoes/${eixo}.png`;
-        let valor = '';
+                const icone = `imagens/variacoes/${eixo}.png`;
+                let valor = '';
 
                 if (eixo === 'cor') {
                     if (v.cor) {
@@ -226,15 +224,18 @@ const linhas = variacoes.map((v, i) => {
                 }
 
                 return `
-                    <div class="celula-variacao" style="display: flex; align-items: center; gap: 6px; flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 6px; flex: 1;">
                         <img src="${icone}" style="width: 18px; height: 18px; object-fit: contain; flex-shrink: 0;">
                         ${valor}
                     </div>
                 `;
             });
 
+            const idLinha = `linha-var-${i}`;
+            const qtd = v.quantidade ?? 0;
+
             return `
-                <div class="linha-variacao" style="
+                <div id="${idLinha}" style="
                     display: flex;
                     align-items: center;
                     gap: 10px;
@@ -242,8 +243,16 @@ const linhas = variacoes.map((v, i) => {
                     background: #f9f9f9;
                     border-radius: 8px;
                     border: 1px solid #eee;
-                ">
+                    cursor: pointer;
+                    transition: border-color 0.2s ease;
+                " onclick="toggleEstoqueLinha('${idLinha}', ${qtd})"
+                   onmouseenter="if(this.dataset.aberta !== 'true') this.style.borderColor='#0047ab'"
+                   onmouseleave="if(this.dataset.aberta !== 'true') this.style.borderColor='#eee'">
                     ${celulas.join('')}
+                    <div style="display: flex; gap: 4px; align-items: center; flex-shrink: 0;">
+                        <span style="width: 7px; height: 7px; border-radius: 50%; background: #0047ab;"></span>
+                        <span style="width: 7px; height: 7px; border-radius: 50%; background: #ccc;"></span>
+                    </div>
                 </div>
             `;
         });
@@ -297,6 +306,79 @@ const linhas = variacoes.map((v, i) => {
     });
 
     document.body.appendChild(modal);
+}
+
+function toggleEstoqueLinha(idLinha, quantidade) {
+    const linha = document.getElementById(idLinha);
+    if (!linha) return;
+
+    const jaAberta = linha.dataset.aberta === 'true';
+
+    const indicadorFrente = `
+        <div style="display: flex; gap: 4px; align-items: center; flex-shrink: 0;">
+            <span style="width: 7px; height: 7px; border-radius: 50%; background: #0047ab;"></span>
+            <span style="width: 7px; height: 7px; border-radius: 50%; background: #ccc;"></span>
+        </div>
+    `;
+
+    const indicadorVerso = `
+        <div style="display: flex; gap: 4px; align-items: center; flex-shrink: 0;">
+            <span style="width: 7px; height: 7px; border-radius: 50%; background: #ccc;"></span>
+            <span style="width: 7px; height: 7px; border-radius: 50%; background: #0047ab;"></span>
+        </div>
+    `;
+
+    // Fecha qualquer outra linha que esteja virada
+    document.querySelectorAll('[id^="linha-var-"]').forEach(outraLinha => {
+        if (outraLinha.id !== idLinha && outraLinha.dataset.aberta === 'true') {
+            outraLinha.style.opacity = '0';
+            outraLinha.style.transform = 'scaleY(0.85)';
+            setTimeout(() => {
+                outraLinha.innerHTML = outraLinha.dataset.conteudoOriginal + indicadorFrente;
+                outraLinha.style.borderColor = outraLinha.matches(':hover') ? '#0047ab' : '#eee';
+                outraLinha.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+                outraLinha.style.opacity = '1';
+                outraLinha.style.transform = 'scaleY(1)';
+                outraLinha.dataset.aberta = 'false';
+            }, 150);
+        }
+    });
+
+    if (jaAberta) {
+        linha.style.opacity = '0';
+        linha.style.transform = 'scaleY(0.85)';
+        setTimeout(() => {
+            linha.innerHTML = linha.dataset.conteudoOriginal + indicadorFrente;
+            linha.style.borderColor = linha.matches(':hover') ? '#0047ab' : '#eee';
+            linha.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+            linha.style.opacity = '1';
+            linha.style.transform = 'scaleY(1)';
+            linha.dataset.aberta = 'false';
+        }, 150);
+    } else {
+        const clone = linha.cloneNode(true);
+        const indicadorAtual = clone.querySelector('div:last-child');
+        if (indicadorAtual) indicadorAtual.remove();
+        linha.dataset.conteudoOriginal = clone.innerHTML;
+
+        linha.style.transition = 'opacity 0.15s ease, transform 0.15s ease';
+        linha.style.opacity = '0';
+        linha.style.transform = 'scaleY(0.85)';
+        setTimeout(() => {
+            linha.dataset.aberta = 'true';
+            linha.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 8px; flex: 1; justify-content: center;">
+                    <img src="imagens/variacoes/quantidade.png" style="width: 18px; height: 18px; object-fit: contain; ${quantidade === 0 ? 'filter: brightness(0) saturate(100%) invert(15%) sepia(95%) saturate(6932%) hue-rotate(358deg) brightness(95%) contrast(112%);' : ''}">
+                    <span style="font-size: 0.85rem; color: #333;">${quantidade}</span>
+                </div>
+                ${indicadorVerso}
+            `;
+            linha.style.borderColor = '#0047ab';
+            linha.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+            linha.style.opacity = '1';
+            linha.style.transform = 'scaleY(1)';
+        }, 150);
+    }
 }
 
 // Função para girar a carta garantindo que apenas uma fique virada

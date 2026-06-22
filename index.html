@@ -554,26 +554,6 @@
     }
 }
 
-/* Modal de Variações/Estoque: no mobile, os 4 slots (ícones + dados) de cada
-   variação ficam em 2 colunas x 2 linhas, ao invés de 1 linha só. */
-@media (max-width: 768px) {
-    .linha-variacao {
-        display: grid !important;
-        grid-template-columns: 1fr 1fr !important;
-        grid-auto-rows: auto !important;
-        row-gap: 8px !important;
-        column-gap: 10px !important;
-    }
-
-    .linha-variacao .celula-variacao {
-        flex: none !important;
-        min-width: 0 !important;
-    }
-    .linha-variacao .celula-variacao:empty {
-        display: none !important;
-    }
-}
-
 /* Esconde o botão flutuante no Desktop */
 @media (min-width: 769px) {
     .btn-menu-movel {
