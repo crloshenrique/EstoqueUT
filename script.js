@@ -206,7 +206,7 @@ while (slots.length < 4) slots.push(null);
 const linhas = variacoes.map((v, i) => {
     const celulas = slots.map(eixo => {
         if (!eixo) {
-            return `<div class="celula-variacao" style="flex: 1;"></div>`;
+            return `<div style="flex: 1;"></div>`;
         }
 
         const icone = `imagens/variacoes/${eixo}.png`;
@@ -226,7 +226,7 @@ const linhas = variacoes.map((v, i) => {
                 }
 
                 return `
-                    <div class="celula-variacao" style="display: flex; align-items: center; gap: 6px; flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 6px; flex: 1;">
                         <img src="${icone}" style="width: 18px; height: 18px; object-fit: contain; flex-shrink: 0;">
                         ${valor}
                     </div>
@@ -234,7 +234,7 @@ const linhas = variacoes.map((v, i) => {
             });
 
             return `
-                <div class="linha-variacao" style="
+                <div style="
                     display: flex;
                     align-items: center;
                     gap: 10px;
