@@ -196,42 +196,70 @@ function abrirModalVariacoes(variacoesEncoded, nomeProduto) {
     if (!dados || !dados.eixos || !dados.variacoes || dados.variacoes.length === 0) {
         conteudo = `<p style="color: #999; text-align: center; padding: 20px;">Sem variações cadastradas.</p>`;
     } else {
-const { eixos, variacoes } = dados;
+        const { eixos, variacoes } = dados;
 
-// Empacota as variações do produto à esquerda, seguidas da quantidade,
-// e preenche o resto com espaços vazios.
-const slots = [...eixos, 'quantidade'];
-while (slots.length < 4) slots.push(null);
+        const slots = [...eixos, 'quantidade'];
+        const isMobile = window.innerWidth <= 768;
+        const totalSlots = slots.length;
 
-const linhas = variacoes.map((v, i) => {
-    const celulas = slots.map(eixo => {
-        if (!eixo) {
-            return `<div class="celula-variacao" style="flex: 1;"></div>`;
-        }
+        const linhas = variacoes.map((v, i) => {
+            let celulas;
 
-        const icone = `imagens/variacoes/${eixo}.png`;
-        let valor = '';
-
-                if (eixo === 'cor') {
-                    if (v.cor) {
-                        const hex = obterHexDaCor(v.cor);
-                        valor = `<span style="
-                            width: 16px; height: 16px; border-radius: 50%;
-                            background: ${hex}; display: inline-block;
-                            border: 1px solid #ccc; flex-shrink: 0;
-                        "></span>`;
+            if (isMobile && totalSlots <= 3) {
+                // Mobile com 1 ou 2 variações + qtd: tudo em 1 linha
+                celulas = slots.map(eixo => {
+                    const icone = `imagens/variacoes/${eixo}.png`;
+                    let valor = '';
+                    if (eixo === 'cor') {
+                        if (v.cor) {
+                            const hex = obterHexDaCor(v.cor);
+                            valor = `<span style="
+                                width: 16px; height: 16px; border-radius: 50%;
+                                background: ${hex}; display: inline-block;
+                                border: 1px solid #ccc; flex-shrink: 0;
+                            "></span>`;
+                        }
+                    } else {
+                        valor = `<span style="font-size: 0.85rem; color: #333;">${v[eixo] ?? 0}</span>`;
                     }
-                } else {
-                    valor = `<span style="font-size: 0.85rem; color: #333;">${v[eixo] ?? 0}</span>`;
-                }
+                    return `
+                        <div class="celula-variacao" style="display: flex; align-items: center; gap: 6px; flex: 1;">
+                            <img src="${icone}" style="width: 18px; height: 18px; object-fit: contain; flex-shrink: 0;">
+                            ${valor}
+                        </div>
+                    `;
+                });
+            } else {
+                // Desktop ou mobile com 3 variações + qtd: preenche até 4
+                const slotsCompletos = [...slots];
+                while (slotsCompletos.length < 4) slotsCompletos.push(null);
 
-                return `
-                    <div class="celula-variacao" style="display: flex; align-items: center; gap: 6px; flex: 1;">
-                        <img src="${icone}" style="width: 18px; height: 18px; object-fit: contain; flex-shrink: 0;">
-                        ${valor}
-                    </div>
-                `;
-            });
+                celulas = slotsCompletos.map(eixo => {
+                    if (!eixo) {
+                        return `<div class="celula-variacao" style="flex: 1;"></div>`;
+                    }
+                    const icone = `imagens/variacoes/${eixo}.png`;
+                    let valor = '';
+                    if (eixo === 'cor') {
+                        if (v.cor) {
+                            const hex = obterHexDaCor(v.cor);
+                            valor = `<span style="
+                                width: 16px; height: 16px; border-radius: 50%;
+                                background: ${hex}; display: inline-block;
+                                border: 1px solid #ccc; flex-shrink: 0;
+                            "></span>`;
+                        }
+                    } else {
+                        valor = `<span style="font-size: 0.85rem; color: #333;">${v[eixo] ?? 0}</span>`;
+                    }
+                    return `
+                        <div class="celula-variacao" style="display: flex; align-items: center; gap: 6px; flex: 1;">
+                            <img src="${icone}" style="width: 18px; height: 18px; object-fit: contain; flex-shrink: 0;">
+                            ${valor}
+                        </div>
+                    `;
+                });
+            }
 
             return `
                 <div class="linha-variacao" style="
