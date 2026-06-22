@@ -925,7 +925,7 @@ function renderizarBlocoVariacoes() {
     // Cabeçalho
     const todosEixos = [...eixosSelecionados, 'quantidade'];
     const cabecalho = document.createElement('div');
-    cabecalho.style.cssText = `display: flex; gap: 8px; align-items: center; width: max-content; min-width: 100%; margin-bottom: 4px;`;
+    cabecalho.style.cssText = `display: flex; gap: 8px; align-items: center; width: 100%; margin-bottom: 4px;`;
 
     todosEixos.forEach(eixo => {
         const titulo = document.createElement('span');
@@ -951,7 +951,7 @@ function renderizarBlocoVariacoes() {
     btnAdicionar.id = 'btn-adicionar-combinacao';
     btnAdicionar.innerText = '+';
     btnAdicionar.style.cssText = `
-        width: max-content; min-width: 100%; padding: 10px;
+        width: 100%; padding: 10px;
         border: 1px dashed var(--accent-color);
         background: #f0f7ff; color: var(--accent-color);
         border-radius: 8px; cursor: pointer;
@@ -994,7 +994,7 @@ function adicionarLinhaCombinacao() {
     const btn = document.getElementById('btn-adicionar-combinacao');
     const linha = document.createElement('div');
     linha.className = 'linha-combinacao';
-    linha.style.cssText = `display: flex; gap: 8px; align-items: center; width: max-content; min-width: 100%; margin-bottom: 6px;`;
+    linha.style.cssText = `display: flex; gap: 8px; align-items: center; width: 100%; margin-bottom: 6px;`;
     eixosSelecionados.forEach(eixo => {
         if (eixo === 'cor') {
             // Botão de cor (abre modal de cores)
