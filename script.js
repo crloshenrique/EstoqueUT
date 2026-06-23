@@ -366,13 +366,16 @@ function toggleEstoqueLinha(idLinha, quantidade) {
         linha.style.transform = 'scaleY(0.85)';
         setTimeout(() => {
             linha.dataset.aberta = 'true';
-            linha.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 8px; flex: 1; justify-content: center;">
-                    <img src="imagens/variacoes/quantidade.png" style="width: 18px; height: 18px; object-fit: contain; ${quantidade === 0 ? 'filter: brightness(0) saturate(100%) invert(15%) sepia(95%) saturate(6932%) hue-rotate(358deg) brightness(95%) contrast(112%);' : ''}">
-                    <span style="font-size: 0.85rem; color: #333;">${quantidade}</span>
-                </div>
-                ${indicadorVerso}
-            `;
+linha.innerHTML = `
+    <div style="position: relative; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <img src="imagens/variacoes/quantidade.png" style="width: 18px; height: 18px; object-fit: contain; ${quantidade === 0 ? 'filter: brightness(0) saturate(100%) invert(15%) sepia(95%) saturate(6932%) hue-rotate(358deg) brightness(95%) contrast(112%);' : ''}">
+        <span style="font-size: 0.85rem; color: #333;">${quantidade}</span>
+        <div style="position: absolute; right: 0; display: flex; gap: 4px; align-items: center;">
+            <span style="width: 7px; height: 7px; border-radius: 50%; background: #ccc;"></span>
+            <span style="width: 7px; height: 7px; border-radius: 50%; background: #0047ab;"></span>
+        </div>
+    </div>
+`;
             linha.style.borderColor = '#0047ab';
             linha.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
             linha.style.opacity = '1';
