@@ -1694,7 +1694,6 @@ function mostrarSecao(idSecao) {
             <section id="secao-inicio">
                 <h1>UnterTech</h1>
                 <p>Bem-vindo ao sistema de gestão. Selecione uma opção no menu lateral.</p>
-                <p>Version 13.2</p>
             </section>
             <section id="secao-registros" style="display:none;">
                 <h1>Registros de atividade</h1>
