@@ -1000,14 +1000,12 @@ function coletarDadosLinhasAtuais() {
 function renderizarBlocoVariacoes() {
     const container = document.getElementById('container-variacoes');
 
-    // Salva dados das linhas existentes antes de limpar
     const dadosAnteriores = coletarDadosLinhasAtuais();
 
     container.innerHTML = '';
 
     if (eixosSelecionados.length === 0) return;
 
-    // Cabeçalho
     const todosEixos = [...eixosSelecionados, 'quantidade'];
     const cabecalho = document.createElement('div');
     cabecalho.style.cssText = `display: flex; gap: 8px; align-items: center; width: 100%; margin-bottom: 4px;`;
@@ -1030,23 +1028,21 @@ function renderizarBlocoVariacoes() {
 
     container.appendChild(cabecalho);
 
-    // Botão "Adicionar combinação"
     const btnAdicionar = document.createElement('button');
     btnAdicionar.type = 'button';
     btnAdicionar.id = 'btn-adicionar-combinacao';
     btnAdicionar.innerText = '+';
-btnAdicionar.style.cssText = `
-    width: 100%; min-width: max-content; padding: 10px;
-    border: 1px dashed var(--accent-color);
-    background: #f0f7ff; color: var(--accent-color);
-    border-radius: 8px; cursor: pointer;
-    font-weight: normal; font-size: 1rem;
-    margin-top: 6px;
-`;
+    btnAdicionar.style.cssText = `
+        padding: 10px;
+        border: 1px dashed var(--accent-color);
+        background: #f0f7ff; color: var(--accent-color);
+        border-radius: 8px; cursor: pointer;
+        font-weight: normal; font-size: 1rem;
+        margin-top: 6px;
+    `;
     btnAdicionar.onclick = adicionarLinhaCombinacao;
     container.appendChild(btnAdicionar);
 
-    // Se havia linhas anteriores, restaura cada uma com seus dados
     if (dadosAnteriores.length > 0) {
         dadosAnteriores.forEach(dados => {
             adicionarLinhaCombinacao();
@@ -1069,6 +1065,13 @@ btnAdicionar.style.cssText = `
     } else {
         adicionarLinhaCombinacao();
     }
+
+    requestAnimationFrame(() => {
+        const primeiraLinha = container.querySelector('.linha-combinacao');
+        if (primeiraLinha) {
+            btnAdicionar.style.width = primeiraLinha.scrollWidth + 'px';
+        }
+    });
 }
 
 // ============================================================
