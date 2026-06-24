@@ -1036,13 +1036,13 @@ function renderizarBlocoVariacoes() {
     btnAdicionar.id = 'btn-adicionar-combinacao';
     btnAdicionar.innerText = '+';
     btnAdicionar.style.cssText = `
-        width: 100%; min-width: 100%; padding: 10px;
-        border: 1px dashed var(--accent-color);
-        background: #f0f7ff; color: var(--accent-color);
-        border-radius: 8px; cursor: pointer;
-        font-weight: normal; font-size: 1rem;
-        margin-top: 6px;
-    `;
+    width: 100%; min-width: max-content; padding: 10px;
+    border: 1px dashed var(--accent-color);
+    background: #f0f7ff; color: var(--accent-color);
+    border-radius: 8px; cursor: pointer;
+    font-weight: normal; font-size: 1rem;
+    margin-top: 6px;
+`;
     btnAdicionar.onclick = adicionarLinhaCombinacao;
     container.appendChild(btnAdicionar);
 
