@@ -3,6 +3,24 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let filtroTipoAtivo = ""; // Guarda o tipo selecionado pelo usuário
 
+// Configuração centralizada de cores
+const MAPA_CORES = {
+    "preto": "#000000",
+    "branco": "#ffffff",
+    "rosa": "#ff69b4",
+    "azul": "#0047ab",
+    "ciano": "#00ffff",
+    "vermelho": "#ff0000",
+    "verde": "#039e03ff",
+    "amarelo": "#ffdf00",
+    "laranja": "#ff9100ff",
+    "bege": "#f5f5dc",
+    "cinza": "#808080",
+    "roxo": "#800080",
+    "colorido": "conic-gradient(red, yellow, lime, aqua, blue, magenta, red)",
+    "transparente": "repeating-conic-gradient(#ffffff 0% 25%, #bbbbbb 0% 50%) 50% / 6px 6px"
+};
+
 const Marcas = [
     "Baseus",
     "Ugreen",
@@ -570,22 +588,6 @@ document.addEventListener('click', (event) => {
     }
 });
 
-// Configuração centralizada de cores
-const MAPA_CORES = {
-    "preto": "#000000",
-    "branco": "#ffffff",
-    "rosa": "#ff69b4",
-    "azul": "#0047ab",
-    "ciano": "#00ffff",
-    "vermelho": "#ff0000",
-    "verde": "#039e03ff",
-    "amarelo": "#ffdf00",
-    "laranja": "#ff9100ff",
-    "cinza": "#808080",
-    "roxo": "#800080",
-    "colorido": "conic-gradient(red, yellow, lime, aqua, blue, magenta, red)",
-    "transparente": "repeating-conic-gradient(#ffffff 0% 25%, #bbbbbb 0% 50%) 50% / 6px 6px"
-};
 
 function obterHexDaCor(nomeCor) {
     const corNormalizada = nomeCor.trim().toLowerCase();
