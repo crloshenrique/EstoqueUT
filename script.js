@@ -136,7 +136,9 @@ if (estoqueTotal === 0 && !divisorInserido) {
 
         html += `
             <div class="card-container ${estoqueTotal === 0 ? 'sem-estoque' : ''}" data-tipo="${item.tipo || ''}" data-estoque-total="${estoqueTotal}"
-                onclick="abrirModalVariacoes('${variacoesJson}', '${item.nome.replace(/'/g, "\\'")}')"
+                data-variacoes="${variacoesJson.replace(/"/g, '&quot;')}"
+data-nome="${item.nome.replace(/"/g, '&quot;')}"
+onclick="abrirModalVariacoes(this.dataset.variacoes, this.dataset.nome)"
 onmouseenter="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 24px rgba(0,71,171,0.15)'"
                 onmouseleave="this.style.transform='translateY(0)'; this.style.boxShadow=''"
                 style="
