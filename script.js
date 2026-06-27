@@ -32,7 +32,8 @@ const Marcas = [
     "Elgin",
     "Multi",
     "Philips",
-    "Havit"
+    "Havit",
+    "Orico"
     //"Fortrek",
 ];
 
