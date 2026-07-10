@@ -170,7 +170,7 @@ onmouseenter="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8
                             <div style="width: 100%; height: 1px; background-color: #eee; margin: -2px 0 8px 0;"></div>
                         
 <div style="display: flex; align-items: center; justify-content: flex-start; gap: 5px;">
-<div style="width: 4px; height: 16px; background-color: #0047ab; border-radius: 2px; ${estoqueTotal === 0 ? 'opacity: 0.5;' : ''}"></div>
+<div style="width: 4px; height: 15px; background-color: #0047ab; border-radius: 2px; ${estoqueTotal === 0 ? 'opacity: 0.5;' : ''}"></div>
                                 <span class="numero-estoque">${preco}</span>
                             </div>
                         </div>
